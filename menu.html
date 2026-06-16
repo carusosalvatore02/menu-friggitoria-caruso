@@ -72,6 +72,29 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 
 /* BANNER ORARIO */
 .orario-banner{background:var(--nero);color:var(--oro-v);text-align:center;padding:8px 16px;font-size:12px;letter-spacing:.04em;}
+
+/* ALLERGENI SIGLE */
+.allergeni-sigle{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.all-sigla-pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:700;background:#fff0f0;color:#b03a2e;border:1px solid #f5c6c2;cursor:pointer;}
+
+/* PANNELLO DETTAGLIO */
+.dettaglio-overlay{display:none;position:fixed;inset:0;background:rgba(17,16,8,.6);z-index:100;align-items:flex-end;justify-content:center;}
+.dettaglio-overlay.show{display:flex;}
+.dettaglio-box{background:var(--carta);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 -4px 40px rgba(0,0,0,.25);animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.dettaglio-handle{width:40px;height:4px;background:#d4c9bb;border-radius:2px;margin:0 auto 20px;}
+.dettaglio-nome{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--nero);margin-bottom:6px;}
+.dettaglio-desc{font-size:13px;color:var(--grigio);line-height:1.6;margin-bottom:16px;}
+.dettaglio-sezione{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grigio);margin-bottom:8px;margin-top:16px;}
+.dettaglio-ingredienti{font-size:13px;color:var(--nero);line-height:1.6;background:var(--sabbia);padding:12px;border-radius:10px;}
+.dettaglio-allergeni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.all-pill{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:600;}
+.all-pill.presente{background:#fef5f5;border:1px solid #f5c6c2;color:#b03a2e;}
+.all-pill.assente{background:var(--sabbia);border:1px solid #e8dfd0;color:#aaa;}
+.all-pill .sigla{font-size:10px;font-weight:700;width:28px;flex-shrink:0;}
+.dettaglio-prezzo{font-family:'Playfair Display',serif;font-size:22px;color:var(--oro);font-weight:700;margin-top:16px;}
+.btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;}
+.nota-allergeni{font-size:11px;color:var(--grigio);margin-top:12px;font-style:italic;}
 </style>
 </head>
 <body>
@@ -86,11 +109,38 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 <main class="main" id="main"><div class="stato"><div class="spinner"></div>Caricamento menù…</div></main>
 <footer class="footer"><strong>Antica Friggitoria Fratelli Caruso</strong>Corso dei Mille 803 · Piazza Torrelunga · Palermo</footer>
 
+<!-- PANNELLO DETTAGLIO PRODOTTO -->
+<div class="dettaglio-overlay" id="dettaglio-overlay" onclick="chiudiDettaglio(event)">
+  <div class="dettaglio-box" id="dettaglio-box">
+    <div class="dettaglio-handle"></div>
+    <div class="dettaglio-nome" id="det-nome"></div>
+    <div class="dettaglio-desc" id="det-desc"></div>
+    <div class="dettaglio-prezzo" id="det-prezzo"></div>
+    <div id="det-ingredienti-wrap" style="display:none">
+      <div class="dettaglio-sezione">Ingredienti</div>
+      <div class="dettaglio-ingredienti" id="det-ingredienti"></div>
+    </div>
+    <div id="det-allergeni-wrap" style="display:none">
+      <div class="dettaglio-sezione">Allergeni</div>
+      <div class="dettaglio-allergeni-grid" id="det-allergeni-grid"></div>
+      <div class="nota-allergeni">⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.</div>
+    </div>
+    <button class="btn-chiudi-det" onclick="chiudiDettaglio()">Chiudi</button>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL  = 'https://cmqaujrjrhmwxfkgvrgp.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtcWF1anJqcmhtd3hma2d2cmdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MDYwNjIsImV4cCI6MjA5NzE4MjA2Mn0.JEO-R-_7B5h7FiwWOc1jRZkMwpwSk3BkYuBeq1HbsKs';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-let datiMenu=[];
+const ALLERGENI_EU=[
+  {sigla:'GLU',nome:'Glutine'},{sigla:'CRO',nome:'Crostacei'},{sigla:'UOV',nome:'Uova'},
+  {sigla:'PES',nome:'Pesce'},{sigla:'ARA',nome:'Arachidi'},{sigla:'SOI',nome:'Soia'},
+  {sigla:'LAT',nome:'Latte'},{sigla:'FRU',nome:'Frutta a guscio'},{sigla:'SED',nome:'Sedano'},
+  {sigla:'SEN',nome:'Senape'},{sigla:'SES',nome:'Sesamo'},{sigla:'SOL',nome:'Solfiti'},
+  {sigla:'LUP',nome:'Lupini'},{sigla:'MOL',nome:'Molluschi'},
+];
+let prodottiAll={}; // mappa id->prodotto per il pannello dettaglio
 
 function oraCorrente(){
   const n=new Date();
@@ -116,6 +166,8 @@ async function caricaMenu(){
       categoria:c,
       prodotti:prods.filter(p=>p.categoria_id===c.id&&p.disponibile!==false)
     })).filter(g=>g.prodotti.length>0&&orarioVisibile(g.categoria.ora_inizio,g.categoria.ora_fine));
+    // Mappa per dettaglio
+    prodottiAll={};prods.forEach(p=>prodottiAll[p.id]=p);
 
     // Banner orario
     const banner=document.getElementById('orario-banner');
@@ -171,12 +223,15 @@ function renderMenu(gruppi){
             :`<div class="prodotto-foto-placeholder">${g.categoria.emoji}</div>`;
           const prezzoBarrato=p.prezzo_barrato
             ?`<span class="prodotto-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>`:'';
-          return `<div class="prodotto">
+          const sigleHTML=p.allergeni&&p.allergeni.length
+            ?`<div class="allergeni-sigle">${p.allergeni.map(s=>`<span class="all-sigla-pill" title="Clicca per dettagli allergeni">${s}</span>`).join('')}</div>`:'';
+          return `<div class="prodotto" onclick="apriDettaglio(${p.id})" style="cursor:pointer">
             ${foto}
             <div class="prodotto-info">
               <div class="prodotto-nome">${p.nome}</div>
               ${p.descrizione?`<div class="prodotto-desc">${p.descrizione}</div>`:''}
               ${bHTML||''}
+              ${sigleHTML}
             </div>
             <div class="prodotto-prezzo-wrap">
               ${prezzoBarrato}
@@ -221,8 +276,49 @@ function filtra(){
   document.getElementById('nav-inner').innerHTML='';
 }
 
+// ── PANNELLO DETTAGLIO ──
+function apriDettaglio(id){
+  const p=prodottiAll[id];
+  if(!p)return;
+  document.getElementById('det-nome').textContent=p.nome;
+  document.getElementById('det-desc').textContent=p.descrizione||'';
+  const pb=p.prezzo_barrato?`<span style="text-decoration:line-through;color:#aaa;font-size:14px;font-family:Inter">€${Number(p.prezzo_barrato).toFixed(2)}</span> `:'';
+  document.getElementById('det-prezzo').innerHTML=pb+`€${Number(p.prezzo).toFixed(2)}`;
+
+  // Ingredienti
+  const ingWrap=document.getElementById('det-ingredienti-wrap');
+  if(p.ingredienti){
+    document.getElementById('det-ingredienti').textContent=p.ingredienti;
+    ingWrap.style.display='block';
+  } else { ingWrap.style.display='none'; }
+
+  // Allergeni
+  const allWrap=document.getElementById('det-allergeni-wrap');
+  const hasDatiAllergeni=p.allergeni!==null&&p.allergeni!==undefined;
+  if(hasDatiAllergeni){
+    const arr=p.allergeni||[];
+    document.getElementById('det-allergeni-grid').innerHTML=ALLERGENI_EU.map(a=>{
+      const presente=arr.includes(a.sigla);
+      return `<div class="all-pill ${presente?'presente':'assente'}">
+        <span class="sigla">${a.sigla}</span>
+        <span>${a.nome}</span>
+        ${presente?'<span style="margin-left:auto">⚠</span>':''}
+      </div>`;
+    }).join('');
+    allWrap.style.display='block';
+  } else { allWrap.style.display='none'; }
+
+  document.getElementById('dettaglio-overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function chiudiDettaglio(e){
+  if(e&&e.target!==document.getElementById('dettaglio-overlay')&&!e.target.classList.contains('btn-chiudi-det'))return;
+  document.getElementById('dettaglio-overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
 caricaMenu();
-// Aggiorna ogni minuto per orari
 setInterval(()=>{if(datiMenu.length)renderMenu(datiMenu);},60000);
 </script>
 </body>
