@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0045)file:///C:/Users/Utente/Downloads/menu_1.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Menù — Fratelli Caruso Torrelunga</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./menu_files/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap');
 :root{--nero:#111008;--carbone:#1e1a0f;--oro:#c8922a;--oro-v:#e8b96a;--carta:#faf6ee;--sabbia:#f0e8d8;--grigio:#7a6f63;--bianco:#ffffff;--rosso:#b03a2e;}
@@ -77,14 +77,1080 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 <body>
 <header class="hero">
   <span class="hero-anno">Dal 1955 · Palermo</span>
-  <h1>Fratelli Caruso<br><em>Torrelunga</em></h1>
-  <span class="hero-tag">Piazza Torrelunga · Palermo</span>
+  <h1>Antica Friggitoria<br><em>Fratelli Caruso</em></h1>
+  <span class="hero-tag">Corso dei Mille 803 · Piazza Torrelunga · Palermo</span>
 </header>
 <div class="orario-banner" id="orario-banner" style="display:none"></div>
-<nav class="nav-categorie" id="nav-cat"><div class="nav-inner" id="nav-inner"></div></nav>
+<nav class="nav-categorie" id="nav-cat"><div class="nav-inner" id="nav-inner"><button class="nav-btn" onclick="scorriA(&#39;cat-1&#39;)" id="nav-1">🍝 Pasta</button><button class="nav-btn" onclick="scorriA(&#39;cat-2&#39;)" id="nav-2">🥖 Panini</button><button class="nav-btn" onclick="scorriA(&#39;cat-3&#39;)" id="nav-3">🔥 Panini alla piastra</button><button class="nav-btn" onclick="scorriA(&#39;cat-4&#39;)" id="nav-4">⭐ Panini speciali</button><button class="nav-btn" onclick="scorriA(&#39;cat-5&#39;)" id="nav-5">🍔 Hamburger della casa</button><button class="nav-btn" onclick="scorriA(&#39;cat-6&#39;)" id="nav-6">🌯 Kebab</button><button class="nav-btn" onclick="scorriA(&#39;cat-7&#39;)" id="nav-7">🫓 Piadina e sandwich</button><button class="nav-btn" onclick="scorriA(&#39;cat-8&#39;)" id="nav-8">✏️ Crea la tua piadina</button><button class="nav-btn" onclick="scorriA(&#39;cat-9&#39;)" id="nav-9">🥐 Mignon</button><button class="nav-btn" onclick="scorriA(&#39;cat-10&#39;)" id="nav-10">🍟 Sfizioserie</button><button class="nav-btn" onclick="scorriA(&#39;cat-11&#39;)" id="nav-11">🥤 Bevande</button><button class="nav-btn" onclick="scorriA(&#39;cat-12&#39;)" id="nav-12">🍺 Birre</button></div></nav>
 <div class="barra-ricerca"><input class="ricerca-input" type="search" id="ricerca" placeholder="Cerca nel menù…" oninput="filtra()"></div>
-<main class="main" id="main"><div class="stato"><div class="spinner"></div>Caricamento menù…</div></main>
-<footer class="footer"><strong>Fratelli Caruso Torrelunga</strong>Piazza Torrelunga · Palermo</footer>
+<main class="main" id="main"><section class="sezione" id="cat-1">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🍝</span>
+        <h2>Pasta</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍝</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Anelletti al forno</div>
+              <div class="prodotto-desc">Anelletti al forno</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍝</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Lasagne al forno</div>
+              <div class="prodotto-desc">Lasagne al forno</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-2">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🥖</span>
+        <h2>Panini</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Calamari fritti</div>
+              <div class="prodotto-desc">Calamari fritti</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Salmone</div>
+              <div class="prodotto-desc">Salmone affumicato, salsa a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Insalata di mare</div>
+              <div class="prodotto-desc">Calamari, cozze, polpo, polpa di granchio, sottaceti</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Cotoletta di pollo</div>
+              <div class="prodotto-desc">Cotoletta di pollo fritta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Tonno</div>
+              <div class="prodotto-desc">Tonno</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Ca Meusa - Con Milza</div>
+              <div class="prodotto-desc">Panino con Milza</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Insalata mista</div>
+              <div class="prodotto-desc">Scegli la tua insalata preferita</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melanzane Arrostite</div>
+              <div class="prodotto-desc">Melanzane Arrostite</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melanzane alla Parmigiana</div>
+              <div class="prodotto-desc">Melanzane fritte, salsa di pomodoro, formaggio</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melanzane arrostite panate</div>
+              <div class="prodotto-desc">Melanzane arrostite panate</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melanzane fritte panate</div>
+              <div class="prodotto-desc">Melanzane fritte panate</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panelle</div>
+              <div class="prodotto-desc">Farina di ceci</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Cazzilli - Crocche</div>
+              <div class="prodotto-desc">Crocchette di patate</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melanzane Fritte</div>
+              <div class="prodotto-desc">Melanzane Fritte</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Patatine Fritte</div>
+              <div class="prodotto-desc">Patatine Fritte</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥖</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Caprese</div>
+              <div class="prodotto-desc">Pomodoro e mozzarella</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-3">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🔥</span>
+        <h2>Panini alla piastra</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Carne di maiale</div>
+              <div class="prodotto-desc">Carne di maiale arrostita</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Carne di vitello</div>
+              <div class="prodotto-desc">Carne di vitello arrostita</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Bacon</div>
+              <div class="prodotto-desc">Bacon, salame piccante, emmental</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Porchetta</div>
+              <div class="prodotto-desc">Porchetta di nostra produzione</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Salciccia</div>
+              <div class="prodotto-desc">Salsiccia</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Diavola</div>
+              <div class="prodotto-desc">Bacon, salame piccante, emmental, funghi, tabasco</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Topolino</div>
+              <div class="prodotto-desc">Prosciutto cotto, mozzarella, wurstel</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Cartoccio</div>
+              <div class="prodotto-desc">Prosciutto cotto, mozzarella</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🔥</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Wurstel</div>
+              <div class="prodotto-desc">Wurstel</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-4">
+      <div class="sezione-header">
+        <span class="sezione-emoji">⭐</span>
+        <h2>Panini speciali</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Esagerato</div>
+              <div class="prodotto-desc">Hamburger, porchetta, mozzarella, patatine, insalata a scelta e salsa a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Topolino sbagliato</div>
+              <div class="prodotto-desc">Bacon, wurstel, salame piccante, emmental</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panino zio Toto</div>
+              <div class="prodotto-desc">Salsiccia, salame piccante, emmental, melanzana fritta, BBQ</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Cocktail</div>
+              <div class="prodotto-desc">Gamberetti, lattuga, radicchio, salsa rosa</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panino Giovanni Caruso</div>
+              <div class="prodotto-desc">Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">⭐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Fratelli Caruso</div>
+              <div class="prodotto-desc">Salsiccia, porchetta, cipolla agrodolce, tabasco</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-5">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🍔</span>
+        <h2>Hamburger della casa</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">BBQ Burger</div>
+              <div class="prodotto-desc">Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Melted Burger</div>
+              <div class="prodotto-desc">Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Bacon Burger</div>
+              <div class="prodotto-desc">Hamburger, lattuga, bacon, pomodoro</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Cheese Burger</div>
+              <div class="prodotto-desc">Hamburger, emmental, lattuga, pomodoro</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Burger</div>
+              <div class="prodotto-desc">Hamburger</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Classic Burger</div>
+              <div class="prodotto-desc">Hamburger, lattuga, pomodoro</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍔</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Onion Burger</div>
+              <div class="prodotto-desc">Hamburger, cipolla agrodolce</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.50</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-6">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🌯</span>
+        <h2>Kebab</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🌯</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panino Kebab</div>
+              <div class="prodotto-desc">Carne di pollo e tacchino e ingredienti a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🌯</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Piadina Kebab</div>
+              <div class="prodotto-desc">Carne di pollo e tacchino e ingredienti a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-7">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🫓</span>
+        <h2>Piadina e sandwich</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🫓</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Piadina cotoletta di Pollo</div>
+              <div class="prodotto-desc">Cotoletta di pollo e lattuga</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🫓</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Sandwich Cotto</div>
+              <div class="prodotto-desc">Prosciutto cotto, mozzarella</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🫓</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Sandwich Tonno</div>
+              <div class="prodotto-desc">Tonno, pomodoro</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🫓</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Schiacciata cotto</div>
+              <div class="prodotto-desc">Prosciutto cotto, mozzarella, pomodoro a fette</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🫓</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Schiacciata tonno</div>
+              <div class="prodotto-desc">Tonno, pomodoro a fette</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-8">
+      <div class="sezione-header">
+        <span class="sezione-emoji">✏️</span>
+        <h2>Crea la tua piadina</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">✏️</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Crea la tua piadina</div>
+              <div class="prodotto-desc">Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€4.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-9">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🥐</span>
+        <h2>Mignon</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Rosticceria Mignon</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panineria Mignon</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Spiedini con Carne</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Crostini con Prosciutto, mozzarella e Besciamella</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Arancine Mignon Carne</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥐</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Arancine mignon burro</div>
+              <div class="prodotto-desc">€ 8,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€8.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-10">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🍟</span>
+        <h2>Sfizioserie</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Vaschetta Insalata di mare 200gr</div>
+              <div class="prodotto-desc">€ 25,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Ali di pollo e paprika</div>
+              <div class="prodotto-desc">€ 15,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€15.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Birbe di pollo</div>
+              <div class="prodotto-desc">€ 15,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€15.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Anelli di cipolla</div>
+              <div class="prodotto-desc">€ 15,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€15.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Milza e polmone di vitello</div>
+              <div class="prodotto-desc">€ 10,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€10.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Mozzarelline Fritte</div>
+              <div class="prodotto-desc">€ 15,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€15.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Vaschetta Calamari Fritti 200gr</div>
+              <div class="prodotto-desc">€ 25,00 al Kg</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Vaschetta patatine grande</div>
+              <div class="prodotto-desc">con salsa a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€5.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Vaschetta patatine media</div>
+              <div class="prodotto-desc">con salsa a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Vaschetta patatine piccola</div>
+              <div class="prodotto-desc">con salsa a scelta</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Crocche singole fritte</div>
+              <div class="prodotto-desc">Crocchette di patata, prezzemolo</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€0.20</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panelle singole fritte</div>
+              <div class="prodotto-desc">Farina di ceci, acqua, sale, prezzemolo</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€0.20</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Panelle singole crude</div>
+              <div class="prodotto-desc">Farina di ceci, acqua, sale, prezzemolo</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€0.15</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍟</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Crocche singole crude</div>
+              <div class="prodotto-desc">Da friggere</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€0.15</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-11">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🥤</span>
+        <h2>Bevande</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Acqua naturale 1.5 Lt</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Coca-Cola Lattina 330 ml</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Coca-Cola Zero Lattina 330 ml</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Fanta Lattina 330 ml</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Sprite Lattina 330 ml</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Chinotto Lattina 330 ml</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Acqua naturale 50 cl</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Acqua frizzante 50 cl</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Gazzosa</div>
+              <div class="prodotto-desc">Partannina</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🥤</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Spuma</div>
+              
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.00</div>
+            </div>
+          </div>
+      </div>
+    </section><section class="sezione" id="cat-12">
+      <div class="sezione-header">
+        <span class="sezione-emoji">🍺</span>
+        <h2>Birre</h2>
+        
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">
+        <div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Becks 66 cl</div>
+              <div class="prodotto-desc">66 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Peroni Nastro Azzurro 66 cl</div>
+              <div class="prodotto-desc">Birra premium lager italiana 5.0% vol.</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Ceres</div>
+              <div class="prodotto-desc">33 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Tennents</div>
+              <div class="prodotto-desc">33 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€3.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Moretti 66 cl</div>
+              <div class="prodotto-desc">66 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.50</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Becks 33 cl</div>
+              <div class="prodotto-desc">33 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Peroni Nastro Azzurro 33 cl</div>
+              <div class="prodotto-desc">Birra premium lager italiana 5.0% vol.</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€2.00</div>
+            </div>
+          </div><div class="prodotto">
+            <div class="prodotto-foto-placeholder">🍺</div>
+            <div class="prodotto-info">
+              <div class="prodotto-nome">Moretti 33 cl</div>
+              <div class="prodotto-desc">Moretti 33 cl</div>
+              
+            </div>
+            <div class="prodotto-prezzo-wrap">
+              
+              <div class="prodotto-prezzo">€1.50</div>
+            </div>
+          </div>
+      </div>
+    </section></main>
+<footer class="footer"><strong>Antica Friggitoria Fratelli Caruso</strong>Corso dei Mille 803 · Piazza Torrelunga · Palermo</footer>
 
 <script>
 const SUPABASE_URL  = 'https://cmqaujrjrhmwxfkgvrgp.supabase.co';
@@ -225,5 +1291,6 @@ caricaMenu();
 // Aggiorna ogni minuto per orari
 setInterval(()=>{if(datiMenu.length)renderMenu(datiMenu);},60000);
 </script>
-</body>
-</html>
+
+
+</body></html>
