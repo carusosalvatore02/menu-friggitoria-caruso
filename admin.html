@@ -26,8 +26,9 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .topbar h1{font-family:'Playfair Display',serif;font-size:17px;color:var(--oro);flex:1;}
 .topbar-btn{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;}
 .topbar-btn.anteprima{background:var(--oro);border-color:var(--oro);color:var(--nero);font-weight:600;}
-.tabs{background:var(--nero);display:flex;border-top:1px solid rgba(255,255,255,.06);}
-.tab-btn{flex:1;padding:12px 8px;background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;transition:all .15s;}
+.tabs{background:var(--nero);display:flex;border-top:1px solid rgba(255,255,255,.06);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;padding:12px 14px;background:none;border:none;color:rgba(255,255,255,.4);font-size:11px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;}
 .tab-btn.attivo{color:var(--oro);border-bottom-color:var(--oro);}
 .contenuto{max-width:700px;margin:0 auto;padding:20px 16px 80px;}
 .drag-list{list-style:none;}
@@ -87,8 +88,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .foto-preview-img{width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;display:none;}
 .foto-area-testo{font-size:13px;color:var(--grigio);}
 .foto-area-testo strong{color:var(--oro);}
-
-/* MULTI-BADGE CHECKBOX */
 .badges-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
 .badge-chk{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #e8dfd0;border-radius:8px;cursor:pointer;transition:all .15s;background:var(--bianco);}
 .badge-chk:hover{border-color:var(--oro);background:#fffdf8;}
@@ -96,14 +95,10 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .badge-chk input{width:16px;height:16px;accent-color:var(--oro);cursor:pointer;flex-shrink:0;}
 .badge-chk .bc-icon{font-size:14px;}
 .badge-chk .bc-label{font-size:12px;font-weight:600;}
-
-/* PREFERITO TOGGLE */
 .preferito-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1.5px solid #e8dfd0;border-radius:10px;background:var(--bianco);margin-bottom:13px;}
 .preferito-row.attivo{border-color:var(--oro);background:#fffcf0;}
 .preferito-label{font-size:13px;font-weight:600;color:var(--nero);}
 .preferito-sub{font-size:11px;color:var(--grigio);margin-top:1px;}
-
-/* ALLERGENI CHECKBOX */
 .allergeni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
 .all-check{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #e8dfd0;border-radius:8px;cursor:pointer;transition:all .15s;background:var(--bianco);}
 .all-check:hover{border-color:var(--oro);background:#fffdf8;}
@@ -111,7 +106,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .all-check input{width:16px;height:16px;accent-color:var(--rosso);cursor:pointer;flex-shrink:0;}
 .all-check .all-nome{font-size:12px;font-weight:500;color:var(--nero);}
 .all-check .all-sigla{font-size:10px;color:var(--grigio);margin-left:auto;}
-
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--nero);color:var(--carta);padding:13px 22px;border-radius:12px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.35);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;max-width:300px;text-align:center;pointer-events:none;}
 #toast.show{transform:translateX(-50%) translateY(0);}
 #toast.ok{border-top:3px solid var(--oro);}
@@ -130,6 +124,35 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .upload-progress{height:4px;background:#e8dfd0;border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
 .upload-progress-bar{height:100%;background:var(--oro);border-radius:2px;width:0%;transition:width .3s;}
 .sezione-titolo-modale{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grigio);margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #e8dfd0;}
+
+/* ── POPOLARITÀ ── */
+.pop-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.pop-header h2{font-family:'Playfair Display',serif;font-size:18px;}
+.pop-reset-btn{background:none;border:1.5px solid var(--rosso);color:var(--rosso);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+.pop-reset-btn:hover{background:#fef0ef;}
+.pop-filtro{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.pop-chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #d4c9bb;background:var(--bianco);color:var(--grigio);transition:all .15s;}
+.pop-chip.attivo{background:var(--nero);color:var(--carta);border-color:var(--nero);}
+.pop-item{background:var(--bianco);border:1.5px solid #e8dfd0;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.pop-rank{width:28px;font-size:12px;font-weight:700;color:var(--grigio);text-align:center;flex-shrink:0;}
+.pop-rank.top1{color:#c8922a;font-size:16px;}
+.pop-rank.top2{color:#888;}
+.pop-rank.top3{color:#a05c20;}
+.pop-foto{width:44px;height:44px;border-radius:8px;flex-shrink:0;background:var(--sabbia);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;}
+.pop-foto img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.pop-info{flex:1;min-width:0;}
+.pop-nome{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pop-cat{font-size:11px;color:var(--grigio);margin-top:1px;}
+.pop-bar-wrap{flex:1;min-width:60px;}
+.pop-bar-bg{background:#e8dfd0;border-radius:4px;height:6px;overflow:hidden;}
+.pop-bar-fill{height:100%;background:linear-gradient(90deg,var(--oro),var(--oro-v));border-radius:4px;transition:width .4s;}
+.pop-count{font-size:11px;font-weight:700;color:var(--nero);white-space:nowrap;flex-shrink:0;text-align:right;min-width:44px;}
+.pop-count small{display:block;font-size:9px;color:var(--grigio);font-weight:400;}
+.pop-loading{text-align:center;padding:30px;color:var(--grigio);font-size:13px;}
+.pop-spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--sabbia);border-top-color:var(--oro);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pop-vuoto{text-align:center;padding:40px 20px;color:var(--grigio);}
+.pop-vuoto strong{display:block;font-size:28px;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -158,6 +181,7 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
   <div class="tabs">
     <button class="tab-btn attivo" onclick="mostraTab('prodotti')">🍽️ Prodotti</button>
     <button class="tab-btn" onclick="mostraTab('categorie')">📂 Categorie</button>
+    <button class="tab-btn" onclick="mostraTab('popolarita')">📊 Popolarità</button>
   </div>
   <div class="contenuto">
     <div id="tab-prodotti">
@@ -167,6 +191,18 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
     <div id="tab-categorie" style="display:none">
       <button class="btn-aggiungi" onclick="apriModaleCategoria()">+ Aggiungi categoria</button>
       <div id="lista-categorie"><div class="empty">Caricamento…</div></div>
+    </div>
+    <div id="tab-popolarita" style="display:none">
+      <div class="pop-header">
+        <h2>📊 Prodotti più cliccati</h2>
+        <button class="pop-reset-btn" onclick="resetPopolarita()">🗑 Reset contatori</button>
+      </div>
+      <div class="pop-filtro">
+        <button class="pop-chip attivo" id="pchip-tutti" onclick="filtroPop('tutti')">Tutti</button>
+        <button class="pop-chip" id="pchip-lista" onclick="filtroPop('lista')">👆 Tap lista</button>
+        <button class="pop-chip" id="pchip-dettaglio" onclick="filtroPop('dettaglio')">🔍 Aperture dettaglio</button>
+      </div>
+      <div id="pop-content"><div class="pop-loading"><span class="pop-spinner"></span>Caricamento…</div></div>
     </div>
   </div>
 </div>
@@ -182,12 +218,8 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
       <div class="campo"><label>Prezzo (€)</label><input type="number" id="prod-prezzo" placeholder="0.00" min="0" step="0.05"></div>
       <div class="campo"><label>Prezzo barrato (€)</label><input type="number" id="prod-prezzo-barrato" placeholder="Lascia vuoto" min="0" step="0.05"></div>
     </div>
-
-    <!-- MULTI-BADGE -->
     <div class="sezione-titolo-modale">🏷️ Badge</div>
     <div class="badges-grid" id="badges-checkboxes"></div>
-
-    <!-- PREFERITO -->
     <div class="sezione-titolo-modale">⭐ Sezione Preferiti</div>
     <div class="preferito-row" id="preferito-row" onclick="togglePreferito()">
       <div>
@@ -196,8 +228,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
       </div>
       <button class="toggle-disp" id="prod-preferito" onclick="event.stopPropagation();togglePreferito()"></button>
     </div>
-
-    <!-- ORARI -->
     <div class="campo">
       <label>Visibile solo in questi orari <span style="color:#aaa;font-weight:400">(lascia vuoto = sempre)</span></label>
       <div class="campo-row">
@@ -205,8 +235,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
         <div class="campo" style="margin:0"><label>Alle</label><input type="time" id="prod-ora-fine"></div>
       </div>
     </div>
-
-    <!-- FOTO -->
     <div class="campo">
       <label>Foto prodotto</label>
       <div class="foto-area" id="foto-area" ondragover="fotagOver(event)" ondragleave="fotaLeave(event)" ondrop="fotaDrop(event)">
@@ -217,24 +245,16 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
       </div>
       <input type="text" id="prod-foto-url" placeholder="oppure incolla URL foto…" style="margin-top:4px">
     </div>
-
-    <!-- ALLERGENI -->
     <div class="sezione-titolo-modale">⚠️ Allergeni presenti</div>
     <div class="allergeni-grid" id="allergeni-checkboxes"></div>
-
-    <!-- INGREDIENTI COMPLETI -->
     <div class="campo" style="margin-top:14px">
       <label>Ingredienti completi <span style="color:#aaa;font-weight:400">(dettaglio interno)</span></label>
       <textarea id="prod-ingredienti" placeholder="Es. Farina di ceci, prezzemolo, sale, olio di semi…" style="min-height:80px"></textarea>
     </div>
-
-    <!-- ABBINAMENTI -->
     <div class="campo">
       <label>Abbinamenti consigliati</label>
       <textarea id="prod-abbinamenti" placeholder="Es. Ottimo con una birra artigianale o una Spuma ghiacciata. Prova anche le panelle come antipasto…" style="min-height:80px"></textarea>
     </div>
-
-    <!-- DISPONIBILITÀ -->
     <div class="campo" style="display:flex;align-items:center;gap:10px;margin-top:4px;">
       <label style="margin:0">Disponibile</label>
       <button class="toggle-disp on" id="prod-disp" onclick="this.classList.toggle('on')"></button>
@@ -286,17 +306,17 @@ const ALLERGENI_EU = [
   {sigla:'SEN',nome:'Senape'},{sigla:'SES',nome:'Sesamo'},{sigla:'SOL',nome:'Solfiti'},
   {sigla:'LUP',nome:'Lupini'},{sigla:'MOL',nome:'Molluschi'},
 ];
-
 const BADGES_DEF = [
-  {k:'senza-glutine', label:'Senza Glutine', icon:'🌾', cls:'badge-senza-glutine'},
-  {k:'best-seller',   label:'Best Seller',   icon:'🔥', cls:'badge-best-seller'},
-  {k:'novita',        label:'Novità',        icon:'🆕', cls:'badge-novita'},
-  {k:'consigliato',   label:'Consigliato',   icon:'⭐', cls:'badge-consigliato'},
-  {k:'piccante',      label:'Piccante',      icon:'🌶️', cls:'badge-piccante'},
-  {k:'vegano',        label:'Vegano',        icon:'🌱', cls:'badge-vegano'},
+  {k:'senza-glutine',label:'Senza Glutine',icon:'🌾',cls:'badge-senza-glutine'},
+  {k:'best-seller',label:'Best Seller',icon:'🔥',cls:'badge-best-seller'},
+  {k:'novita',label:'Novità',icon:'🆕',cls:'badge-novita'},
+  {k:'consigliato',label:'Consigliato',icon:'⭐',cls:'badge-consigliato'},
+  {k:'piccante',label:'Piccante',icon:'🌶️',cls:'badge-piccante'},
+  {k:'vegano',label:'Vegano',icon:'🌱',cls:'badge-vegano'},
 ];
 
 let categorie=[], prodotti=[], editId=null, fotoFile=null;
+let popFiltro = 'tutti';
 
 // ── PIN ──
 let pinBuf='';
@@ -307,15 +327,13 @@ function pconf(){
   if(pinBuf!==PIN_ADMIN){document.getElementById('login-err').textContent='PIN errato';pinBuf='';aggPin();return;}
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='block';
-  costruisciCheckboxAllergeni();
-  costruisciCheckboxBadges();
-  carica();
+  costruisciCheckboxAllergeni();costruisciCheckboxBadges();carica();
 }
 function logout(){document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';pinBuf='';aggPin();}
 
 // ── ALLERGENI CHECKBOX ──
 function costruisciCheckboxAllergeni(){
-  document.getElementById('allergeni-checkboxes').innerHTML = ALLERGENI_EU.map(a=>`
+  document.getElementById('allergeni-checkboxes').innerHTML=ALLERGENI_EU.map(a=>`
     <label class="all-check" id="all-${a.sigla}" onclick="toggleAllCheck('${a.sigla}',this)">
       <input type="checkbox" id="chk-${a.sigla}" onclick="event.stopPropagation()">
       <span class="all-nome">${a.nome}</span>
@@ -324,17 +342,11 @@ function costruisciCheckboxAllergeni(){
 }
 function toggleAllCheck(sigla,el){const chk=document.getElementById('chk-'+sigla);chk.checked=!chk.checked;el.classList.toggle('sel',chk.checked);}
 function getAllergeniSelezionati(){return ALLERGENI_EU.filter(a=>document.getElementById('chk-'+a.sigla)?.checked).map(a=>a.sigla);}
-function setAllergeniCheckbox(arr){
-  ALLERGENI_EU.forEach(a=>{
-    const chk=document.getElementById('chk-'+a.sigla);
-    const lbl=document.getElementById('all-'+a.sigla);
-    if(chk&&lbl){chk.checked=arr&&arr.includes(a.sigla);lbl.classList.toggle('sel',chk.checked);}
-  });
-}
+function setAllergeniCheckbox(arr){ALLERGENI_EU.forEach(a=>{const chk=document.getElementById('chk-'+a.sigla);const lbl=document.getElementById('all-'+a.sigla);if(chk&&lbl){chk.checked=arr&&arr.includes(a.sigla);lbl.classList.toggle('sel',chk.checked);}});}
 
 // ── BADGES MULTI-CHECKBOX ──
 function costruisciCheckboxBadges(){
-  document.getElementById('badges-checkboxes').innerHTML = BADGES_DEF.map(b=>`
+  document.getElementById('badges-checkboxes').innerHTML=BADGES_DEF.map(b=>`
     <label class="badge-chk" id="badgechk-${b.k}" onclick="toggleBadgeCheck('${b.k}',this)">
       <input type="checkbox" id="bchk-${b.k}" onclick="event.stopPropagation()">
       <span class="bc-icon">${b.icon}</span>
@@ -343,36 +355,23 @@ function costruisciCheckboxBadges(){
 }
 function toggleBadgeCheck(k,el){const chk=document.getElementById('bchk-'+k);chk.checked=!chk.checked;el.classList.toggle('sel',chk.checked);}
 function getBadgesSelezionati(){return BADGES_DEF.filter(b=>document.getElementById('bchk-'+b.k)?.checked).map(b=>b.k);}
-function setBadgesCheckbox(arr){
-  BADGES_DEF.forEach(b=>{
-    const chk=document.getElementById('bchk-'+b.k);
-    const lbl=document.getElementById('badgechk-'+b.k);
-    if(chk&&lbl){chk.checked=arr&&arr.includes(b.k);lbl.classList.toggle('sel',chk.checked);}
-  });
-}
+function setBadgesCheckbox(arr){BADGES_DEF.forEach(b=>{const chk=document.getElementById('bchk-'+b.k);const lbl=document.getElementById('badgechk-'+b.k);if(chk&&lbl){chk.checked=arr&&arr.includes(b.k);lbl.classList.toggle('sel',chk.checked);}});}
 
 // ── PREFERITO ──
-function togglePreferito(){
-  const btn=document.getElementById('prod-preferito');
-  const row=document.getElementById('preferito-row');
-  btn.classList.toggle('on');
-  row.classList.toggle('attivo',btn.classList.contains('on'));
-}
+function togglePreferito(){const btn=document.getElementById('prod-preferito');const row=document.getElementById('preferito-row');btn.classList.toggle('on');row.classList.toggle('attivo',btn.classList.contains('on'));}
 
 // ── CARICAMENTO ──
 async function carica(){
-  const[r1,r2]=await Promise.all([
-    sb.from('categorie').select('*').order('ordine'),
-    sb.from('prodotti').select('*').order('ordine')
-  ]);
+  const[r1,r2]=await Promise.all([sb.from('categorie').select('*').order('ordine'),sb.from('prodotti').select('*').order('ordine')]);
   categorie=r1.data||[];prodotti=r2.data||[];
   renderProdotti();renderCategorie();
 }
 
 // ── TAB ──
 function mostraTab(nome){
-  ['prodotti','categorie'].forEach(t=>document.getElementById('tab-'+t).style.display=t===nome?'block':'none');
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('attivo',['prodotti','categorie'][i]===nome));
+  ['prodotti','categorie','popolarita'].forEach(t=>document.getElementById('tab-'+t).style.display=t===nome?'block':'none');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('attivo',['prodotti','categorie','popolarita'][i]===nome));
+  if(nome==='popolarita') caricaPopolarita();
 }
 
 // ── RENDER PRODOTTI ──
@@ -441,7 +440,6 @@ function inizializzaDrag(){
     handle.addEventListener('touchend',e=>{if(clone){document.body.removeChild(clone);clone=null;}if(touchEl){touchEl.style.opacity='';document.querySelectorAll('.drag-item').forEach(x=>x.classList.remove('drag-over'));salvaOrdineProdotti(touchEl.closest('.drag-list'));touchEl=null;}});
   });
 }
-
 async function salvaOrdineProdotti(list){
   const items=[...list.querySelectorAll('.drag-item')];
   await Promise.all(items.map((el,i)=>sb.from('prodotti').update({ordine:i+1}).eq('id',el.dataset.id)));
@@ -473,7 +471,6 @@ function renderCategorie(){
     el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');salvaOrdineCategorie();});
   });
 }
-
 async function salvaOrdineCategorie(){
   const items=[...document.querySelectorAll('.cat-admin-item')];
   await Promise.all(items.map((el,i)=>sb.from('categorie').update({ordine:i+1}).eq('id',el.dataset.id)));
@@ -517,7 +514,7 @@ async function caricaFoto(){
 
 // ── MODALE PRODOTTO ──
 function apriModaleProdotto(id){
-  editId=id||null; fotoFile=null;
+  editId=id||null;fotoFile=null;
   const p=id?prodotti.find(x=>x.id===id):null;
   document.getElementById('modal-prod-titolo').textContent=p?'Modifica prodotto':'Nuovo prodotto';
   document.getElementById('prod-cat').innerHTML=categorie.map(c=>`<option value="${c.id}"${p&&p.categoria_id===c.id?' selected':''}>${c.emoji} ${c.nome}</option>`).join('');
@@ -533,14 +530,11 @@ function apriModaleProdotto(id){
   const img=document.getElementById('foto-preview');
   if(p?.foto_url){img.src=p.foto_url;img.style.display='block';document.getElementById('foto-testo').textContent='Foto attuale';}
   else{img.style.display='none';document.getElementById('foto-testo').innerHTML='📷 <strong>Tocca per scegliere una foto</strong><br><span style="font-size:11px">JPG, PNG, WEBP · max 5MB</span>';}
-  setBadgesCheckbox(p?.badges||[]);
-  setAllergeniCheckbox(p?.allergeni||[]);
-  // Preferito
+  setBadgesCheckbox(p?.badges||[]);setAllergeniCheckbox(p?.allergeni||[]);
   const prefBtn=document.getElementById('prod-preferito');
   const prefRow=document.getElementById('preferito-row');
   const isPref=p?.is_preferito||false;
-  prefBtn.classList.toggle('on',isPref);
-  prefRow.classList.toggle('attivo',isPref);
+  prefBtn.classList.toggle('on',isPref);prefRow.classList.toggle('attivo',isPref);
   document.getElementById('prod-disp').classList.toggle('on',p?.disponibile!==false);
   document.getElementById('btn-elimina-prod').style.display=p?'block':'none';
   document.getElementById('modal-prodotto').classList.add('show');
@@ -553,40 +547,18 @@ async function salvaProdotto(){
   if(!nome||isNaN(prezzo)){toast('Inserisci nome e prezzo','err');return;}
   let fotoUrl=document.getElementById('prod-foto-url').value.trim()||null;
   if(fotoFile){const url=await caricaFoto();if(url)fotoUrl=url;}
-  const dati={
-    categoria_id:parseInt(document.getElementById('prod-cat').value),
-    nome,
-    descrizione:document.getElementById('prod-desc').value.trim(),
-    prezzo,
-    prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,
-    badges:getBadgesSelezionati(),
-    is_preferito:document.getElementById('prod-preferito').classList.contains('on'),
-    ora_inizio:document.getElementById('prod-ora-inizio').value||null,
-    ora_fine:document.getElementById('prod-ora-fine').value||null,
-    foto_url:fotoUrl,
-    disponibile:document.getElementById('prod-disp').classList.contains('on'),
-    allergeni:getAllergeniSelezionati(),
-    ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,
-    abbinamenti:document.getElementById('prod-abbinamenti').value.trim()||null,
-  };
+  const dati={categoria_id:parseInt(document.getElementById('prod-cat').value),nome,descrizione:document.getElementById('prod-desc').value.trim(),prezzo,prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,badges:getBadgesSelezionati(),is_preferito:document.getElementById('prod-preferito').classList.contains('on'),ora_inizio:document.getElementById('prod-ora-inizio').value||null,ora_fine:document.getElementById('prod-ora-fine').value||null,foto_url:fotoUrl,disponibile:document.getElementById('prod-disp').classList.contains('on'),allergeni:getAllergeniSelezionati(),ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,abbinamenti:document.getElementById('prod-abbinamenti').value.trim()||null};
   if(editId){await sb.from('prodotti').update(dati).eq('id',editId);toast('Prodotto aggiornato ✓','ok');}
   else{dati.ordine=prodotti.filter(p=>p.categoria_id===dati.categoria_id).length+1;await sb.from('prodotti').insert(dati);toast('Prodotto aggiunto ✓','ok');}
   chiudiModale('modal-prodotto');await carica();
 }
-
-async function eliminaProdottoModal(){
-  if(!editId||!confirm('Eliminare questo prodotto?'))return;
-  await sb.from('prodotti').delete().eq('id',editId);
-  chiudiModale('modal-prodotto');await carica();toast('Prodotto eliminato','ok');
-}
+async function eliminaProdottoModal(){if(!editId||!confirm('Eliminare questo prodotto?'))return;await sb.from('prodotti').delete().eq('id',editId);chiudiModale('modal-prodotto');await carica();toast('Prodotto eliminato','ok');}
 
 // ── MODALE CATEGORIA ──
 function apriModaleCategoria(id){
-  editId=id||null;
-  const c=id?categorie.find(x=>x.id===id):null;
+  editId=id||null;const c=id?categorie.find(x=>x.id===id):null;
   document.getElementById('modal-cat-titolo').textContent=c?'Modifica categoria':'Nuova categoria';
-  document.getElementById('cat-nome').value=c?.nome||'';
-  document.getElementById('cat-emoji').value=c?.emoji||'🍽️';
+  document.getElementById('cat-nome').value=c?.nome||'';document.getElementById('cat-emoji').value=c?.emoji||'🍽️';
   document.getElementById('cat-ordine').value=c?.ordine||(categorie.length+1);
   document.getElementById('cat-ora-inizio').value=c?.ora_inizio?.slice(0,5)||'';
   document.getElementById('cat-ora-fine').value=c?.ora_fine?.slice(0,5)||'';
@@ -595,17 +567,85 @@ function apriModaleCategoria(id){
 }
 function modificaCategoria(id){apriModaleCategoria(id);}
 async function salvaCategoria(){
-  const nome=document.getElementById('cat-nome').value.trim();
-  if(!nome){toast('Inserisci il nome','err');return;}
+  const nome=document.getElementById('cat-nome').value.trim();if(!nome){toast('Inserisci il nome','err');return;}
   const dati={nome,emoji:document.getElementById('cat-emoji').value.trim()||'🍽️',ordine:parseInt(document.getElementById('cat-ordine').value)||99,attiva:true,ora_inizio:document.getElementById('cat-ora-inizio').value||null,ora_fine:document.getElementById('cat-ora-fine').value||null};
   if(editId){await sb.from('categorie').update(dati).eq('id',editId);toast('Categoria aggiornata ✓','ok');}
   else{await sb.from('categorie').insert(dati);toast('Categoria aggiunta ✓','ok');}
   chiudiModale('modal-categoria');await carica();
 }
-async function eliminaCategoriaModal(){
-  if(!editId||!confirm('Eliminare questa categoria?'))return;
-  await sb.from('categorie').delete().eq('id',editId);
-  chiudiModale('modal-categoria');await carica();toast('Categoria eliminata','ok');
+async function eliminaCategoriaModal(){if(!editId||!confirm('Eliminare questa categoria?'))return;await sb.from('categorie').delete().eq('id',editId);chiudiModale('modal-categoria');await carica();toast('Categoria eliminata','ok');}
+
+// ── POPOLARITÀ ──
+async function caricaPopolarita(){
+  document.getElementById('pop-content').innerHTML='<div class="pop-loading"><span class="pop-spinner"></span>Caricamento dati…</div>';
+  try {
+    let query = sb.from('tap_log').select('prodotto_id, tipo');
+    if (popFiltro !== 'tutti') query = query.eq('tipo', popFiltro);
+    const { data: taps, error } = await query;
+    if (error) throw error;
+    if (!taps || taps.length === 0) {
+      document.getElementById('pop-content').innerHTML='<div class="pop-vuoto"><strong>📊</strong>Nessun dato ancora.<br><small>I tap del menu appariranno qui.</small></div>';
+      return;
+    }
+    // Aggrega per prodotto
+    const conteggi = {};
+    taps.forEach(t => {
+      if (!conteggi[t.prodotto_id]) conteggi[t.prodotto_id] = { lista: 0, dettaglio: 0, totale: 0 };
+      conteggi[t.prodotto_id][t.tipo] = (conteggi[t.prodotto_id][t.tipo] || 0) + 1;
+      conteggi[t.prodotto_id].totale++;
+    });
+    // Ordina
+    const ordinati = Object.entries(conteggi).sort((a,b) => b[1].totale - a[1].totale);
+    const massimo = ordinati.length > 0 ? ordinati[0][1].totale : 1;
+    let html = '';
+    ordinati.forEach(([prodId, cnt], idx) => {
+      const p = prodotti.find(x => x.id == prodId);
+      const cat = p ? categorie.find(c => c.id === p.categoria_id) : null;
+      const nome = p ? p.nome : `Prodotto #${prodId}`;
+      const catNome = cat ? `${cat.emoji} ${cat.nome}` : '';
+      const fotoSrc = p?.foto_url ? `<img src="${p.foto_url}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:18px">${cat?.emoji||'🍽️'}</span>` : `<span style="font-size:18px">${cat?.emoji||'🍽️'}</span>`;
+      const pct = Math.round((cnt.totale / massimo) * 100);
+      const rankClass = idx === 0 ? 'top1' : idx === 1 ? 'top2' : idx === 2 ? 'top3' : '';
+      const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx+1}`;
+      html += `<div class="pop-item">
+        <div class="pop-rank ${rankClass}">${rankIcon}</div>
+        <div class="pop-foto">${fotoSrc}</div>
+        <div class="pop-info">
+          <div class="pop-nome">${nome}</div>
+          <div class="pop-cat">${catNome}</div>
+        </div>
+        <div class="pop-bar-wrap">
+          <div class="pop-bar-bg"><div class="pop-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="pop-count">
+          ${cnt.totale} tap
+          <small>${cnt.lista||0} lista · ${cnt.dettaglio||0} det.</small>
+        </div>
+      </div>`;
+    });
+    document.getElementById('pop-content').innerHTML = html;
+  } catch(e) {
+    document.getElementById('pop-content').innerHTML='<div class="pop-vuoto"><strong>⚠️</strong>Errore nel caricamento.<br><small>Verifica la tabella tap_log su Supabase.</small></div>';
+  }
+}
+
+function filtroPop(filtro){
+  popFiltro = filtro;
+  ['tutti','lista','dettaglio'].forEach(f=>{
+    document.getElementById('pchip-'+f)?.classList.toggle('attivo', f===filtro);
+  });
+  caricaPopolarita();
+}
+
+async function resetPopolarita(){
+  if(!confirm('Sicuro di voler azzerare tutti i contatori? L\'operazione non è reversibile.'))return;
+  try {
+    await sb.from('tap_log').delete().neq('id', 0); // elimina tutto
+    toast('Contatori azzerati ✓','ok');
+    caricaPopolarita();
+  } catch(e){
+    toast('Errore nel reset','err');
+  }
 }
 
 // ── ANTEPRIMA ──

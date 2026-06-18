@@ -11,6 +11,33 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);min-height:100vh;-webkit-font-smoothing:antialiased;}
 
+/* ── SELEZIONE LINGUA ── */
+#lang-screen{position:fixed;inset:0;background:var(--nero);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;}
+#lang-screen h1{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,34px);font-weight:900;color:var(--bianco);text-align:center;margin-bottom:4px;}
+#lang-screen h1 em{font-style:italic;color:var(--oro-v);}
+#lang-screen .lang-sub{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;text-align:center;}
+#lang-screen .lang-badge{font-size:12px;color:var(--oro-v);background:rgba(200,146,42,.15);border:1px solid rgba(200,146,42,.3);border-radius:20px;padding:5px 14px;margin-bottom:32px;text-align:center;}
+.lang-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:380px;}
+.lang-btn{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .2s;color:var(--bianco);font-family:'Inter',sans-serif;font-size:14px;font-weight:500;}
+.lang-btn:hover{background:rgba(200,146,42,.15);border-color:rgba(200,146,42,.5);}
+.lang-flag{font-size:24px;flex-shrink:0;}
+.lang-nome{text-align:left;line-height:1.2;}
+.lang-nome small{display:block;font-size:10px;color:rgba(255,255,255,.4);font-weight:400;}
+
+/* ── BANNER ORARI ── */
+.orario-banner{background:linear-gradient(90deg,#1a1200,#2a1e00,#1a1200);color:var(--oro-v);text-align:center;padding:9px 16px;font-size:12px;letter-spacing:.04em;border-bottom:1px solid rgba(200,146,42,.2);}
+.orario-banner strong{color:var(--oro);}
+
+/* ── BANNER INGLESE ── */
+.lang-notice{background:#0d1520;border-bottom:1px solid rgba(100,160,255,.15);color:rgba(200,220,255,.7);text-align:center;padding:7px 16px;font-size:11px;letter-spacing:.03em;}
+.lang-notice strong{color:rgba(150,200,255,.9);}
+
+/* ── BANNER FUORI MENU ── */
+.fuori-menu-banner{background:#1e0800;border-bottom:1px solid rgba(176,58,46,.3);color:rgba(255,160,140,.85);padding:9px 16px 9px 14px;font-size:12px;display:none;}
+.fuori-menu-banner strong{color:#ff8870;display:block;margin-bottom:2px;}
+.fuori-menu-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.fuori-menu-pill{background:rgba(176,58,46,.2);border:1px solid rgba(176,58,46,.4);border-radius:10px;padding:2px 9px;font-size:11px;color:#ffaa90;}
+
 /* HERO */
 .hero{background:var(--nero);padding:40px 24px 32px;text-align:center;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 100%,rgba(200,146,42,.18) 0%,transparent 70%);pointer-events:none;}
@@ -18,6 +45,8 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,42px);font-weight:900;color:var(--bianco);line-height:1.1;margin-bottom:6px;}
 .hero h1 em{font-style:italic;font-weight:400;color:var(--oro-v);}
 .hero-tag{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.18em;text-transform:uppercase;margin-top:10px;display:block;}
+.hero-lang-btn{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 11px;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;display:flex;align-items:center;gap:5px;}
+.hero-lang-btn:hover{background:rgba(200,146,42,.2);border-color:var(--oro);}
 
 /* NAV */
 .nav-categorie{position:sticky;top:0;z-index:20;background:var(--nero);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid rgba(200,146,42,.2);}
@@ -108,9 +137,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .footer{background:var(--nero);color:rgba(255,255,255,.35);text-align:center;padding:24px;font-size:11px;letter-spacing:.08em;}
 .footer strong{color:var(--oro);display:block;font-size:13px;margin-bottom:4px;}
 
-/* BANNER ORARIO */
-.orario-banner{background:var(--nero);color:var(--oro-v);text-align:center;padding:8px 16px;font-size:12px;letter-spacing:.04em;}
-
 /* BADGE STILI */
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
 .badge-senza-glutine{background:#e8f5e9;color:#2d6a4f;}
@@ -119,7 +145,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .badge-consigliato{background:#fff8e1;color:#b08000;}
 .badge-piccante{background:#fce4e4;color:#b03a2e;}
 .badge-vegano{background:#f0faf0;color:#276749;}
-.badge-nd{color:var(--rosso);}
 
 /* PANNELLO DETTAGLIO */
 .dettaglio-overlay{display:none;position:fixed;inset:0;background:rgba(17,16,8,.6);z-index:100;align-items:flex-end;justify-content:center;}
@@ -139,49 +164,91 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .all-pill.assente{background:var(--sabbia);border:1px solid #e8dfd0;color:#aaa;}
 .all-pill .sigla{font-size:10px;font-weight:700;width:28px;flex-shrink:0;}
 .nota-allergeni{font-size:11px;color:var(--grigio);margin-top:12px;font-style:italic;}
-
-/* ABBINAMENTI */
 .det-abbinamenti{background:linear-gradient(135deg,var(--nero),var(--carbone));border-radius:12px;padding:14px 16px;margin-top:4px;}
 .det-abbinamenti-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--oro);margin-bottom:6px;}
 .det-abbinamenti-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
-
 .btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px;}
+
+/* TRADUZIONE LOADING */
+.trad-loader{text-align:center;padding:20px;color:var(--grigio);font-size:13px;display:none;}
+.trad-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--sabbia);border-top-color:var(--oro);border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle;}
+
+/* RTL per arabo */
+body.rtl{direction:rtl;}
+body.rtl .prodotto{flex-direction:row-reverse;}
+body.rtl .prodotto-prezzo-wrap{align-items:flex-start;}
+body.rtl .hero-lang-btn{left:14px;right:auto;}
 </style>
 </head>
 <body>
+
+<!-- ── SCHERMATA SELEZIONE LINGUA ── -->
+<div id="lang-screen">
+  <span style="font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--oro);margin-bottom:14px;">Dal 1955 · Palermo</span>
+  <h1>Antica Friggitoria<br><em>Fratelli Caruso</em></h1>
+  <div class="lang-sub">Corso dei Mille 803 · Piazza Torrelunga</div>
+  <div class="lang-badge">🗣️ English spoken — ask for Salvatore or Giovanni</div>
+  <div class="lang-grid">
+    <button class="lang-btn" onclick="scegliLingua('it')"><span class="lang-flag">🇮🇹</span><span class="lang-nome">Italiano<small>Lingua originale</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('en')"><span class="lang-flag">🇬🇧</span><span class="lang-nome">English<small>Auto-translated</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('fr')"><span class="lang-flag">🇫🇷</span><span class="lang-nome">Français<small>Traduit automatiquement</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('de')"><span class="lang-flag">🇩🇪</span><span class="lang-nome">Deutsch<small>Automatisch übersetzt</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('es')"><span class="lang-flag">🇪🇸</span><span class="lang-nome">Español<small>Traducido automáticamente</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('ar')"><span class="lang-flag">🇸🇦</span><span class="lang-nome">العربية<small>مترجم تلقائياً</small></span></button>
+    <button class="lang-btn" onclick="scegliLingua('zh')"><span class="lang-flag">🇨🇳</span><span class="lang-nome">中文<small>自动翻译</small></span></button>
+  </div>
+</div>
+
+<!-- ── APP PRINCIPALE ── -->
+<div id="app" style="display:none">
+
+<div class="lang-notice" id="lang-notice" style="display:none">
+  🗣️ <strong>English spoken here</strong> — ask for <strong>Salvatore</strong> or <strong>Giovanni</strong>
+</div>
+
+<div class="orario-banner" id="orario-banner"></div>
+<div class="fuori-menu-banner" id="fuori-menu-banner">
+  <strong id="fuori-menu-title">⚠️ Momentaneamente non disponibili:</strong>
+  <div class="fuori-menu-items" id="fuori-menu-lista"></div>
+</div>
+
 <header class="hero">
+  <button class="hero-lang-btn" onclick="riapriFlagScreen()" id="hero-lang-flag">🌐 IT</button>
   <span class="hero-anno">Dal 1955 · Palermo</span>
   <h1>Antica Friggitoria<br><em>Fratelli Caruso</em></h1>
   <span class="hero-tag">Corso dei Mille 803 · Piazza Torrelunga · Palermo</span>
 </header>
 
-<div class="orario-banner" id="orario-banner" style="display:none"></div>
 <nav class="nav-categorie" id="nav-cat"><div class="nav-inner" id="nav-inner"></div></nav>
 
 <div class="barra-ricerca">
   <input class="ricerca-input" type="search" id="ricerca" placeholder="Cerca per nome o ingrediente…" oninput="aggiorna()">
-  <div class="ricerca-hint">Cerca anche per ingrediente — es. "mozzarella", "bacon", "gamberetti"</div>
+  <div class="ricerca-hint" id="ricerca-hint">Cerca anche per ingrediente — es. "mozzarella", "bacon", "gamberetti"</div>
 </div>
 
 <div class="filtri-bar">
   <div class="filtri-toggle" id="filtri-toggle" onclick="toggleFiltri()">
     <span class="filtri-toggle-left">
-      🔍 Filtri
+      🔍 <span id="filtri-label-txt">Filtri</span>
       <span class="filtri-badge-count" id="filtri-count" style="display:none">0</span>
     </span>
     <span class="filtri-toggle-icon" id="filtri-icon">▼</span>
   </div>
   <div class="filtri-corpo" id="filtri-corpo">
-    <div class="filtri-label">Escludi allergeni</div>
+    <div class="filtri-label" id="lbl-escludi">Escludi allergeni</div>
     <div class="filtri-chips" id="chips-allergeni"></div>
-    <div class="filtri-label">Mostra solo</div>
+    <div class="filtri-label" id="lbl-mostra">Mostra solo</div>
     <div class="filtri-chips" id="chips-badge"></div>
     <div style="margin-top:10px">
-      <button class="chip-reset" onclick="resetFiltri()">✕ Cancella tutti i filtri</button>
+      <button class="chip-reset" onclick="resetFiltri()" id="btn-reset-filtri">✕ Cancella tutti i filtri</button>
     </div>
   </div>
 </div>
 <div class="filtri-attivi" id="filtri-attivi" style="display:none"></div>
+
+<div class="trad-loader" id="trad-loader">
+  <span class="trad-spinner"></span><span id="trad-loader-txt">Traduzione in corso…</span>
+</div>
 
 <main class="main" id="main">
   <div class="stato"><div class="spinner"></div>Caricamento menù…</div>
@@ -201,29 +268,44 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
     <div class="dettaglio-desc" id="det-desc"></div>
     <div class="dettaglio-prezzo" id="det-prezzo"></div>
     <div id="det-ingredienti-wrap" style="display:none">
-      <div class="det-sezione">Ingredienti</div>
+      <div class="det-sezione" id="det-lbl-ingredienti">Ingredienti</div>
       <div class="det-ingredienti" id="det-ingredienti"></div>
     </div>
     <div id="det-abbinamenti-wrap" style="display:none">
-      <div class="det-sezione">Abbinamenti consigliati</div>
+      <div class="det-sezione" id="det-lbl-abbinamenti">Abbinamenti consigliati</div>
       <div class="det-abbinamenti">
         <div class="det-abbinamenti-title">🍷 Prova anche</div>
         <div class="det-abbinamenti-text" id="det-abbinamenti-text"></div>
       </div>
     </div>
     <div id="det-allergeni-wrap" style="display:none">
-      <div class="det-sezione">Allergeni</div>
+      <div class="det-sezione" id="det-lbl-allergeni">Allergeni</div>
       <div class="det-allergeni-grid" id="det-allergeni-grid"></div>
-      <div class="nota-allergeni">⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.</div>
+      <div class="nota-allergeni" id="det-nota-allergeni">⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.</div>
     </div>
-    <button class="btn-chiudi-det" onclick="chiudiDettaglio()">Chiudi</button>
+    <button class="btn-chiudi-det" id="btn-chiudi-det" onclick="chiudiDettaglio()">Chiudi</button>
   </div>
 </div>
+
+</div><!-- /app -->
 
 <script>
 const SUPABASE_URL  = 'https://cmqaujrjrhmwxfkgvrgp.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtcWF1anJqcmhtd3hma2d2cmdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MDYwNjIsImV4cCI6MjA5NzE4MjA2Mn0.JEO-R-_7B5h7FiwWOc1jRZkMwpwSk3BkYuBeq1HbsKs';
+const CLAUDE_API    = 'https://api.anthropic.com/v1/messages';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── ORARI APERTURA per giorno (0=Dom,1=Lun,...,6=Sab) ──
+// Formato: { label_it, label_en, label_fr, label_de, label_es, label_ar, label_zh }
+const ORARI_GIORNO = {
+  1: { chiusura: '21:00–21:30' }, // Lunedì
+  2: { chiusura: '21:00–21:30' }, // Martedì
+  3: { chiusura: '21:00–21:30' }, // Mercoledì
+  4: { chiusura: '21:00–21:30' }, // Giovedì
+  5: { chiusura: '21:30–22:00' }, // Venerdì
+  6: { chiusura: '22:00–22:30' }, // Sabato
+  0: null, // Domenica (chiuso / modifica se aperto)
+};
 
 const ALLERGENI_EU = [
   {sigla:'GLU',nome:'Glutine'},{sigla:'CRO',nome:'Crostacei'},{sigla:'UOV',nome:'Uova'},
@@ -242,14 +324,179 @@ const BADGES_DEF = {
   'vegano':        { label:'Vegano',        icon:'🌱', cls:'badge-vegano' },
 };
 
+// ── TRADUZIONI UI (stringhe fisse dell'interfaccia) ──
+const UI_STRINGS = {
+  it: {
+    searchPlaceholder: 'Cerca per nome o ingrediente…',
+    searchHint: 'Cerca anche per ingrediente — es. "mozzarella", "bacon", "gamberetti"',
+    filtri: 'Filtri', escludiAllergeni: 'Escludi allergeni', mostraSolo: 'Mostra solo',
+    resetFiltri: '✕ Cancella tutti i filtri', noRisultati: 'Nessun prodotto trovato.',
+    noRisultatiSub: 'Prova a modificare la ricerca o i filtri.',
+    ingredienti: 'Ingredienti', abbinamenti: 'Abbinamenti consigliati', allergeni: 'Allergeni',
+    notaAllergeni: '⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.',
+    chiudi: 'Chiudi', preferiti: '⭐ I Nostri Preferiti', traduzione: 'Traduzione in corso…',
+    bannerChiuso: '🔴 Oggi siamo chiusi', noAllergene: 'No ', bannerAperto: '🟢 Oggi siamo aperti fino alle',
+    fuoriMenu: '⚠️ Momentaneamente non disponibili:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'Senza Glutine','best-seller':'Best Seller','novita':'Novità','consigliato':'Consigliato','piccante':'Piccante','vegano':'Vegano' }
+  },
+  en: {
+    searchPlaceholder: 'Search by name or ingredient…',
+    searchHint: 'Search by ingredient too — e.g. "mozzarella", "bacon", "shrimp"',
+    filtri: 'Filters', escludiAllergeni: 'Exclude allergens', mostraSolo: 'Show only',
+    resetFiltri: '✕ Clear all filters', noRisultati: 'No products found.',
+    noRisultatiSub: 'Try changing the search or filters.',
+    ingredienti: 'Ingredients', abbinamenti: 'Recommended pairings', allergeni: 'Allergens',
+    notaAllergeni: '⚠ Possible cross-contamination. For severe allergies always inform staff.',
+    chiudi: 'Close', preferiti: '⭐ Our Favourites', traduzione: 'Translating…',
+    bannerChiuso: '🔴 We are closed today', noAllergene: 'No ', bannerAperto: '🟢 Open today until',
+    fuoriMenu: '⚠️ Temporarily unavailable:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'Gluten Free','best-seller':'Best Seller','novita':'New','consigliato':'Recommended','piccante':'Spicy','vegano':'Vegan' }
+  },
+  fr: {
+    searchPlaceholder: 'Rechercher par nom ou ingrédient…',
+    searchHint: 'Recherchez aussi par ingrédient — ex. "mozzarella", "bacon"',
+    filtri: 'Filtres', escludiAllergeni: 'Exclure les allergènes', mostraSolo: 'Afficher seulement',
+    resetFiltri: '✕ Effacer tous les filtres', noRisultati: 'Aucun produit trouvé.',
+    noRisultatiSub: 'Essayez de modifier la recherche ou les filtres.',
+    ingredienti: 'Ingrédients', abbinamenti: 'Accords recommandés', allergeni: 'Allergènes',
+    notaAllergeni: '⚠ Contamination croisée possible. En cas d\'allergie grave, informez toujours le personnel.',
+    chiudi: 'Fermer', preferiti: '⭐ Nos Favoris', traduzione: 'Traduction en cours…',
+    bannerChiuso: '🔴 Fermé aujourd\'hui', noAllergene: 'Sans ', bannerAperto: '🟢 Ouvert aujourd\'hui jusqu\'à',
+    fuoriMenu: '⚠️ Temporairement indisponibles:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'Sans Gluten','best-seller':'Best Seller','novita':'Nouveau','consigliato':'Conseillé','piccante':'Épicé','vegano':'Végane' }
+  },
+  de: {
+    searchPlaceholder: 'Nach Name oder Zutat suchen…',
+    searchHint: 'Suche auch nach Zutat — z.B. "Mozzarella", "Bacon"',
+    filtri: 'Filter', escludiAllergeni: 'Allergene ausschließen', mostraSolo: 'Nur anzeigen',
+    resetFiltri: '✕ Alle Filter zurücksetzen', noRisultati: 'Keine Produkte gefunden.',
+    noRisultatiSub: 'Versuche die Suche oder Filter zu ändern.',
+    ingredienti: 'Zutaten', abbinamenti: 'Empfohlene Kombinationen', allergeni: 'Allergene',
+    notaAllergeni: '⚠ Mögliche Kreuzkontamination. Bei schweren Allergien immer das Personal informieren.',
+    chiudi: 'Schließen', preferiti: '⭐ Unsere Favoriten', traduzione: 'Übersetzung läuft…',
+    bannerChiuso: '🔴 Heute geschlossen', noAllergene: 'Ohne ', bannerAperto: '🟢 Heute geöffnet bis',
+    fuoriMenu: '⚠️ Vorübergehend nicht verfügbar:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'Glutenfrei','best-seller':'Bestseller','novita':'Neu','consigliato':'Empfohlen','piccante':'Scharf','vegano':'Vegan' }
+  },
+  es: {
+    searchPlaceholder: 'Buscar por nombre o ingrediente…',
+    searchHint: 'Busca también por ingrediente — ej. "mozzarella", "bacon"',
+    filtri: 'Filtros', escludiAllergeni: 'Excluir alérgenos', mostraSolo: 'Mostrar solo',
+    resetFiltri: '✕ Borrar todos los filtros', noRisultati: 'No se encontraron productos.',
+    noRisultatiSub: 'Intenta cambiar la búsqueda o los filtros.',
+    ingredienti: 'Ingredientes', abbinamenti: 'Maridajes recomendados', allergeni: 'Alérgenos',
+    notaAllergeni: '⚠ Posible contaminación cruzada. En caso de alergias graves, informar siempre al personal.',
+    chiudi: 'Cerrar', preferiti: '⭐ Nuestros Favoritos', traduzione: 'Traduciendo…',
+    bannerChiuso: '🔴 Hoy estamos cerrados', noAllergene: 'Sin ', bannerAperto: '🟢 Hoy abiertos hasta las',
+    fuoriMenu: '⚠️ Temporalmente no disponibles:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'Sin Gluten','best-seller':'Más Vendido','novita':'Novedad','consigliato':'Recomendado','piccante':'Picante','vegano':'Vegano' }
+  },
+  ar: {
+    searchPlaceholder: 'ابحث بالاسم أو المكوّن…',
+    searchHint: 'ابحث أيضاً بالمكوّن — مثل "موزاريلا"، "بيكون"',
+    filtri: 'مرشحات', escludiAllergeni: 'استبعاد مسببات الحساسية', mostraSolo: 'عرض فقط',
+    resetFiltri: '✕ مسح جميع المرشحات', noRisultati: 'لا توجد منتجات.',
+    noRisultatiSub: 'حاول تغيير البحث أو المرشحات.',
+    ingredienti: 'المكوّنات', abbinamenti: 'مقترحات التقديم', allergeni: 'مسببات الحساسية',
+    notaAllergeni: '⚠ احتمال تلوث متبادل. في حالة الحساسية الشديدة أبلغ الموظفين دائماً.',
+    chiudi: 'إغلاق', preferiti: '⭐ مفضلاتنا', traduzione: 'جارٍ الترجمة…',
+    bannerChiuso: '🔴 مغلق اليوم', noAllergene: 'بدون ', bannerAperto: '🟢 مفتوح اليوم حتى',
+    fuoriMenu: '⚠️ غير متوفر مؤقتاً:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'خالٍ من الغلوتين','best-seller':'الأكثر مبيعاً','novita':'جديد','consigliato':'موصى به','piccante':'حار','vegano':'نباتي' }
+  },
+  zh: {
+    searchPlaceholder: '按名称或食材搜索…',
+    searchHint: '也可按食材搜索 — 例如 "马苏里拉"、"培根"',
+    filtri: '筛选', escludiAllergeni: '排除过敏原', mostraSolo: '只显示',
+    resetFiltri: '✕ 清除所有筛选', noRisultati: '未找到产品。',
+    noRisultatiSub: '请尝试更改搜索或筛选条件。',
+    ingredienti: '成分', abbinamenti: '推荐搭配', allergeni: '过敏原',
+    notaAllergeni: '⚠ 可能存在交叉污染。严重过敏请务必告知工作人员。',
+    chiudi: '关闭', preferiti: '⭐ 我们的推荐', traduzione: '翻译中…',
+    bannerChiuso: '🔴 今日休息', noAllergene: '无 ', bannerAperto: '🟢 今日营业至',
+    fuoriMenu: '⚠️ 暂时缺货:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
+    badgeLabels: { 'senza-glutine':'无麸质','best-seller':'热销','novita':'新品','consigliato':'推荐','piccante':'辣','vegano':'素食' }
+  }
+};
+
+const FLAG_EMOJI = { it:'🇮🇹', en:'🇬🇧', fr:'🇫🇷', de:'🇩🇪', es:'🇪🇸', ar:'🇸🇦', zh:'🇨🇳' };
+
+let lingua = 'it';
 let datiMenu = [];
 let prodottiAll = {};
 let filtriAttivi = { allergeni: [], badges: [] };
+let traduzioneCache = {}; // { 'en': { nomeOriginale: nomeTradotto, ... } }
+
+// ── SELEZIONE LINGUA ──
+function scegliLingua(lang) {
+  lingua = lang;
+  document.getElementById('lang-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('hero-lang-flag').textContent = FLAG_EMOJI[lang] + ' ' + lang.toUpperCase();
+  // RTL per arabo
+  document.body.classList.toggle('rtl', lang === 'ar');
+  // Notice inglese
+  const notice = document.getElementById('lang-notice');
+  notice.style.display = (lang === 'it') ? 'none' : 'block';
+  applicaStringheUI();
+  caricaMenu();
+}
+
+function riapriFlagScreen() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('lang-screen').style.display = 'flex';
+}
+
+function applicaStringheUI() {
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
+  document.getElementById('ricerca').placeholder = s.searchPlaceholder;
+  document.getElementById('ricerca-hint').textContent = s.searchHint;
+  document.getElementById('filtri-label-txt').textContent = s.filtri;
+  document.getElementById('lbl-escludi').textContent = s.escludiAllergeni;
+  document.getElementById('lbl-mostra').textContent = s.mostraSolo;
+  document.getElementById('btn-reset-filtri').textContent = s.resetFiltri;
+  document.getElementById('det-lbl-ingredienti').textContent = s.ingredienti;
+  document.getElementById('det-lbl-abbinamenti').textContent = s.abbinamenti;
+  document.getElementById('det-lbl-allergeni').textContent = s.allergeni;
+  document.getElementById('det-nota-allergeni').textContent = s.notaAllergeni;
+  document.getElementById('btn-chiudi-det').textContent = s.chiudi;
+  document.getElementById('lang-notice').innerHTML = s.langNotice;
+}
+
+// ── BANNER ORARI (automatico per giorno) ──
+function aggiornaBannerOrari() {
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
+  const oggi = new Date().getDay();
+  const info = ORARI_GIORNO[oggi];
+  const banner = document.getElementById('orario-banner');
+  if (!info) {
+    banner.textContent = s.bannerChiuso;
+    banner.style.display = 'block';
+  } else {
+    banner.innerHTML = `${s.bannerAperto} <strong>${info.chiusura}</strong>`;
+    banner.style.display = 'block';
+  }
+}
+
+// ── BANNER FUORI MENU ──
+function aggiornaBannerFuoriMenu(prodotti) {
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
+  const nonDisp = prodotti.filter(p => p.disponibile === false);
+  const banner = document.getElementById('fuori-menu-banner');
+  const lista = document.getElementById('fuori-menu-lista');
+  const title = document.getElementById('fuori-menu-title');
+  if (nonDisp.length === 0) { banner.style.display = 'none'; return; }
+  title.textContent = s.fuoriMenu;
+  lista.innerHTML = nonDisp.map(p => {
+    const nome = (traduzioneCache[lingua] && traduzioneCache[lingua][p.nome]) || p.nome;
+    return `<span class="fuori-menu-pill">${nome}</span>`;
+  }).join('');
+  banner.style.display = 'block';
+}
 
 // ── ORARIO ──
 function oraCorrente(){ const n=new Date(); return n.getHours()*60+n.getMinutes(); }
 function orarioVisibile(oi,of){ if(!oi||!of)return true; const[oh,om]=oi.split(':').map(Number); const[fh,fm]=of.split(':').map(Number); const now=oraCorrente(); return now>=oh*60+om&&now<=fh*60+fm; }
-function oraStr(){ const n=new Date(); return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
 
 // ── CARICAMENTO ──
 async function caricaMenu(){
@@ -265,10 +512,14 @@ async function caricaMenu(){
     prodottiAll = {};
     prods.forEach(p=>prodottiAll[p.id]=p);
 
-    const banner = document.getElementById('orario-banner');
-    if(cats.some(c=>c.ora_inizio)){ banner.style.display='block'; banner.textContent=`🕐 Orario attuale: ${oraStr()} — il menù mostra solo i prodotti disponibili ora`; }
-
+    aggiornaBannerOrari();
+    aggiornaBannerFuoriMenu(prods);
     inizializzaFiltriUI();
+
+    if (lingua !== 'it') {
+      await traduciMenu(prods, cats);
+    }
+
     aggiorna();
 
     sb.channel('menu-live')
@@ -280,152 +531,159 @@ async function caricaMenu(){
   }
 }
 
+// ── TRADUZIONE VIA CLAUDE API ──
+async function traduciMenu(prods, cats) {
+  if (traduzioneCache[lingua]) return; // già tradotto
+
+  const s = UI_STRINGS[lingua];
+  document.getElementById('trad-loader').style.display = 'block';
+  document.getElementById('trad-loader-txt').textContent = s.traduzione;
+
+  const testiDaTradurre = {};
+  prods.forEach(p => {
+    testiDaTradurre[`n_${p.id}`] = p.nome;
+    if (p.descrizione) testiDaTradurre[`d_${p.id}`] = p.descrizione;
+  });
+  cats.forEach(c => {
+    testiDaTradurre[`c_${c.id}`] = c.nome;
+  });
+
+  const lingueNomi = { en:'English', fr:'French', de:'German', es:'Spanish', ar:'Arabic', zh:'Chinese' };
+  const nomeLingua = lingueNomi[lingua] || lingua;
+
+  try {
+    const resp = await fetch(CLAUDE_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `You are a professional menu translator for an Italian street food restaurant in Palermo (Sicily). Translate the given JSON object values to ${nomeLingua}. Keep proper nouns (brand names like "Fratelli Caruso", "Giovanni Caruso", "Zio Totò"), ingredient names that are internationally known (mozzarella, arancina, etc.) and measurement units as-is or in their commonly known form. Return ONLY a valid JSON object with the same keys and translated values. No preamble, no markdown, no explanation.`,
+        messages: [{ role: 'user', content: JSON.stringify(testiDaTradurre) }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content.map(i => i.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const tradotto = JSON.parse(clean);
+
+    // Costruiamo la cache: { nomeOriginale: nomeTradotto } per uso in dettaglio e banner
+    const cache = {};
+    prods.forEach(p => {
+      if (tradotto[`n_${p.id}`]) cache[p.nome] = tradotto[`n_${p.id}`];
+      if (tradotto[`d_${p.id}`]) cache[p.descrizione] = tradotto[`d_${p.id}`];
+    });
+    cats.forEach(c => {
+      if (tradotto[`c_${c.id}`]) cache[c.nome] = tradotto[`c_${c.id}`];
+    });
+    traduzioneCache[lingua] = { ...tradotto, ...cache };
+
+    // Aggiorna anche i badge labels
+    BADGES_DEF['senza-glutine'].label = s.badgeLabels['senza-glutine'];
+    BADGES_DEF['best-seller'].label   = s.badgeLabels['best-seller'];
+    BADGES_DEF['novita'].label        = s.badgeLabels['novita'];
+    BADGES_DEF['consigliato'].label   = s.badgeLabels['consigliato'];
+    BADGES_DEF['piccante'].label      = s.badgeLabels['piccante'];
+    BADGES_DEF['vegano'].label        = s.badgeLabels['vegano'];
+
+  } catch(e) {
+    console.warn('Traduzione fallita, uso italiano:', e);
+  }
+  document.getElementById('trad-loader').style.display = 'none';
+}
+
+function t(testo) {
+  if (lingua === 'it' || !testo) return testo;
+  const cache = traduzioneCache[lingua];
+  if (!cache) return testo;
+  // prova con chiave diretta (nome), poi con chiave n_id (fallback)
+  return cache[testo] || testo;
+}
+
 // ── FILTRI UI ──
 function inizializzaFiltriUI(){
-  // Chips allergeni
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
   document.getElementById('chips-allergeni').innerHTML = ALLERGENI_EU.map(a=>
-    `<button class="chip" id="chip-all-${a.sigla}" onclick="toggleAllergene('${a.sigla}')" title="Escludi ${a.nome}">${a.sigla} · ${a.nome}</button>`
+    `<button class="chip" id="chip-all-${a.sigla}" onclick="toggleAllergene('${a.sigla}')" title="${s.escludiAllergeni} ${a.nome}">${a.sigla} · ${a.nome}</button>`
   ).join('');
-
-  // Chips badge
   document.getElementById('chips-badge').innerHTML = Object.entries(BADGES_DEF).map(([k,v])=>
     `<button class="chip" id="chip-badge-${k}" onclick="toggleBadge('${k}')">${v.icon} ${v.label}</button>`
   ).join('');
 }
 
 function toggleFiltri(){
-  const corpo = document.getElementById('filtri-corpo');
-  const toggle = document.getElementById('filtri-toggle');
+  const corpo=document.getElementById('filtri-corpo');
+  const toggle=document.getElementById('filtri-toggle');
   corpo.classList.toggle('show');
   toggle.classList.toggle('aperto');
 }
-
-function toggleAllergene(sigla){
-  const idx = filtriAttivi.allergeni.indexOf(sigla);
-  if(idx>=0) filtriAttivi.allergeni.splice(idx,1);
-  else filtriAttivi.allergeni.push(sigla);
-  aggiorna();
-}
-
-function toggleBadge(k){
-  const idx = filtriAttivi.badges.indexOf(k);
-  if(idx>=0) filtriAttivi.badges.splice(idx,1);
-  else filtriAttivi.badges.push(k);
-  aggiorna();
-}
-
-function resetFiltri(){
-  filtriAttivi = { allergeni: [], badges: [] };
-  aggiorna();
-}
+function toggleAllergene(sigla){ const idx=filtriAttivi.allergeni.indexOf(sigla); if(idx>=0)filtriAttivi.allergeni.splice(idx,1); else filtriAttivi.allergeni.push(sigla); aggiorna(); }
+function toggleBadge(k){ const idx=filtriAttivi.badges.indexOf(k); if(idx>=0)filtriAttivi.badges.splice(idx,1); else filtriAttivi.badges.push(k); aggiorna(); }
+function resetFiltri(){ filtriAttivi={allergeni:[],badges:[]}; aggiorna(); }
 
 function aggiornaCSSFiltri(){
-  // Aggiorna chip attivi
-  ALLERGENI_EU.forEach(a=>{
-    const el = document.getElementById('chip-all-'+a.sigla);
-    if(el) el.classList.toggle('attivo', filtriAttivi.allergeni.includes(a.sigla));
-  });
-  Object.keys(BADGES_DEF).forEach(k=>{
-    const el = document.getElementById('chip-badge-'+k);
-    if(el) el.classList.toggle('attivo', filtriAttivi.badges.includes(k));
-  });
-
-  // Contatore
-  const tot = filtriAttivi.allergeni.length + filtriAttivi.badges.length;
-  const cnt = document.getElementById('filtri-count');
-  cnt.style.display = tot>0 ? 'inline' : 'none';
-  cnt.textContent = tot;
-
-  // Pills filtri attivi
-  const wrap = document.getElementById('filtri-attivi');
-  const pills = [
-    ...filtriAttivi.allergeni.map(s=>{
-      const a = ALLERGENI_EU.find(x=>x.sigla===s);
-      return `<span class="filtro-pill">No ${s}<button onclick="toggleAllergene('${s}')">✕</button></span>`;
-    }),
-    ...filtriAttivi.badges.map(k=>{
-      const b = BADGES_DEF[k];
-      return `<span class="filtro-pill">${b.icon} ${b.label}<button onclick="toggleBadge('${k}')">✕</button></span>`;
-    })
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
+  ALLERGENI_EU.forEach(a=>{ const el=document.getElementById('chip-all-'+a.sigla); if(el)el.classList.toggle('attivo',filtriAttivi.allergeni.includes(a.sigla)); });
+  Object.keys(BADGES_DEF).forEach(k=>{ const el=document.getElementById('chip-badge-'+k); if(el)el.classList.toggle('attivo',filtriAttivi.badges.includes(k)); });
+  const tot=filtriAttivi.allergeni.length+filtriAttivi.badges.length;
+  const cnt=document.getElementById('filtri-count');
+  cnt.style.display=tot>0?'inline':'none'; cnt.textContent=tot;
+  const wrap=document.getElementById('filtri-attivi');
+  const pills=[
+    ...filtriAttivi.allergeni.map(sig=>{ const a=ALLERGENI_EU.find(x=>x.sigla===sig); return `<span class="filtro-pill">${s.noAllergene}${sig}<button onclick="toggleAllergene('${sig}')">✕</button></span>`; }),
+    ...filtriAttivi.badges.map(k=>{ const b=BADGES_DEF[k]; return `<span class="filtro-pill">${b.icon} ${b.label}<button onclick="toggleBadge('${k}')">✕</button></span>`; })
   ];
-  wrap.style.display = pills.length>0 ? 'flex' : 'none';
-  wrap.innerHTML = pills.join('');
+  wrap.style.display=pills.length>0?'flex':'none';
+  wrap.innerHTML=pills.join('');
 }
 
-// ── FILTRAGGIO PRODOTTI ──
+// ── FILTRAGGIO ──
 function prodottoPassaFiltri(p){
-  const q = document.getElementById('ricerca').value.trim().toLowerCase();
-  if(q){
-    const testo = [(p.nome||''),(p.descrizione||''),(p.ingredienti||'')].join(' ').toLowerCase();
-    if(!testo.includes(q)) return false;
-  }
-  if(filtriAttivi.allergeni.length>0){
-    const allProd = p.allergeni || [];
-    if(filtriAttivi.allergeni.some(a=>allProd.includes(a))) return false;
-  }
-  if(filtriAttivi.badges.length>0){
-    const badgesProd = p.badges || [];
-    if(!filtriAttivi.badges.every(b=>badgesProd.includes(b))) return false;
-  }
+  const q=document.getElementById('ricerca').value.trim().toLowerCase();
+  if(q){ const testo=[(p.nome||''),(p.descrizione||''),(p.ingredienti||'')].join(' ').toLowerCase(); if(!testo.includes(q))return false; }
+  if(filtriAttivi.allergeni.length>0){ const allProd=p.allergeni||[]; if(filtriAttivi.allergeni.some(a=>allProd.includes(a)))return false; }
+  if(filtriAttivi.badges.length>0){ const badgesProd=p.badges||[]; if(!filtriAttivi.badges.every(b=>badgesProd.includes(b)))return false; }
   return true;
 }
 
-// ── AGGIORNA (render + filtri CSS) ──
+// ── AGGIORNA ──
 function aggiorna(){
   aggiornaCSSFiltri();
-
-  const q = document.getElementById('ricerca').value.trim();
-  const haFiltri = filtriAttivi.allergeni.length>0 || filtriAttivi.badges.length>0 || q;
-
-  // Preferiti: sempre visibili (se nessun filtro attivo o se passano i filtri)
-  const preferiti = Object.values(prodottiAll).filter(p=>
-    p.is_preferito && orarioVisibile(p.ora_inizio,p.ora_fine) && p.disponibile!==false && prodottoPassaFiltri(p)
-  );
-
-  const gruppi = datiMenu.map(g=>({
-    categoria: g.categoria,
-    prodotti: g.prodotti.filter(p=>prodottoPassaFiltri(p))
-  })).filter(g=>g.prodotti.length>0);
-
-  renderNav(preferiti.length>0, gruppi);
-  renderMain(preferiti, gruppi);
+  const preferiti=Object.values(prodottiAll).filter(p=>p.is_preferito && orarioVisibile(p.ora_inizio,p.ora_fine) && p.disponibile!==false && prodottoPassaFiltri(p));
+  const gruppi=datiMenu.map(g=>({categoria:g.categoria,prodotti:g.prodotti.filter(p=>prodottoPassaFiltri(p))})).filter(g=>g.prodotti.length>0);
+  renderNav(preferiti.length>0,gruppi);
+  renderMain(preferiti,gruppi);
 }
 
 // ── NAV ──
-function renderNav(haPreferiti, gruppi){
-  const inner = document.getElementById('nav-inner');
-  let html = '';
-  if(haPreferiti) html += `<button class="nav-btn preferiti attivo" onclick="scorriA('sec-preferiti')">⭐ Preferiti</button>`;
-  html += gruppi.map(g=>
-    `<button class="nav-btn" onclick="scorriA('cat-${g.categoria.id}')" id="nav-${g.categoria.id}">${g.categoria.emoji} ${g.categoria.nome}</button>`
-  ).join('');
-  inner.innerHTML = html;
+function renderNav(haPreferiti,gruppi){
+  const s=UI_STRINGS[lingua]||UI_STRINGS['it'];
+  const inner=document.getElementById('nav-inner');
+  let html='';
+  if(haPreferiti) html+=`<button class="nav-btn preferiti attivo" id="nav-preferiti" onclick="scorriA('sec-preferiti')">${s.preferiti}</button>`;
+  html+=gruppi.map(g=>`<button class="nav-btn" onclick="scorriA('cat-${g.categoria.id}')" id="nav-${g.categoria.id}">${g.categoria.emoji} ${t(g.categoria.nome)}</button>`).join('');
+  inner.innerHTML=html;
 }
 
 // ── BADGE HTML ──
 function badgeHTML(badges){
-  if(!badges||!badges.length) return '';
-  const pills = badges.map(k=>{
-    const b = BADGES_DEF[k];
-    if(!b) return `<span class="badge">${k}</span>`;
-    return `<span class="badge ${b.cls}">${b.icon} ${b.label}</span>`;
-  });
+  if(!badges||!badges.length)return '';
+  const pills=badges.map(k=>{ const b=BADGES_DEF[k]; if(!b)return `<span class="badge">${k}</span>`; return `<span class="badge ${b.cls}">${b.icon} ${b.label}</span>`; });
   return `<div class="prodotto-badges">${pills.join('')}</div>`;
 }
 
 // ── RENDER PRODOTTO ──
-function prodottoHTML(p, catEmoji){
-  const foto = p.foto_url
-    ? `<img class="prodotto-foto" src="${p.foto_url}" alt="${p.nome}" loading="lazy" onerror="this.style.display='none'">`
-    : `<div class="prodotto-foto-placeholder">${catEmoji||'🍽️'}</div>`;
-  const pb = p.prezzo_barrato ? `<span class="prodotto-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>` : '';
-  const sigle = p.allergeni&&p.allergeni.length
-    ? `<div class="allergeni-sigle">${p.allergeni.map(s=>`<span class="all-sigla-pill">${s}</span>`).join('')}</div>` : '';
-  return `<div class="prodotto" onclick="apriDettaglio(${p.id})">
+function prodottoHTML(p,catEmoji){
+  const nomeTrad=t(p.nome);
+  const descTrad=p.descrizione?t(p.descrizione):'';
+  const foto=p.foto_url?`<img class="prodotto-foto" src="${p.foto_url}" alt="${nomeTrad}" loading="lazy" onerror="this.style.display='none'">`:`<div class="prodotto-foto-placeholder">${catEmoji||'🍽️'}</div>`;
+  const pb=p.prezzo_barrato?`<span class="prodotto-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>`:'';
+  const sigle=p.allergeni&&p.allergeni.length?`<div class="allergeni-sigle">${p.allergeni.map(s=>`<span class="all-sigla-pill">${s}</span>`).join('')}</div>`:'';
+  return `<div class="prodotto" onclick="tapLista(${p.id})">
     ${foto}
     <div class="prodotto-info">
-      <div class="prodotto-nome">${p.nome}</div>
-      ${p.descrizione?`<div class="prodotto-desc">${p.descrizione}</div>`:''}
+      <div class="prodotto-nome">${nomeTrad}</div>
+      ${descTrad?`<div class="prodotto-desc">${descTrad}`:''}
       ${badgeHTML(p.badges||[])}
       ${sigle}
     </div>
@@ -434,65 +692,45 @@ function prodottoHTML(p, catEmoji){
 }
 
 // ── RENDER MAIN ──
-function renderMain(preferiti, gruppi){
-  const main = document.getElementById('main');
-  let html = '';
-
+function renderMain(preferiti,gruppi){
+  const s=UI_STRINGS[lingua]||UI_STRINGS['it'];
+  const main=document.getElementById('main');
+  let html='';
   if(preferiti.length>0){
-    html += `<section class="sezione sezione-preferiti" id="sec-preferiti">
-      <div class="sezione-header">
-        <span class="sezione-emoji">⭐</span>
-        <h2>I Nostri Preferiti</h2>
-        <div class="sezione-divider"></div>
-      </div>
+    html+=`<section class="sezione sezione-preferiti" id="sec-preferiti">
+      <div class="sezione-header"><span class="sezione-emoji">⭐</span><h2>${s.preferiti.replace('⭐ ','')}</h2><div class="sezione-divider"></div></div>
       <div class="prodotti-lista">${preferiti.map(p=>prodottoHTML(p,'⭐')).join('')}</div>
     </section>`;
   }
-
-  if(!gruppi.length && !preferiti.length){
-    main.innerHTML = `<div class="nessun-risultato"><strong>🔍</strong>Nessun prodotto trovato.<br><small>Prova a modificare la ricerca o i filtri.</small></div>`;
-    return;
+  if(!gruppi.length&&!preferiti.length){
+    main.innerHTML=`<div class="nessun-risultato"><strong>🔍</strong>${s.noRisultati}<br><small>${s.noRisultatiSub}</small></div>`;return;
   }
-
-  html += gruppi.map(g=>{
-    const orAvviso = g.categoria.ora_inizio&&g.categoria.ora_fine
-      ? `<span class="orario-avviso">🕐 ${g.categoria.ora_inizio.slice(0,5)}–${g.categoria.ora_fine.slice(0,5)}</span>` : '';
+  html+=gruppi.map(g=>{
+    const orAvviso=g.categoria.ora_inizio&&g.categoria.ora_fine?`<span class="orario-avviso">🕐 ${g.categoria.ora_inizio.slice(0,5)}–${g.categoria.ora_fine.slice(0,5)}</span>`:'';
     return `<section class="sezione" id="cat-${g.categoria.id}">
-      <div class="sezione-header">
-        <span class="sezione-emoji">${g.categoria.emoji}</span>
-        <h2>${g.categoria.nome}</h2>
-        ${orAvviso}
-        <div class="sezione-divider"></div>
-      </div>
+      <div class="sezione-header"><span class="sezione-emoji">${g.categoria.emoji}</span><h2>${t(g.categoria.nome)}</h2>${orAvviso}<div class="sezione-divider"></div></div>
       <div class="prodotti-lista">${g.prodotti.map(p=>prodottoHTML(p,g.categoria.emoji)).join('')}</div>
     </section>`;
   }).join('');
-
-  main.innerHTML = html;
+  main.innerHTML=html;
   osservaSezioni();
 }
 
 // ── SCROLL ──
 function scorriA(id){
-  const el = document.getElementById(id);
-  if(!el) return;
-  const navH = document.querySelector('.nav-categorie').offsetHeight
-             + document.querySelector('.barra-ricerca').offsetHeight
-             + document.querySelector('.filtri-bar').offsetHeight;
+  const el=document.getElementById(id); if(!el)return;
+  const navH=document.querySelector('.nav-categorie').offsetHeight+document.querySelector('.barra-ricerca').offsetHeight+document.querySelector('.filtri-bar').offsetHeight;
   window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-navH-8,behavior:'smooth'});
 }
-
 function osservaSezioni(){
-  const navH = document.querySelector('.nav-categorie').offsetHeight
-             + document.querySelector('.barra-ricerca').offsetHeight
-             + document.querySelector('.filtri-bar').offsetHeight;
-  const obs = new IntersectionObserver(entries=>{
+  const navH=document.querySelector('.nav-categorie').offsetHeight+document.querySelector('.barra-ricerca').offsetHeight+document.querySelector('.filtri-bar').offsetHeight;
+  const obs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){
-        const raw = e.target.id;
-        const id = raw.replace('cat-','').replace('sec-preferiti','preferiti');
+        const raw=e.target.id;
+        const id=raw.replace('cat-','').replace('sec-preferiti','preferiti');
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('attivo'));
-        const btn = document.getElementById('nav-'+id) || document.querySelector(`[onclick*="${raw}"]`);
+        const btn=document.getElementById('nav-'+id)||document.querySelector(`[onclick*="${raw}"]`);
         if(btn){btn.classList.add('attivo');btn.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});}
       }
     });
@@ -500,45 +738,46 @@ function osservaSezioni(){
   document.querySelectorAll('.sezione').forEach(s=>obs.observe(s));
 }
 
+// ── CONTATORE TAP ──
+async function registraTap(prodottoId, tipo) {
+  try {
+    await sb.from('tap_log').insert({ prodotto_id: prodottoId, tipo });
+  } catch(e) { /* silenzioso */ }
+}
+
+async function tapLista(id) {
+  await registraTap(id, 'lista');
+  apriDettaglio(id);
+}
+
 // ── PANNELLO DETTAGLIO ──
-function apriDettaglio(id){
-  const p = prodottiAll[id];
-  if(!p) return;
-  document.getElementById('det-nome').textContent = p.nome;
-  document.getElementById('det-desc').textContent = p.descrizione||'';
-
-  // Badge
-  document.getElementById('det-badges').innerHTML = badgeHTML(p.badges||'');
-
-  // Prezzo
-  const pb = p.prezzo_barrato?`<span style="text-decoration:line-through;color:#aaa;font-size:14px;font-family:Inter">€${Number(p.prezzo_barrato).toFixed(2)}</span> `:'';
-  document.getElementById('det-prezzo').innerHTML = pb+`€${Number(p.prezzo).toFixed(2)}`;
-
-  // Ingredienti
-  const ingWrap = document.getElementById('det-ingredienti-wrap');
-  const ingTesto = p.descrizione || p.ingredienti;
-  if(ingTesto){ document.getElementById('det-ingredienti').textContent=ingTesto; ingWrap.style.display='block'; }
+async function apriDettaglio(id){
+  const p=prodottiAll[id]; if(!p)return;
+  await registraTap(id, 'dettaglio');
+  const s=UI_STRINGS[lingua]||UI_STRINGS['it'];
+  document.getElementById('det-nome').textContent=t(p.nome);
+  document.getElementById('det-desc').textContent=t(p.descrizione)||'';
+  document.getElementById('det-badges').innerHTML=badgeHTML(p.badges||'');
+  const pb=p.prezzo_barrato?`<span style="text-decoration:line-through;color:#aaa;font-size:14px;font-family:Inter">€${Number(p.prezzo_barrato).toFixed(2)}</span> `:'';
+  document.getElementById('det-prezzo').innerHTML=pb+`€${Number(p.prezzo).toFixed(2)}`;
+  const ingWrap=document.getElementById('det-ingredienti-wrap');
+  const ingTesto=t(p.descrizione)||p.ingredienti;
+  if(ingTesto){document.getElementById('det-ingredienti').textContent=ingTesto;ingWrap.style.display='block';}
   else ingWrap.style.display='none';
-
-  // Abbinamenti
-  const abbWrap = document.getElementById('det-abbinamenti-wrap');
-  if(p.abbinamenti){ document.getElementById('det-abbinamenti-text').textContent=p.abbinamenti; abbWrap.style.display='block'; }
+  const abbWrap=document.getElementById('det-abbinamenti-wrap');
+  if(p.abbinamenti){document.getElementById('det-abbinamenti-text').textContent=p.abbinamenti;abbWrap.style.display='block';}
   else abbWrap.style.display='none';
-
-  // Allergeni
-  const allWrap = document.getElementById('det-allergeni-wrap');
-  if(p.allergeni!==null && p.allergeni!==undefined){
-    const arr = p.allergeni||[];
-    document.getElementById('det-allergeni-grid').innerHTML = ALLERGENI_EU.map(a=>{
-      const presente = arr.includes(a.sigla);
-      return `<div class="all-pill ${presente?'presente':'assente'}">
-        <span class="sigla">${a.sigla}</span><span>${a.nome}</span>
-        ${presente?'<span style="margin-left:auto">⚠</span>':''}
-      </div>`;
+  const allWrap=document.getElementById('det-allergeni-wrap');
+  if(p.allergeni!==null&&p.allergeni!==undefined){
+    const arr=p.allergeni||[];
+    document.getElementById('det-allergeni-grid').innerHTML=ALLERGENI_EU.map(a=>{
+      const presente=arr.includes(a.sigla);
+      return `<div class="all-pill ${presente?'presente':'assente'}"><span class="sigla">${a.sigla}</span><span>${a.nome}</span>${presente?'<span style="margin-left:auto">⚠</span>':''}</div>`;
     }).join('');
     allWrap.style.display='block';
   } else allWrap.style.display='none';
-
+  document.getElementById('det-nota-allergeni').textContent=s.notaAllergeni;
+  document.getElementById('btn-chiudi-det').textContent=s.chiudi;
   document.getElementById('dettaglio-overlay').classList.add('show');
   document.body.style.overflow='hidden';
 }
@@ -549,8 +788,7 @@ function chiudiDettaglio(e){
   document.body.style.overflow='';
 }
 
-caricaMenu();
-setInterval(()=>{ if(datiMenu.length) aggiorna(); }, 60000);
+setInterval(()=>{ if(datiMenu.length)aggiorna(); },60000);
 </script>
 </body>
 </html>
