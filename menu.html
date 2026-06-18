@@ -533,52 +533,72 @@ async function caricaMenu(){
 
 // ── TRADUZIONE VIA CLAUDE API ──
 async function traduciMenu(prods, cats) {
-  if (traduzioneCache[lingua]) return; // già tradotto
+  if (traduzioneCache[lingua]) return;
 
   const s = UI_STRINGS[lingua];
   document.getElementById('trad-loader').style.display = 'block';
   document.getElementById('trad-loader-txt').textContent = s.traduzione;
 
-  const testiDaTradurre = {};
-  prods.forEach(p => {
-    testiDaTradurre[`n_${p.id}`] = p.nome;
-    if (p.descrizione) testiDaTradurre[`d_${p.id}`] = p.descrizione;
-  });
-  cats.forEach(c => {
-    testiDaTradurre[`c_${c.id}`] = c.nome;
-  });
-
   const lingueNomi = { en:'English', fr:'French', de:'German', es:'Spanish', ar:'Arabic', zh:'Chinese' };
   const nomeLingua = lingueNomi[lingua] || lingua;
+  const SYSTEM = `You are a professional menu translator for an Italian street food restaurant in Palermo (Sicily). Translate the given JSON object values to ${nomeLingua}. Keep proper nouns (brand names like "Fratelli Caruso", "Giovanni Caruso", "Zio Totò"), internationally known ingredient names (mozzarella, arancina, etc.) and measurement units as-is. Return ONLY a valid JSON object with the same keys and translated values. No preamble, no markdown, no explanation.`;
 
+  // Costruiamo il dizionario completo da tradurre
+  const tuttiTesti = {};
+  prods.forEach(p => {
+    tuttiTesti[`n_${p.id}`] = p.nome;
+    if (p.descrizione) tuttiTesti[`d_${p.id}`] = p.descrizione;
+  });
+  cats.forEach(c => { tuttiTesti[`c_${c.id}`] = c.nome; });
+
+  // Dividiamo in batch da 25 chiavi per evitare overflow token
+  const BATCH = 25;
+  const chiavi = Object.keys(tuttiTesti);
+  const batches = [];
+  for (let i = 0; i < chiavi.length; i += BATCH) {
+    const slice = chiavi.slice(i, i + BATCH);
+    const obj = {};
+    slice.forEach(k => { obj[k] = tuttiTesti[k]; });
+    batches.push(obj);
+  }
+
+  const tradottoTotale = {};
   try {
-    const resp = await fetch(CLAUDE_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: `You are a professional menu translator for an Italian street food restaurant in Palermo (Sicily). Translate the given JSON object values to ${nomeLingua}. Keep proper nouns (brand names like "Fratelli Caruso", "Giovanni Caruso", "Zio Totò"), ingredient names that are internationally known (mozzarella, arancina, etc.) and measurement units as-is or in their commonly known form. Return ONLY a valid JSON object with the same keys and translated values. No preamble, no markdown, no explanation.`,
-        messages: [{ role: 'user', content: JSON.stringify(testiDaTradurre) }]
-      })
-    });
-    const data = await resp.json();
-    const raw = data.content.map(i => i.text || '').join('');
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const tradotto = JSON.parse(clean);
+    for (const batch of batches) {
+      const resp = await fetch(CLAUDE_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 4000,
+          system: SYSTEM,
+          messages: [{ role: 'user', content: JSON.stringify(batch) }]
+        })
+      });
+      const data = await resp.json();
+      if (!data.content) { console.warn('Batch fallito:', data); continue; }
+      const raw = data.content.map(i => i.text || '').join('');
+      const clean = raw.replace(/```json|```/g, '').trim();
+      try {
+        const parziale = JSON.parse(clean);
+        Object.assign(tradottoTotale, parziale);
+      } catch(parseErr) {
+        console.warn('Parse JSON fallito per batch:', parseErr, raw.slice(0,200));
+      }
+    }
 
-    // Costruiamo la cache: { nomeOriginale: nomeTradotto } per uso in dettaglio e banner
+    // Costruiamo la cache testo→testo per la funzione t()
     const cache = {};
     prods.forEach(p => {
-      if (tradotto[`n_${p.id}`]) cache[p.nome] = tradotto[`n_${p.id}`];
-      if (tradotto[`d_${p.id}`]) cache[p.descrizione] = tradotto[`d_${p.id}`];
+      if (tradottoTotale[`n_${p.id}`]) cache[p.nome] = tradottoTotale[`n_${p.id}`];
+      if (p.descrizione && tradottoTotale[`d_${p.id}`]) cache[p.descrizione] = tradottoTotale[`d_${p.id}`];
     });
     cats.forEach(c => {
-      if (tradotto[`c_${c.id}`]) cache[c.nome] = tradotto[`c_${c.id}`];
+      if (tradottoTotale[`c_${c.id}`]) cache[c.nome] = tradottoTotale[`c_${c.id}`];
     });
-    traduzioneCache[lingua] = { ...tradotto, ...cache };
+    traduzioneCache[lingua] = { ...tradottoTotale, ...cache };
 
-    // Aggiorna anche i badge labels
+    // Badge labels tradotti
     BADGES_DEF['senza-glutine'].label = s.badgeLabels['senza-glutine'];
     BADGES_DEF['best-seller'].label   = s.badgeLabels['best-seller'];
     BADGES_DEF['novita'].label        = s.badgeLabels['novita'];
@@ -587,7 +607,7 @@ async function traduciMenu(prods, cats) {
     BADGES_DEF['vegano'].label        = s.badgeLabels['vegano'];
 
   } catch(e) {
-    console.warn('Traduzione fallita, uso italiano:', e);
+    console.warn('Traduzione fallita:', e);
   }
   document.getElementById('trad-loader').style.display = 'none';
 }
