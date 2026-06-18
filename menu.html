@@ -26,16 +26,51 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .nav-btn{padding:12px 16px;background:none;border:none;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.06em;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
 .nav-btn:hover{color:var(--oro-v);}
 .nav-btn.attivo{color:var(--oro);border-bottom-color:var(--oro);}
+.nav-btn.preferiti{color:var(--oro-v);}
 
-/* RICERCA */
-.barra-ricerca{padding:14px 16px;background:var(--carta);border-bottom:1px solid rgba(0,0,0,.06);}
+/* BARRA RICERCA */
+.barra-ricerca{padding:14px 16px 10px;background:var(--carta);border-bottom:1px solid rgba(0,0,0,.06);}
 .ricerca-input{width:100%;padding:11px 16px 11px 40px;border:1.5px solid #d4c9bb;border-radius:24px;font-family:'Inter',sans-serif;font-size:14px;background:var(--bianco);color:var(--nero);outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a6f63' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center;}
 .ricerca-input:focus{border-color:var(--oro);}
+.ricerca-hint{font-size:10px;color:var(--grigio);margin-top:6px;padding-left:4px;}
+
+/* BARRA FILTRI */
+.filtri-bar{background:var(--carta);border-bottom:1px solid rgba(0,0,0,.06);padding:0 16px;}
+.filtri-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;user-select:none;}
+.filtri-toggle-left{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--grigio);}
+.filtri-badge-count{background:var(--nero);color:var(--carta);border-radius:10px;font-size:10px;font-weight:700;padding:1px 7px;}
+.filtri-toggle-icon{font-size:10px;color:var(--grigio);transition:transform .2s;}
+.filtri-toggle.aperto .filtri-toggle-icon{transform:rotate(180deg);}
+.filtri-corpo{display:none;padding-bottom:14px;}
+.filtri-corpo.show{display:block;}
+.filtri-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grigio);margin-bottom:8px;margin-top:12px;}
+.filtri-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #d4c9bb;background:var(--bianco);color:var(--grigio);transition:all .15s;white-space:nowrap;}
+.chip:hover{border-color:var(--oro);}
+.chip.attivo{background:var(--nero);color:var(--carta);border-color:var(--nero);}
+.chip-reset{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--rosso);background:#fff5f5;color:var(--rosso);margin-top:10px;}
+
+/* FILTRI ATTIVI PILLS */
+.filtri-attivi{display:flex;flex-wrap:wrap;gap:5px;padding:6px 16px 10px;}
+.filtro-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:var(--nero);color:var(--carta);}
+.filtro-pill button{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:13px;line-height:1;padding:0 0 0 2px;}
 
 /* CONTENUTO */
 .main{max-width:680px;margin:0 auto;padding:0 0 60px;}
 
-/* SEZIONE */
+/* SEZIONE PREFERITI */
+.sezione-preferiti{background:var(--nero);border-bottom:2px solid rgba(200,146,42,.3);}
+.sezione-preferiti .sezione-header{position:relative;top:0;background:transparent;}
+.sezione-preferiti .sezione-header h2{color:var(--oro-v);}
+.sezione-preferiti .prodotto{border-bottom-color:rgba(255,255,255,.07);}
+.sezione-preferiti .prodotto-nome{color:var(--bianco);}
+.sezione-preferiti .prodotto-desc{color:rgba(255,255,255,.45);}
+.sezione-preferiti .prodotto-prezzo{color:var(--oro);}
+.sezione-preferiti .prodotto-prezzo-barrato{color:rgba(255,255,255,.3);}
+.sezione-preferiti .prodotto-foto-placeholder{background:rgba(255,255,255,.07);}
+.sezione-preferiti .all-sigla-pill{background:#2a1500;border-color:#5a2d00;color:#e8a050;}
+
+/* SEZIONE NORMALE */
 .sezione{padding:0 0 8px;}
 .sezione-header{display:flex;align-items:baseline;gap:10px;padding:28px 20px 14px;position:sticky;top:45px;background:var(--carta);z-index:10;}
 .sezione-header h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--nero);}
@@ -45,7 +80,7 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 
 /* PRODOTTO */
 .prodotti-lista{padding:0 16px;}
-.prodotto{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06);transition:opacity .2s;}
+.prodotto{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06);transition:opacity .2s;cursor:pointer;}
 .prodotto:last-child{border-bottom:none;}
 .prodotto.non-disponibile{opacity:.38;}
 .prodotto-foto{width:80px;height:80px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--sabbia);}
@@ -53,18 +88,21 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .prodotto-info{flex:1;min-width:0;}
 .prodotto-nome{font-size:14px;font-weight:600;color:var(--nero);line-height:1.3;margin-bottom:3px;}
 .prodotto-desc{font-size:12px;color:var(--grigio);line-height:1.5;}
-.prodotto-badges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
-.badge-novita{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:#e8f5e9;color:#2d6a4f;}
-.badge-consigliato{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:#fff8e1;color:#b08000;}
-.badge-nd{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:var(--rosso);}
+.prodotto-badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;}
 .prodotto-prezzo-wrap{display:flex;flex-direction:column;align-items:flex-end;align-self:center;flex-shrink:0;}
 .prodotto-prezzo{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--oro);white-space:nowrap;}
 .prodotto-prezzo-barrato{font-size:12px;color:#aaa;text-decoration:line-through;white-space:nowrap;}
 
-/* STATO */
+/* ALLERGENI SIGLE */
+.allergeni-sigle{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.all-sigla-pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:700;background:#fff0f0;color:#b03a2e;border:1px solid #f5c6c2;}
+
+/* STATO / SPINNER */
 .stato{text-align:center;padding:60px 24px;color:var(--grigio);font-size:14px;}
 .spinner{width:36px;height:36px;border:3px solid var(--sabbia);border-top-color:var(--oro);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg)}}
+.nessun-risultato{text-align:center;padding:40px 24px;color:var(--grigio);font-size:13px;}
+.nessun-risultato strong{display:block;font-size:32px;margin-bottom:8px;}
 
 /* FOOTER */
 .footer{background:var(--nero);color:rgba(255,255,255,.35);text-align:center;padding:24px;font-size:11px;letter-spacing:.08em;}
@@ -73,28 +111,41 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 /* BANNER ORARIO */
 .orario-banner{background:var(--nero);color:var(--oro-v);text-align:center;padding:8px 16px;font-size:12px;letter-spacing:.04em;}
 
-/* ALLERGENI SIGLE */
-.allergeni-sigle{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
-.all-sigla-pill{display:inline-block;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:700;background:#fff0f0;color:#b03a2e;border:1px solid #f5c6c2;cursor:pointer;}
+/* BADGE STILI */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.badge-senza-glutine{background:#e8f5e9;color:#2d6a4f;}
+.badge-best-seller{background:#fff3cd;color:#856404;}
+.badge-novita{background:#e3f0ff;color:#1a56db;}
+.badge-consigliato{background:#fff8e1;color:#b08000;}
+.badge-piccante{background:#fce4e4;color:#b03a2e;}
+.badge-vegano{background:#f0faf0;color:#276749;}
+.badge-nd{color:var(--rosso);}
 
 /* PANNELLO DETTAGLIO */
 .dettaglio-overlay{display:none;position:fixed;inset:0;background:rgba(17,16,8,.6);z-index:100;align-items:flex-end;justify-content:center;}
 .dettaglio-overlay.show{display:flex;}
-.dettaglio-box{background:var(--carta);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 -4px 40px rgba(0,0,0,.25);animation:slideUp .25s ease;}
+.dettaglio-box{background:var(--carta);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;max-height:82vh;overflow-y:auto;box-shadow:0 -4px 40px rgba(0,0,0,.25);animation:slideUp .25s ease;}
 @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 .dettaglio-handle{width:40px;height:4px;background:#d4c9bb;border-radius:2px;margin:0 auto 20px;}
 .dettaglio-nome{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--nero);margin-bottom:6px;}
-.dettaglio-desc{font-size:13px;color:var(--grigio);line-height:1.6;margin-bottom:16px;}
-.dettaglio-sezione{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grigio);margin-bottom:8px;margin-top:16px;}
-.dettaglio-ingredienti{font-size:13px;color:var(--nero);line-height:1.6;background:var(--sabbia);padding:12px;border-radius:10px;}
-.dettaglio-allergeni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.dettaglio-desc{font-size:13px;color:var(--grigio);line-height:1.6;margin-bottom:8px;}
+.dettaglio-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.dettaglio-prezzo{font-family:'Playfair Display',serif;font-size:22px;color:var(--oro);font-weight:700;margin-top:4px;}
+.det-sezione{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grigio);margin-bottom:8px;margin-top:18px;}
+.det-ingredienti{font-size:13px;color:var(--nero);line-height:1.6;background:var(--sabbia);padding:12px;border-radius:10px;}
+.det-allergeni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
 .all-pill{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:600;}
 .all-pill.presente{background:#fef5f5;border:1px solid #f5c6c2;color:#b03a2e;}
 .all-pill.assente{background:var(--sabbia);border:1px solid #e8dfd0;color:#aaa;}
 .all-pill .sigla{font-size:10px;font-weight:700;width:28px;flex-shrink:0;}
-.dettaglio-prezzo{font-family:'Playfair Display',serif;font-size:22px;color:var(--oro);font-weight:700;margin-top:16px;}
-.btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;}
 .nota-allergeni{font-size:11px;color:var(--grigio);margin-top:12px;font-style:italic;}
+
+/* ABBINAMENTI */
+.det-abbinamenti{background:linear-gradient(135deg,var(--nero),var(--carbone));border-radius:12px;padding:14px 16px;margin-top:4px;}
+.det-abbinamenti-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--oro);margin-bottom:6px;}
+.det-abbinamenti-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+
+.btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px;}
 </style>
 </head>
 <body>
@@ -103,26 +154,66 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
   <h1>Antica Friggitoria<br><em>Fratelli Caruso</em></h1>
   <span class="hero-tag">Corso dei Mille 803 · Piazza Torrelunga · Palermo</span>
 </header>
+
 <div class="orario-banner" id="orario-banner" style="display:none"></div>
 <nav class="nav-categorie" id="nav-cat"><div class="nav-inner" id="nav-inner"></div></nav>
-<div class="barra-ricerca"><input class="ricerca-input" type="search" id="ricerca" placeholder="Cerca nel menù…" oninput="filtra()"></div>
-<main class="main" id="main"><div class="stato"><div class="spinner"></div>Caricamento menù…</div></main>
-<footer class="footer"><strong>Antica Friggitoria Fratelli Caruso</strong>Corso dei Mille 803 · Piazza Torrelunga · Palermo</footer>
 
-<!-- PANNELLO DETTAGLIO PRODOTTO -->
+<div class="barra-ricerca">
+  <input class="ricerca-input" type="search" id="ricerca" placeholder="Cerca per nome o ingrediente…" oninput="aggiorna()">
+  <div class="ricerca-hint">Cerca anche per ingrediente — es. "mozzarella", "bacon", "gamberetti"</div>
+</div>
+
+<div class="filtri-bar">
+  <div class="filtri-toggle" id="filtri-toggle" onclick="toggleFiltri()">
+    <span class="filtri-toggle-left">
+      🔍 Filtri
+      <span class="filtri-badge-count" id="filtri-count" style="display:none">0</span>
+    </span>
+    <span class="filtri-toggle-icon" id="filtri-icon">▼</span>
+  </div>
+  <div class="filtri-corpo" id="filtri-corpo">
+    <div class="filtri-label">Escludi allergeni</div>
+    <div class="filtri-chips" id="chips-allergeni"></div>
+    <div class="filtri-label">Mostra solo</div>
+    <div class="filtri-chips" id="chips-badge"></div>
+    <div style="margin-top:10px">
+      <button class="chip-reset" onclick="resetFiltri()">✕ Cancella tutti i filtri</button>
+    </div>
+  </div>
+</div>
+<div class="filtri-attivi" id="filtri-attivi" style="display:none"></div>
+
+<main class="main" id="main">
+  <div class="stato"><div class="spinner"></div>Caricamento menù…</div>
+</main>
+
+<footer class="footer">
+  <strong>Antica Friggitoria Fratelli Caruso</strong>
+  Corso dei Mille 803 · Piazza Torrelunga · Palermo
+</footer>
+
+<!-- PANNELLO DETTAGLIO -->
 <div class="dettaglio-overlay" id="dettaglio-overlay" onclick="chiudiDettaglio(event)">
   <div class="dettaglio-box" id="dettaglio-box">
     <div class="dettaglio-handle"></div>
     <div class="dettaglio-nome" id="det-nome"></div>
+    <div class="dettaglio-badges" id="det-badges"></div>
     <div class="dettaglio-desc" id="det-desc"></div>
     <div class="dettaglio-prezzo" id="det-prezzo"></div>
     <div id="det-ingredienti-wrap" style="display:none">
-      <div class="dettaglio-sezione">Ingredienti</div>
-      <div class="dettaglio-ingredienti" id="det-ingredienti"></div>
+      <div class="det-sezione">Ingredienti</div>
+      <div class="det-ingredienti" id="det-ingredienti"></div>
+    </div>
+    <div id="det-abbinamenti-wrap" style="display:none">
+      <div class="det-sezione">Abbinamenti consigliati</div>
+      <div class="det-abbinamenti">
+        <div class="det-abbinamenti-title">🍷 Prova anche</div>
+        <div class="det-abbinamenti-text" id="det-abbinamenti-text"></div>
+      </div>
     </div>
     <div id="det-allergeni-wrap" style="display:none">
-      <div class="dettaglio-sezione">Allergeni</div>
-      <div class="dettaglio-allergeni-grid" id="det-allergeni-grid"></div>
+      <div class="det-sezione">Allergeni</div>
+      <div class="det-allergeni-grid" id="det-allergeni-grid"></div>
       <div class="nota-allergeni">⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.</div>
     </div>
     <button class="btn-chiudi-det" onclick="chiudiDettaglio()">Chiudi</button>
@@ -132,82 +223,240 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 <script>
 const SUPABASE_URL  = 'https://cmqaujrjrhmwxfkgvrgp.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtcWF1anJqcmhtd3hma2d2cmdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MDYwNjIsImV4cCI6MjA5NzE4MjA2Mn0.JEO-R-_7B5h7FiwWOc1jRZkMwpwSk3BkYuBeq1HbsKs';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-const ALLERGENI_EU=[
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const ALLERGENI_EU = [
   {sigla:'GLU',nome:'Glutine'},{sigla:'CRO',nome:'Crostacei'},{sigla:'UOV',nome:'Uova'},
   {sigla:'PES',nome:'Pesce'},{sigla:'ARA',nome:'Arachidi'},{sigla:'SOI',nome:'Soia'},
   {sigla:'LAT',nome:'Latte'},{sigla:'FRU',nome:'Frutta a guscio'},{sigla:'SED',nome:'Sedano'},
   {sigla:'SEN',nome:'Senape'},{sigla:'SES',nome:'Sesamo'},{sigla:'SOL',nome:'Solfiti'},
   {sigla:'LUP',nome:'Lupini'},{sigla:'MOL',nome:'Molluschi'},
 ];
-let prodottiAll={}; // mappa id->prodotto per il pannello dettaglio
 
-function oraCorrente(){
-  const n=new Date();
-  return n.getHours()*60+n.getMinutes();
-}
-function orarioVisibile(oi,of){
-  if(!oi||!of)return true;
-  const[oh,om]=oi.split(':').map(Number);
-  const[fh,fm]=of.split(':').map(Number);
-  const now=oraCorrente();
-  const start=oh*60+om, end=fh*60+fm;
-  return now>=start&&now<=end;
-}
-function oraStr(){const n=new Date();return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;}
+const BADGES_DEF = {
+  'senza-glutine': { label:'Senza Glutine', icon:'🌾', cls:'badge-senza-glutine' },
+  'best-seller':   { label:'Best Seller',   icon:'🔥', cls:'badge-best-seller' },
+  'novita':        { label:'Novità',        icon:'🆕', cls:'badge-novita' },
+  'consigliato':   { label:'Consigliato',   icon:'⭐', cls:'badge-consigliato' },
+  'piccante':      { label:'Piccante',      icon:'🌶️', cls:'badge-piccante' },
+  'vegano':        { label:'Vegano',        icon:'🌱', cls:'badge-vegano' },
+};
 
+let datiMenu = [];
+let prodottiAll = {};
+let filtriAttivi = { allergeni: [], badges: [] };
+
+// ── ORARIO ──
+function oraCorrente(){ const n=new Date(); return n.getHours()*60+n.getMinutes(); }
+function orarioVisibile(oi,of){ if(!oi||!of)return true; const[oh,om]=oi.split(':').map(Number); const[fh,fm]=of.split(':').map(Number); const now=oraCorrente(); return now>=oh*60+om&&now<=fh*60+fm; }
+function oraStr(){ const n=new Date(); return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
+
+// ── CARICAMENTO ──
 async function caricaMenu(){
   try{
-    const[{data:cats},{data:prods}]=await Promise.all([
+    const [{data:cats},{data:prods}] = await Promise.all([
       sb.from('categorie').select('*').eq('attiva',true).order('ordine'),
       sb.from('prodotti').select('*').order('ordine')
     ]);
-    datiMenu=cats.map(c=>({
+    datiMenu = cats.map(c=>({
       categoria:c,
-      prodotti:prods.filter(p=>p.categoria_id===c.id&&p.disponibile!==false)
-    })).filter(g=>g.prodotti.length>0&&orarioVisibile(g.categoria.ora_inizio,g.categoria.ora_fine));
-    // Mappa per dettaglio
-    prodottiAll={};prods.forEach(p=>prodottiAll[p.id]=p);
+      prodotti:prods.filter(p=>p.categoria_id===c.id && p.disponibile!==false)
+    })).filter(g=>g.prodotti.length>0 && orarioVisibile(g.categoria.ora_inizio,g.categoria.ora_fine));
+    prodottiAll = {};
+    prods.forEach(p=>prodottiAll[p.id]=p);
 
-    // Banner orario
-    const banner=document.getElementById('orario-banner');
-    const hasOrari=cats.some(c=>c.ora_inizio);
-    if(hasOrari){banner.style.display='block';banner.textContent=`🕐 Orario attuale: ${oraStr()} — il menù mostra solo i prodotti disponibili ora`;}
+    const banner = document.getElementById('orario-banner');
+    if(cats.some(c=>c.ora_inizio)){ banner.style.display='block'; banner.textContent=`🕐 Orario attuale: ${oraStr()} — il menù mostra solo i prodotti disponibili ora`; }
 
-    renderNav();renderMenu(datiMenu);
+    inizializzaFiltriUI();
+    aggiorna();
 
     sb.channel('menu-live')
       .on('postgres_changes',{event:'*',schema:'public',table:'prodotti'},()=>caricaMenu())
       .on('postgres_changes',{event:'*',schema:'public',table:'categorie'},()=>caricaMenu())
       .subscribe();
-  }catch(e){
+  } catch(e){
     document.getElementById('main').innerHTML='<div class="stato">⚠️ Impossibile caricare il menù.<br><small>Riprova tra qualche istante.</small></div>';
   }
 }
 
-function renderNav(){
-  document.getElementById('nav-inner').innerHTML=datiMenu.map(g=>
-    `<button class="nav-btn" onclick="scorriA('cat-${g.categoria.id}')" id="nav-${g.categoria.id}">${g.categoria.emoji} ${g.categoria.nome}</button>`
+// ── FILTRI UI ──
+function inizializzaFiltriUI(){
+  // Chips allergeni
+  document.getElementById('chips-allergeni').innerHTML = ALLERGENI_EU.map(a=>
+    `<button class="chip" id="chip-all-${a.sigla}" onclick="toggleAllergene('${a.sigla}')" title="Escludi ${a.nome}">${a.sigla} · ${a.nome}</button>`
+  ).join('');
+
+  // Chips badge
+  document.getElementById('chips-badge').innerHTML = Object.entries(BADGES_DEF).map(([k,v])=>
+    `<button class="chip" id="chip-badge-${k}" onclick="toggleBadge('${k}')">${v.icon} ${v.label}</button>`
   ).join('');
 }
 
-function badgeHTML(p){
-  const b=[];
-  if(p.badge==='novita') b.push('<span class="badge-novita">🟢 Novità</span>');
-  if(p.badge==='consigliato') b.push('<span class="badge-consigliato">⭐ Consigliato</span>');
-  if(!orarioVisibile(p.ora_inizio,p.ora_fine)) return null; // prodotto fuori orario
-  return b.length?`<div class="prodotto-badges">${b.join('')}</div>`:'';
+function toggleFiltri(){
+  const corpo = document.getElementById('filtri-corpo');
+  const toggle = document.getElementById('filtri-toggle');
+  corpo.classList.toggle('show');
+  toggle.classList.toggle('aperto');
 }
 
-function renderMenu(gruppi){
-  const main=document.getElementById('main');
-  if(!gruppi.length){main.innerHTML='<div class="stato">Nessun prodotto trovato.</div>';return;}
-  main.innerHTML=gruppi.map(g=>{
-    // Filtra per orario anche i singoli prodotti
-    const prodFiltrati=g.prodotti.filter(p=>orarioVisibile(p.ora_inizio,p.ora_fine));
-    if(!prodFiltrati.length)return '';
-    const orAvviso=g.categoria.ora_inizio&&g.categoria.ora_fine?
-      `<span class="orario-avviso">🕐 ${g.categoria.ora_inizio.slice(0,5)}–${g.categoria.ora_fine.slice(0,5)}</span>`:'';
+function toggleAllergene(sigla){
+  const idx = filtriAttivi.allergeni.indexOf(sigla);
+  if(idx>=0) filtriAttivi.allergeni.splice(idx,1);
+  else filtriAttivi.allergeni.push(sigla);
+  aggiorna();
+}
+
+function toggleBadge(k){
+  const idx = filtriAttivi.badges.indexOf(k);
+  if(idx>=0) filtriAttivi.badges.splice(idx,1);
+  else filtriAttivi.badges.push(k);
+  aggiorna();
+}
+
+function resetFiltri(){
+  filtriAttivi = { allergeni: [], badges: [] };
+  aggiorna();
+}
+
+function aggiornaCSSFiltri(){
+  // Aggiorna chip attivi
+  ALLERGENI_EU.forEach(a=>{
+    const el = document.getElementById('chip-all-'+a.sigla);
+    if(el) el.classList.toggle('attivo', filtriAttivi.allergeni.includes(a.sigla));
+  });
+  Object.keys(BADGES_DEF).forEach(k=>{
+    const el = document.getElementById('chip-badge-'+k);
+    if(el) el.classList.toggle('attivo', filtriAttivi.badges.includes(k));
+  });
+
+  // Contatore
+  const tot = filtriAttivi.allergeni.length + filtriAttivi.badges.length;
+  const cnt = document.getElementById('filtri-count');
+  cnt.style.display = tot>0 ? 'inline' : 'none';
+  cnt.textContent = tot;
+
+  // Pills filtri attivi
+  const wrap = document.getElementById('filtri-attivi');
+  const pills = [
+    ...filtriAttivi.allergeni.map(s=>{
+      const a = ALLERGENI_EU.find(x=>x.sigla===s);
+      return `<span class="filtro-pill">No ${s}<button onclick="toggleAllergene('${s}')">✕</button></span>`;
+    }),
+    ...filtriAttivi.badges.map(k=>{
+      const b = BADGES_DEF[k];
+      return `<span class="filtro-pill">${b.icon} ${b.label}<button onclick="toggleBadge('${k}')">✕</button></span>`;
+    })
+  ];
+  wrap.style.display = pills.length>0 ? 'flex' : 'none';
+  wrap.innerHTML = pills.join('');
+}
+
+// ── FILTRAGGIO PRODOTTI ──
+function prodottoPassaFiltri(p){
+  const q = document.getElementById('ricerca').value.trim().toLowerCase();
+  if(q){
+    const testo = [(p.nome||''),(p.descrizione||''),(p.ingredienti||'')].join(' ').toLowerCase();
+    if(!testo.includes(q)) return false;
+  }
+  if(filtriAttivi.allergeni.length>0){
+    const allProd = p.allergeni || [];
+    if(filtriAttivi.allergeni.some(a=>allProd.includes(a))) return false;
+  }
+  if(filtriAttivi.badges.length>0){
+    const badgesProd = p.badges || [];
+    if(!filtriAttivi.badges.every(b=>badgesProd.includes(b))) return false;
+  }
+  return true;
+}
+
+// ── AGGIORNA (render + filtri CSS) ──
+function aggiorna(){
+  aggiornaCSSFiltri();
+
+  const q = document.getElementById('ricerca').value.trim();
+  const haFiltri = filtriAttivi.allergeni.length>0 || filtriAttivi.badges.length>0 || q;
+
+  // Preferiti: sempre visibili (se nessun filtro attivo o se passano i filtri)
+  const preferiti = Object.values(prodottiAll).filter(p=>
+    p.is_preferito && orarioVisibile(p.ora_inizio,p.ora_fine) && p.disponibile!==false && prodottoPassaFiltri(p)
+  );
+
+  const gruppi = datiMenu.map(g=>({
+    categoria: g.categoria,
+    prodotti: g.prodotti.filter(p=>prodottoPassaFiltri(p))
+  })).filter(g=>g.prodotti.length>0);
+
+  renderNav(preferiti.length>0, gruppi);
+  renderMain(preferiti, gruppi);
+}
+
+// ── NAV ──
+function renderNav(haPreferiti, gruppi){
+  const inner = document.getElementById('nav-inner');
+  let html = '';
+  if(haPreferiti) html += `<button class="nav-btn preferiti attivo" onclick="scorriA('sec-preferiti')">⭐ Preferiti</button>`;
+  html += gruppi.map(g=>
+    `<button class="nav-btn" onclick="scorriA('cat-${g.categoria.id}')" id="nav-${g.categoria.id}">${g.categoria.emoji} ${g.categoria.nome}</button>`
+  ).join('');
+  inner.innerHTML = html;
+}
+
+// ── BADGE HTML ──
+function badgeHTML(badges){
+  if(!badges||!badges.length) return '';
+  const pills = badges.map(k=>{
+    const b = BADGES_DEF[k];
+    if(!b) return `<span class="badge">${k}</span>`;
+    return `<span class="badge ${b.cls}">${b.icon} ${b.label}</span>`;
+  });
+  return `<div class="prodotto-badges">${pills.join('')}</div>`;
+}
+
+// ── RENDER PRODOTTO ──
+function prodottoHTML(p, catEmoji){
+  const foto = p.foto_url
+    ? `<img class="prodotto-foto" src="${p.foto_url}" alt="${p.nome}" loading="lazy" onerror="this.style.display='none'">`
+    : `<div class="prodotto-foto-placeholder">${catEmoji||'🍽️'}</div>`;
+  const pb = p.prezzo_barrato ? `<span class="prodotto-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>` : '';
+  const sigle = p.allergeni&&p.allergeni.length
+    ? `<div class="allergeni-sigle">${p.allergeni.map(s=>`<span class="all-sigla-pill">${s}</span>`).join('')}</div>` : '';
+  return `<div class="prodotto" onclick="apriDettaglio(${p.id})">
+    ${foto}
+    <div class="prodotto-info">
+      <div class="prodotto-nome">${p.nome}</div>
+      ${p.descrizione?`<div class="prodotto-desc">${p.descrizione}</div>`:''}
+      ${badgeHTML(p.badges||[])}
+      ${sigle}
+    </div>
+    <div class="prodotto-prezzo-wrap">${pb}<div class="prodotto-prezzo">€${Number(p.prezzo).toFixed(2)}</div></div>
+  </div>`;
+}
+
+// ── RENDER MAIN ──
+function renderMain(preferiti, gruppi){
+  const main = document.getElementById('main');
+  let html = '';
+
+  if(preferiti.length>0){
+    html += `<section class="sezione sezione-preferiti" id="sec-preferiti">
+      <div class="sezione-header">
+        <span class="sezione-emoji">⭐</span>
+        <h2>I Nostri Preferiti</h2>
+        <div class="sezione-divider"></div>
+      </div>
+      <div class="prodotti-lista">${preferiti.map(p=>prodottoHTML(p,'⭐')).join('')}</div>
+    </section>`;
+  }
+
+  if(!gruppi.length && !preferiti.length){
+    main.innerHTML = `<div class="nessun-risultato"><strong>🔍</strong>Nessun prodotto trovato.<br><small>Prova a modificare la ricerca o i filtri.</small></div>`;
+    return;
+  }
+
+  html += gruppi.map(g=>{
+    const orAvviso = g.categoria.ora_inizio&&g.categoria.ora_fine
+      ? `<span class="orario-avviso">🕐 ${g.categoria.ora_inizio.slice(0,5)}–${g.categoria.ora_fine.slice(0,5)}</span>` : '';
     return `<section class="sezione" id="cat-${g.categoria.id}">
       <div class="sezione-header">
         <span class="sezione-emoji">${g.categoria.emoji}</span>
@@ -215,52 +464,35 @@ function renderMenu(gruppi){
         ${orAvviso}
         <div class="sezione-divider"></div>
       </div>
-      <div class="prodotti-lista">
-        ${prodFiltrati.map(p=>{
-          const bHTML=badgeHTML(p);
-          const foto=p.foto_url
-            ?`<img class="prodotto-foto" src="${p.foto_url}" alt="${p.nome}" loading="lazy" onerror="this.style.display='none'">`
-            :`<div class="prodotto-foto-placeholder">${g.categoria.emoji}</div>`;
-          const prezzoBarrato=p.prezzo_barrato
-            ?`<span class="prodotto-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>`:'';
-          const sigleHTML=p.allergeni&&p.allergeni.length
-            ?`<div class="allergeni-sigle">${p.allergeni.map(s=>`<span class="all-sigla-pill" title="Clicca per dettagli allergeni">${s}</span>`).join('')}</div>`:'';
-          return `<div class="prodotto" onclick="apriDettaglio(${p.id})" style="cursor:pointer">
-            ${foto}
-            <div class="prodotto-info">
-              <div class="prodotto-nome">${p.nome}</div>
-              ${p.descrizione?`<div class="prodotto-desc">${p.descrizione}</div>`:''}
-              ${bHTML||''}
-              ${sigleHTML}
-            </div>
-            <div class="prodotto-prezzo-wrap">
-              ${prezzoBarrato}
-              <div class="prodotto-prezzo">€${Number(p.prezzo).toFixed(2)}</div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="prodotti-lista">${g.prodotti.map(p=>prodottoHTML(p,g.categoria.emoji)).join('')}</div>
     </section>`;
   }).join('');
+
+  main.innerHTML = html;
   osservaSezioni();
 }
 
+// ── SCROLL ──
 function scorriA(id){
-  const el=document.getElementById(id);
-  if(el){
-    const off=document.querySelector('.nav-categorie').offsetHeight+document.querySelector('.barra-ricerca').offsetHeight;
-    window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-off-8,behavior:'smooth'});
-  }
+  const el = document.getElementById(id);
+  if(!el) return;
+  const navH = document.querySelector('.nav-categorie').offsetHeight
+             + document.querySelector('.barra-ricerca').offsetHeight
+             + document.querySelector('.filtri-bar').offsetHeight;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-navH-8,behavior:'smooth'});
 }
 
 function osservaSezioni(){
-  const navH=document.querySelector('.nav-categorie').offsetHeight+document.querySelector('.barra-ricerca').offsetHeight;
-  const obs=new IntersectionObserver(entries=>{
+  const navH = document.querySelector('.nav-categorie').offsetHeight
+             + document.querySelector('.barra-ricerca').offsetHeight
+             + document.querySelector('.filtri-bar').offsetHeight;
+  const obs = new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){
-        const id=e.target.id.replace('cat-','');
+        const raw = e.target.id;
+        const id = raw.replace('cat-','').replace('sec-preferiti','preferiti');
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('attivo'));
-        const btn=document.getElementById('nav-'+id);
+        const btn = document.getElementById('nav-'+id) || document.querySelector(`[onclick*="${raw}"]`);
         if(btn){btn.classList.add('attivo');btn.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});}
       }
     });
@@ -268,45 +500,44 @@ function osservaSezioni(){
   document.querySelectorAll('.sezione').forEach(s=>obs.observe(s));
 }
 
-function filtra(){
-  const q=document.getElementById('ricerca').value.trim().toLowerCase();
-  if(!q){renderMenu(datiMenu);renderNav();return;}
-  const filtrati=datiMenu.map(g=>({categoria:g.categoria,prodotti:g.prodotti.filter(p=>p.nome.toLowerCase().includes(q)||(p.descrizione||'').toLowerCase().includes(q))})).filter(g=>g.prodotti.length>0);
-  renderMenu(filtrati);
-  document.getElementById('nav-inner').innerHTML='';
-}
-
 // ── PANNELLO DETTAGLIO ──
 function apriDettaglio(id){
-  const p=prodottiAll[id];
-  if(!p)return;
-  document.getElementById('det-nome').textContent=p.nome;
-  document.getElementById('det-desc').textContent=p.descrizione||'';
-  const pb=p.prezzo_barrato?`<span style="text-decoration:line-through;color:#aaa;font-size:14px;font-family:Inter">€${Number(p.prezzo_barrato).toFixed(2)}</span> `:'';
-  document.getElementById('det-prezzo').innerHTML=pb+`€${Number(p.prezzo).toFixed(2)}`;
+  const p = prodottiAll[id];
+  if(!p) return;
+  document.getElementById('det-nome').textContent = p.nome;
+  document.getElementById('det-desc').textContent = p.descrizione||'';
+
+  // Badge
+  document.getElementById('det-badges').innerHTML = badgeHTML(p.badges||'');
+
+  // Prezzo
+  const pb = p.prezzo_barrato?`<span style="text-decoration:line-through;color:#aaa;font-size:14px;font-family:Inter">€${Number(p.prezzo_barrato).toFixed(2)}</span> `:'';
+  document.getElementById('det-prezzo').innerHTML = pb+`€${Number(p.prezzo).toFixed(2)}`;
 
   // Ingredienti
-  const ingWrap=document.getElementById('det-ingredienti-wrap');
-  if(p.ingredienti){
-    document.getElementById('det-ingredienti').textContent=p.ingredienti;
-    ingWrap.style.display='block';
-  } else { ingWrap.style.display='none'; }
+  const ingWrap = document.getElementById('det-ingredienti-wrap');
+  const ingTesto = p.descrizione || p.ingredienti;
+  if(ingTesto){ document.getElementById('det-ingredienti').textContent=ingTesto; ingWrap.style.display='block'; }
+  else ingWrap.style.display='none';
+
+  // Abbinamenti
+  const abbWrap = document.getElementById('det-abbinamenti-wrap');
+  if(p.abbinamenti){ document.getElementById('det-abbinamenti-text').textContent=p.abbinamenti; abbWrap.style.display='block'; }
+  else abbWrap.style.display='none';
 
   // Allergeni
-  const allWrap=document.getElementById('det-allergeni-wrap');
-  const hasDatiAllergeni=p.allergeni!==null&&p.allergeni!==undefined;
-  if(hasDatiAllergeni){
-    const arr=p.allergeni||[];
-    document.getElementById('det-allergeni-grid').innerHTML=ALLERGENI_EU.map(a=>{
-      const presente=arr.includes(a.sigla);
+  const allWrap = document.getElementById('det-allergeni-wrap');
+  if(p.allergeni!==null && p.allergeni!==undefined){
+    const arr = p.allergeni||[];
+    document.getElementById('det-allergeni-grid').innerHTML = ALLERGENI_EU.map(a=>{
+      const presente = arr.includes(a.sigla);
       return `<div class="all-pill ${presente?'presente':'assente'}">
-        <span class="sigla">${a.sigla}</span>
-        <span>${a.nome}</span>
+        <span class="sigla">${a.sigla}</span><span>${a.nome}</span>
         ${presente?'<span style="margin-left:auto">⚠</span>':''}
       </div>`;
     }).join('');
     allWrap.style.display='block';
-  } else { allWrap.style.display='none'; }
+  } else allWrap.style.display='none';
 
   document.getElementById('dettaglio-overlay').classList.add('show');
   document.body.style.overflow='hidden';
@@ -319,7 +550,7 @@ function chiudiDettaglio(e){
 }
 
 caricaMenu();
-setInterval(()=>{if(datiMenu.length)renderMenu(datiMenu);},60000);
+setInterval(()=>{ if(datiMenu.length) aggiorna(); }, 60000);
 </script>
 </body>
 </html>

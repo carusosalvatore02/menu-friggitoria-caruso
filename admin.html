@@ -35,6 +35,7 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .drag-item:hover{border-color:var(--oro);}
 .drag-item.dragging{opacity:.4;box-shadow:0 4px 20px rgba(0,0,0,.15);}
 .drag-item.drag-over{border-color:var(--oro);box-shadow:0 0 0 3px rgba(200,146,42,.2);}
+.drag-item.preferito{border-color:rgba(200,146,42,.5);background:linear-gradient(135deg,#fffdf6,#fff);}
 .drag-handle{color:#c5bdb4;cursor:grab;font-size:18px;flex-shrink:0;padding:4px;touch-action:none;user-select:none;}
 .drag-handle:active{cursor:grabbing;}
 .prod-foto{width:52px;height:52px;border-radius:8px;flex-shrink:0;background:var(--sabbia);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;}
@@ -45,8 +46,12 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .prod-prezzo{font-size:12px;color:var(--oro);font-weight:700;}
 .prod-prezzo-barrato{font-size:11px;color:#aaa;text-decoration:line-through;}
 .badge-pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;}
-.badge-novita{background:#e8f5e9;color:#2d6a4f;}
+.badge-senza-glutine{background:#e8f5e9;color:#2d6a4f;}
+.badge-best-seller{background:#fff3cd;color:#856404;}
+.badge-novita{background:#e3f0ff;color:#1a56db;}
 .badge-consigliato{background:#fff8e1;color:#b08000;}
+.badge-piccante{background:#fce4e4;color:#b03a2e;}
+.badge-vegano{background:#f0faf0;color:#276749;}
 .orario-tag{font-size:10px;color:var(--grigio);background:var(--sabbia);padding:1px 6px;border-radius:8px;}
 .allergeni-tag{font-size:10px;color:#666;background:#f0f0f0;padding:1px 6px;border-radius:8px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .prod-azioni{display:flex;gap:5px;flex-shrink:0;align-items:center;}
@@ -82,11 +87,21 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .foto-preview-img{width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;display:none;}
 .foto-area-testo{font-size:13px;color:var(--grigio);}
 .foto-area-testo strong{color:var(--oro);}
-.badge-select{display:flex;gap:8px;flex-wrap:wrap;}
-.badge-opt{padding:6px 14px;border-radius:20px;border:1.5px solid #d4c9bb;background:none;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
-.badge-opt.sel-novita{background:#e8f5e9;border-color:#2d6a4f;color:#2d6a4f;}
-.badge-opt.sel-consigliato{background:#fff8e1;border-color:#b08000;color:#b08000;}
-.badge-opt.sel-none{background:var(--sabbia);border-color:#aaa;color:var(--grigio);}
+
+/* MULTI-BADGE CHECKBOX */
+.badges-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.badge-chk{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #e8dfd0;border-radius:8px;cursor:pointer;transition:all .15s;background:var(--bianco);}
+.badge-chk:hover{border-color:var(--oro);background:#fffdf8;}
+.badge-chk.sel{border-color:var(--oro);background:#fffcf0;}
+.badge-chk input{width:16px;height:16px;accent-color:var(--oro);cursor:pointer;flex-shrink:0;}
+.badge-chk .bc-icon{font-size:14px;}
+.badge-chk .bc-label{font-size:12px;font-weight:600;}
+
+/* PREFERITO TOGGLE */
+.preferito-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1.5px solid #e8dfd0;border-radius:10px;background:var(--bianco);margin-bottom:13px;}
+.preferito-row.attivo{border-color:var(--oro);background:#fffcf0;}
+.preferito-label{font-size:13px;font-weight:600;color:var(--nero);}
+.preferito-sub{font-size:11px;color:var(--grigio);margin-top:1px;}
 
 /* ALLERGENI CHECKBOX */
 .allergeni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
@@ -162,19 +177,27 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
     <h3 id="modal-prod-titolo">Nuovo prodotto</h3>
     <div class="campo"><label>Categoria</label><select id="prod-cat"></select></div>
     <div class="campo"><label>Nome prodotto</label><input type="text" id="prod-nome" placeholder="es. Panino con la Milza"></div>
-    <div class="campo"><label>Descrizione</label><textarea id="prod-desc" placeholder="Ingredienti o breve descrizione…"></textarea></div>
+    <div class="campo"><label>Descrizione / Ingredienti brevi</label><textarea id="prod-desc" placeholder="Ingredienti o breve descrizione visibile nel menu…"></textarea></div>
     <div class="campo-row">
       <div class="campo"><label>Prezzo (€)</label><input type="number" id="prod-prezzo" placeholder="0.00" min="0" step="0.05"></div>
       <div class="campo"><label>Prezzo barrato (€)</label><input type="number" id="prod-prezzo-barrato" placeholder="Lascia vuoto" min="0" step="0.05"></div>
     </div>
-    <div class="campo">
-      <label>Badge</label>
-      <div class="badge-select">
-        <button type="button" class="badge-opt" id="badge-none" onclick="setBadge(null)">Nessuno</button>
-        <button type="button" class="badge-opt" id="badge-novita" onclick="setBadge('novita')">🟢 Novità</button>
-        <button type="button" class="badge-opt" id="badge-consigliato" onclick="setBadge('consigliato')">⭐ Consigliato</button>
+
+    <!-- MULTI-BADGE -->
+    <div class="sezione-titolo-modale">🏷️ Badge</div>
+    <div class="badges-grid" id="badges-checkboxes"></div>
+
+    <!-- PREFERITO -->
+    <div class="sezione-titolo-modale">⭐ Sezione Preferiti</div>
+    <div class="preferito-row" id="preferito-row" onclick="togglePreferito()">
+      <div>
+        <div class="preferito-label">⭐ Prodotto preferito</div>
+        <div class="preferito-sub">Appare nella sezione "I Nostri Preferiti" in cima al menù</div>
       </div>
+      <button class="toggle-disp" id="prod-preferito" onclick="event.stopPropagation();togglePreferito()"></button>
     </div>
+
+    <!-- ORARI -->
     <div class="campo">
       <label>Visibile solo in questi orari <span style="color:#aaa;font-weight:400">(lascia vuoto = sempre)</span></label>
       <div class="campo-row">
@@ -182,6 +205,8 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
         <div class="campo" style="margin:0"><label>Alle</label><input type="time" id="prod-ora-fine"></div>
       </div>
     </div>
+
+    <!-- FOTO -->
     <div class="campo">
       <label>Foto prodotto</label>
       <div class="foto-area" id="foto-area" ondragover="fotagOver(event)" ondragleave="fotaLeave(event)" ondrop="fotaDrop(event)">
@@ -193,16 +218,23 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
       <input type="text" id="prod-foto-url" placeholder="oppure incolla URL foto…" style="margin-top:4px">
     </div>
 
-    <!-- NUOVA SEZIONE ALLERGENI -->
+    <!-- ALLERGENI -->
     <div class="sezione-titolo-modale">⚠️ Allergeni presenti</div>
     <div class="allergeni-grid" id="allergeni-checkboxes"></div>
 
-    <!-- NUOVA SEZIONE INGREDIENTI -->
+    <!-- INGREDIENTI COMPLETI -->
     <div class="campo" style="margin-top:14px">
-      <label>Ingredienti completi</label>
+      <label>Ingredienti completi <span style="color:#aaa;font-weight:400">(dettaglio interno)</span></label>
       <textarea id="prod-ingredienti" placeholder="Es. Farina di ceci, prezzemolo, sale, olio di semi…" style="min-height:80px"></textarea>
     </div>
 
+    <!-- ABBINAMENTI -->
+    <div class="campo">
+      <label>Abbinamenti consigliati</label>
+      <textarea id="prod-abbinamenti" placeholder="Es. Ottimo con una birra artigianale o una Spuma ghiacciata. Prova anche le panelle come antipasto…" style="min-height:80px"></textarea>
+    </div>
+
+    <!-- DISPONIBILITÀ -->
     <div class="campo" style="display:flex;align-items:center;gap:10px;margin-top:4px;">
       <label style="margin:0">Disponibile</label>
       <button class="toggle-disp on" id="prod-disp" onclick="this.classList.toggle('on')"></button>
@@ -248,23 +280,23 @@ const PIN_ADMIN = '1234';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 const ALLERGENI_EU = [
-  {sigla:'GLU', nome:'Glutine'},
-  {sigla:'CRO', nome:'Crostacei'},
-  {sigla:'UOV', nome:'Uova'},
-  {sigla:'PES', nome:'Pesce'},
-  {sigla:'ARA', nome:'Arachidi'},
-  {sigla:'SOI', nome:'Soia'},
-  {sigla:'LAT', nome:'Latte'},
-  {sigla:'FRU', nome:'Frutta a guscio'},
-  {sigla:'SED', nome:'Sedano'},
-  {sigla:'SEN', nome:'Senape'},
-  {sigla:'SES', nome:'Sesamo'},
-  {sigla:'SOL', nome:'Solfiti'},
-  {sigla:'LUP', nome:'Lupini'},
-  {sigla:'MOL', nome:'Molluschi'},
+  {sigla:'GLU',nome:'Glutine'},{sigla:'CRO',nome:'Crostacei'},{sigla:'UOV',nome:'Uova'},
+  {sigla:'PES',nome:'Pesce'},{sigla:'ARA',nome:'Arachidi'},{sigla:'SOI',nome:'Soia'},
+  {sigla:'LAT',nome:'Latte'},{sigla:'FRU',nome:'Frutta a guscio'},{sigla:'SED',nome:'Sedano'},
+  {sigla:'SEN',nome:'Senape'},{sigla:'SES',nome:'Sesamo'},{sigla:'SOL',nome:'Solfiti'},
+  {sigla:'LUP',nome:'Lupini'},{sigla:'MOL',nome:'Molluschi'},
 ];
 
-let categorie=[], prodotti=[], editId=null, badgeCorrente=null, fotoFile=null;
+const BADGES_DEF = [
+  {k:'senza-glutine', label:'Senza Glutine', icon:'🌾', cls:'badge-senza-glutine'},
+  {k:'best-seller',   label:'Best Seller',   icon:'🔥', cls:'badge-best-seller'},
+  {k:'novita',        label:'Novità',        icon:'🆕', cls:'badge-novita'},
+  {k:'consigliato',   label:'Consigliato',   icon:'⭐', cls:'badge-consigliato'},
+  {k:'piccante',      label:'Piccante',      icon:'🌶️', cls:'badge-piccante'},
+  {k:'vegano',        label:'Vegano',        icon:'🌱', cls:'badge-vegano'},
+];
+
+let categorie=[], prodotti=[], editId=null, fotoFile=null;
 
 // ── PIN ──
 let pinBuf='';
@@ -276,6 +308,7 @@ function pconf(){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='block';
   costruisciCheckboxAllergeni();
+  costruisciCheckboxBadges();
   carica();
 }
 function logout(){document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';pinBuf='';aggPin();}
@@ -289,26 +322,41 @@ function costruisciCheckboxAllergeni(){
       <span class="all-sigla">${a.sigla}</span>
     </label>`).join('');
 }
-
-function toggleAllCheck(sigla, el){
-  const chk = document.getElementById('chk-'+sigla);
-  chk.checked = !chk.checked;
-  el.classList.toggle('sel', chk.checked);
-}
-
-function getAllergeniSelezionati(){
-  return ALLERGENI_EU.filter(a=>document.getElementById('chk-'+a.sigla)?.checked).map(a=>a.sigla);
-}
-
+function toggleAllCheck(sigla,el){const chk=document.getElementById('chk-'+sigla);chk.checked=!chk.checked;el.classList.toggle('sel',chk.checked);}
+function getAllergeniSelezionati(){return ALLERGENI_EU.filter(a=>document.getElementById('chk-'+a.sigla)?.checked).map(a=>a.sigla);}
 function setAllergeniCheckbox(arr){
   ALLERGENI_EU.forEach(a=>{
-    const chk = document.getElementById('chk-'+a.sigla);
-    const lbl = document.getElementById('all-'+a.sigla);
-    if(chk && lbl){
-      chk.checked = arr && arr.includes(a.sigla);
-      lbl.classList.toggle('sel', chk.checked);
-    }
+    const chk=document.getElementById('chk-'+a.sigla);
+    const lbl=document.getElementById('all-'+a.sigla);
+    if(chk&&lbl){chk.checked=arr&&arr.includes(a.sigla);lbl.classList.toggle('sel',chk.checked);}
   });
+}
+
+// ── BADGES MULTI-CHECKBOX ──
+function costruisciCheckboxBadges(){
+  document.getElementById('badges-checkboxes').innerHTML = BADGES_DEF.map(b=>`
+    <label class="badge-chk" id="badgechk-${b.k}" onclick="toggleBadgeCheck('${b.k}',this)">
+      <input type="checkbox" id="bchk-${b.k}" onclick="event.stopPropagation()">
+      <span class="bc-icon">${b.icon}</span>
+      <span class="bc-label">${b.label}</span>
+    </label>`).join('');
+}
+function toggleBadgeCheck(k,el){const chk=document.getElementById('bchk-'+k);chk.checked=!chk.checked;el.classList.toggle('sel',chk.checked);}
+function getBadgesSelezionati(){return BADGES_DEF.filter(b=>document.getElementById('bchk-'+b.k)?.checked).map(b=>b.k);}
+function setBadgesCheckbox(arr){
+  BADGES_DEF.forEach(b=>{
+    const chk=document.getElementById('bchk-'+b.k);
+    const lbl=document.getElementById('badgechk-'+b.k);
+    if(chk&&lbl){chk.checked=arr&&arr.includes(b.k);lbl.classList.toggle('sel',chk.checked);}
+  });
+}
+
+// ── PREFERITO ──
+function togglePreferito(){
+  const btn=document.getElementById('prod-preferito');
+  const row=document.getElementById('preferito-row');
+  btn.classList.toggle('on');
+  row.classList.toggle('attivo',btn.classList.contains('on'));
 }
 
 // ── CARICAMENTO ──
@@ -356,17 +404,16 @@ function itemHTML(p,c){
   const fotoSrc=p.foto_url?`<img src="${p.foto_url}" alt="" onerror="this.style.display='none'">`:`<span>${c.emoji}</span>`;
   const prezzoBarrato=p.prezzo_barrato?`<span class="prod-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>`:'';
   const allerTag=p.allergeni&&p.allergeni.length?`<span class="allergeni-tag">⚠ ${p.allergeni.join(', ')}</span>`:'';
-  return `<li class="drag-item" id="prod-${p.id}" data-id="${p.id}" draggable="true">
+  const badgePills=(p.badges||[]).map(k=>{const b=BADGES_DEF.find(x=>x.k===k);return b?`<span class="badge-pill ${b.cls}">${b.icon}</span>`:''}).join('');
+  const prefTag=p.is_preferito?'<span style="font-size:12px">⭐</span>':'';
+  return `<li class="drag-item ${p.is_preferito?'preferito':''}" id="prod-${p.id}" data-id="${p.id}" draggable="true">
     <span class="drag-handle" title="Trascina per riordinare">⠿</span>
     <div class="prod-foto">${fotoSrc}</div>
     <div class="prod-info">
-      <div class="prod-nome">${p.nome}</div>
+      <div class="prod-nome">${prefTag} ${p.nome}</div>
       <div class="prod-meta">
         <span class="prod-prezzo">€${Number(p.prezzo).toFixed(2)}</span>
-        ${prezzoBarrato}
-        ${p.badge==='novita'?'<span class="badge-pill badge-novita">🟢</span>':''}
-        ${p.badge==='consigliato'?'<span class="badge-pill badge-consigliato">⭐</span>':''}
-        ${orario}${allerTag}
+        ${prezzoBarrato}${badgePills}${orario}${allerTag}
         ${p.disponibile===false?'<span style="font-size:10px;color:var(--rosso);font-weight:600">NON DISP.</span>':''}
       </div>
     </div>
@@ -436,19 +483,10 @@ async function salvaOrdineCategorie(){
 // ── TOGGLE DISPONIBILITÀ ──
 async function toggleDisp(id,btn){
   const p=prodotti.find(x=>x.id===id);
-  const nuovo=p.disponibile===false?true:false;
+  const nuovo=p.disponibile===false;
   await sb.from('prodotti').update({disponibile:nuovo}).eq('id',id);
-  btn.classList.toggle('on',nuovo);
-  p.disponibile=nuovo;
+  btn.classList.toggle('on',nuovo);p.disponibile=nuovo;
   toast(nuovo?'Disponibile ✓':'Non disponibile','ok');
-}
-
-// ── BADGE ──
-function setBadge(v){
-  badgeCorrente=v;
-  document.getElementById('badge-none').className='badge-opt'+(v===null?' sel-none':'');
-  document.getElementById('badge-novita').className='badge-opt'+(v==='novita'?' sel-novita':'');
-  document.getElementById('badge-consigliato').className='badge-opt'+(v==='consigliato'?' sel-consigliato':'');
 }
 
 // ── FOTO ──
@@ -479,7 +517,7 @@ async function caricaFoto(){
 
 // ── MODALE PRODOTTO ──
 function apriModaleProdotto(id){
-  editId=id||null;fotoFile=null;badgeCorrente=null;
+  editId=id||null; fotoFile=null;
   const p=id?prodotti.find(x=>x.id===id):null;
   document.getElementById('modal-prod-titolo').textContent=p?'Modifica prodotto':'Nuovo prodotto';
   document.getElementById('prod-cat').innerHTML=categorie.map(c=>`<option value="${c.id}"${p&&p.categoria_id===c.id?' selected':''}>${c.emoji} ${c.nome}</option>`).join('');
@@ -491,11 +529,18 @@ function apriModaleProdotto(id){
   document.getElementById('prod-ora-fine').value=p?.ora_fine?.slice(0,5)||'';
   document.getElementById('prod-foto-url').value=p?.foto_url||'';
   document.getElementById('prod-ingredienti').value=p?.ingredienti||'';
+  document.getElementById('prod-abbinamenti').value=p?.abbinamenti||'';
   const img=document.getElementById('foto-preview');
   if(p?.foto_url){img.src=p.foto_url;img.style.display='block';document.getElementById('foto-testo').textContent='Foto attuale';}
   else{img.style.display='none';document.getElementById('foto-testo').innerHTML='📷 <strong>Tocca per scegliere una foto</strong><br><span style="font-size:11px">JPG, PNG, WEBP · max 5MB</span>';}
-  setBadge(p?.badge||null);
+  setBadgesCheckbox(p?.badges||[]);
   setAllergeniCheckbox(p?.allergeni||[]);
+  // Preferito
+  const prefBtn=document.getElementById('prod-preferito');
+  const prefRow=document.getElementById('preferito-row');
+  const isPref=p?.is_preferito||false;
+  prefBtn.classList.toggle('on',isPref);
+  prefRow.classList.toggle('attivo',isPref);
   document.getElementById('prod-disp').classList.toggle('on',p?.disponibile!==false);
   document.getElementById('btn-elimina-prod').style.display=p?'block':'none';
   document.getElementById('modal-prodotto').classList.add('show');
@@ -514,13 +559,15 @@ async function salvaProdotto(){
     descrizione:document.getElementById('prod-desc').value.trim(),
     prezzo,
     prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,
-    badge:badgeCorrente,
+    badges:getBadgesSelezionati(),
+    is_preferito:document.getElementById('prod-preferito').classList.contains('on'),
     ora_inizio:document.getElementById('prod-ora-inizio').value||null,
     ora_fine:document.getElementById('prod-ora-fine').value||null,
     foto_url:fotoUrl,
     disponibile:document.getElementById('prod-disp').classList.contains('on'),
     allergeni:getAllergeniSelezionati(),
     ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,
+    abbinamenti:document.getElementById('prod-abbinamenti').value.trim()||null,
   };
   if(editId){await sb.from('prodotti').update(dati).eq('id',editId);toast('Prodotto aggiornato ✓','ok');}
   else{dati.ordine=prodotti.filter(p=>p.categoria_id===dati.categoria_id).length+1;await sb.from('prodotti').insert(dati);toast('Prodotto aggiunto ✓','ok');}
