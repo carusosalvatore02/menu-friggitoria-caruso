@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code — Antica Friggitoria Fratelli Caruso</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap');
+:root{--nero:#111008;--oro:#c8922a;--oro-v:#e8b96a;--carta:#faf6ee;}
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{font-family:'Inter',sans-serif;background:#e8e0d4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;gap:16px;}
+
+/* CARD PRINCIPALE (formato A6 ~105×148mm) */
+.qr-card{background:var(--nero);border-radius:20px;padding:32px 28px;width:340px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.35);}
+.qr-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(200,146,42,.12) 0%,transparent 70%);pointer-events:none;}
+.qr-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--oro),transparent);}
+
+.qr-anno{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--oro);margin-bottom:12px;display:block;}
+.qr-titolo{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;}
+.qr-nome{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--carta);line-height:1.1;margin-bottom:20px;}
+.qr-nome em{font-style:italic;font-weight:400;color:var(--oro-v);}
+
+/* QR CODE */
+.qr-wrap{background:white;border-radius:14px;padding:14px;display:inline-block;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.qr-wrap img{width:180px;height:180px;display:block;}
+
+.qr-istruzione{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:14px;line-height:1.5;}
+.qr-istruzione strong{color:var(--oro-v);display:block;font-size:13px;margin-bottom:2px;}
+
+.qr-divider{width:40px;height:1px;background:rgba(200,146,42,.4);margin:0 auto 14px;}
+
+.qr-lingue{display:flex;gap:6px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
+.qr-lingua{font-size:16px;}
+
+.qr-indirizzo{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.1em;line-height:1.7;}
+.qr-indirizzo strong{color:rgba(255,255,255,.5);}
+
+.qr-badge-lang{font-size:10px;color:var(--oro);background:rgba(200,146,42,.1);border:1px solid rgba(200,146,42,.25);border-radius:10px;padding:3px 10px;display:inline-block;margin-bottom:10px;}
+
+/* VERSIONE PICCOLA (per tavoli, foglio A4 con 4 card) */
+.qr-card-sm{background:var(--nero);border-radius:14px;padding:20px 18px;width:210px;text-align:center;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.qr-card-sm .qr-wrap{padding:10px;margin-bottom:12px;}
+.qr-card-sm .qr-wrap img{width:120px;height:120px;}
+.qr-card-sm .qr-nome{font-size:15px;margin-bottom:14px;}
+.qr-card-sm .qr-istruzione{font-size:9px;margin-bottom:8px;}
+.qr-card-sm .qr-indirizzo{font-size:9px;}
+.qr-card-sm .qr-lingue{margin-bottom:10px;}
+.qr-card-sm .qr-lingua{font-size:13px;}
+.qr-card-sm::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--oro),transparent);}
+
+.griglia-4{display:grid;grid-template-columns:repeat(2,210px);gap:16px;margin-top:8px;}
+
+/* ETICHETTE */
+.etichetta{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--nero);opacity:.5;margin-bottom:6px;}
+
+/* PULSANTE STAMPA */
+.stampa-btn{background:var(--oro);color:var(--nero);border:none;border-radius:12px;padding:12px 28px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.stampa-btn:hover{background:var(--oro-v);}
+
+@media print {
+  body{background:white;padding:0;justify-content:flex-start;}
+  .stampa-btn,.etichetta{display:none!important;}
+  .qr-card,.qr-card-sm{box-shadow:none;}
+  .griglia-4{page-break-after:always;}
+}
+</style>
+</head>
+<body>
+
+<button class="stampa-btn" onclick="window.print()">🖨️ Stampa questa pagina</button>
+
+<!-- CARD GRANDE (da banco / espositore) -->
+<p class="etichetta">Versione grande — banco / espositore</p>
+<div class="qr-card">
+  <span class="qr-anno">Dal 1955 · Palermo</span>
+  <div class="qr-titolo">Antica Friggitoria</div>
+  <div class="qr-nome"><em>Fratelli Caruso</em></div>
+
+  <div class="qr-wrap">
+    <!-- QR CODE: punta a https://carusosalvatore02.github.io/menu-friggitoria-caruso/menu.html -->
+    <img src="svg_menu_friggitoria_caruso.svg" alt="QR Code Menù Fratelli Caruso">
+  </div>
+
+  <div class="qr-badge-lang">🌐 Menu disponibile in 7 lingue</div>
+
+  <div class="qr-istruzione">
+    <strong>📱 Inquadra con la fotocamera</strong>
+    per aprire il menù digitale
+  </div>
+
+  <div class="qr-lingue">
+    <span class="qr-lingua" title="Italiano">🇮🇹</span>
+    <span class="qr-lingua" title="English">🇬🇧</span>
+    <span class="qr-lingua" title="Français">🇫🇷</span>
+    <span class="qr-lingua" title="Deutsch">🇩🇪</span>
+    <span class="qr-lingua" title="Español">🇪🇸</span>
+    <span class="qr-lingua" title="العربية">🇸🇦</span>
+    <span class="qr-lingua" title="中文">🇨🇳</span>
+  </div>
+
+  <div class="qr-divider"></div>
+
+  <div class="qr-indirizzo">
+    <strong>Antica Friggitoria Fratelli Caruso</strong>
+    Corso dei Mille 803 · Piazza Torrelunga<br>
+    Palermo
+  </div>
+</div>
+
+<!-- GRIGLIA 4 CARD PICCOLE (per tavoli, stampa su A4) -->
+<p class="etichetta" style="margin-top:24px">Versione piccola × 4 — per i tavoli (stampa su A4)</p>
+<div class="griglia-4">
+  <!-- Ripetuta 4 volte per riempire foglio A4 -->
+  <div class="qr-card-sm">
+    <span class="qr-anno" style="font-size:7px;letter-spacing:.3em;color:var(--oro);display:block;margin-bottom:8px;">Dal 1955 · Palermo</span>
+    <div class="qr-nome" style="font-size:14px;margin-bottom:12px;">Antica Friggitoria<br><em>Fratelli Caruso</em></div>
+    <div class="qr-wrap"><img src="svg_menu_friggitoria_caruso.svg" alt="QR"></div>
+    <div class="qr-istruzione"><strong>📱 Inquadra per il menù</strong>Disponibile in 7 lingue</div>
+    <div class="qr-lingue"><span class="qr-lingua">🇮🇹</span><span class="qr-lingua">🇬🇧</span><span class="qr-lingua">🇫🇷</span><span class="qr-lingua">🇩🇪</span><span class="qr-lingua">🇪🇸</span><span class="qr-lingua">🇸🇦</span><span class="qr-lingua">🇨🇳</span></div>
+    <div class="qr-indirizzo">Corso dei Mille 803 · Palermo</div>
+  </div>
+  <div class="qr-card-sm">
+    <span class="qr-anno" style="font-size:7px;letter-spacing:.3em;color:var(--oro);display:block;margin-bottom:8px;">Dal 1955 · Palermo</span>
+    <div class="qr-nome" style="font-size:14px;margin-bottom:12px;">Antica Friggitoria<br><em>Fratelli Caruso</em></div>
+    <div class="qr-wrap"><img src="svg_menu_friggitoria_caruso.svg" alt="QR"></div>
+    <div class="qr-istruzione"><strong>📱 Inquadra per il menù</strong>Disponibile in 7 lingue</div>
+    <div class="qr-lingue"><span class="qr-lingua">🇮🇹</span><span class="qr-lingua">🇬🇧</span><span class="qr-lingua">🇫🇷</span><span class="qr-lingua">🇩🇪</span><span class="qr-lingua">🇪🇸</span><span class="qr-lingua">🇸🇦</span><span class="qr-lingua">🇨🇳</span></div>
+    <div class="qr-indirizzo">Corso dei Mille 803 · Palermo</div>
+  </div>
+  <div class="qr-card-sm">
+    <span class="qr-anno" style="font-size:7px;letter-spacing:.3em;color:var(--oro);display:block;margin-bottom:8px;">Dal 1955 · Palermo</span>
+    <div class="qr-nome" style="font-size:14px;margin-bottom:12px;">Antica Friggitoria<br><em>Fratelli Caruso</em></div>
+    <div class="qr-wrap"><img src="svg_menu_friggitoria_caruso.svg" alt="QR"></div>
+    <div class="qr-istruzione"><strong>📱 Inquadra per il menù</strong>Disponibile in 7 lingue</div>
+    <div class="qr-lingue"><span class="qr-lingua">🇮🇹</span><span class="qr-lingua">🇬🇧</span><span class="qr-lingua">🇫🇷</span><span class="qr-lingua">🇩🇪</span><span class="qr-lingua">🇪🇸</span><span class="qr-lingua">🇸🇦</span><span class="qr-lingua">🇨🇳</span></div>
+    <div class="qr-indirizzo">Corso dei Mille 803 · Palermo</div>
+  </div>
+  <div class="qr-card-sm">
+    <span class="qr-anno" style="font-size:7px;letter-spacing:.3em;color:var(--oro);display:block;margin-bottom:8px;">Dal 1955 · Palermo</span>
+    <div class="qr-nome" style="font-size:14px;margin-bottom:12px;">Antica Friggitoria<br><em>Fratelli Caruso</em></div>
+    <div class="qr-wrap"><img src="svg_menu_friggitoria_caruso.svg" alt="QR"></div>
+    <div class="qr-istruzione"><strong>📱 Inquadra per il menù</strong>Disponibile in 7 lingue</div>
+    <div class="qr-lingue"><span class="qr-lingua">🇮🇹</span><span class="qr-lingua">🇬🇧</span><span class="qr-lingua">🇫🇷</span><span class="qr-lingua">🇩🇪</span><span class="qr-lingua">🇪🇸</span><span class="qr-lingua">🇸🇦</span><span class="qr-lingua">🇨🇳</span></div>
+    <div class="qr-indirizzo">Corso dei Mille 803 · Palermo</div>
+  </div>
+</div>
+
+</body>
+</html>
