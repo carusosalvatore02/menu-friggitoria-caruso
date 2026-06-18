@@ -169,10 +169,6 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .det-abbinamenti-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
 .btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px;}
 
-/* TRADUZIONE LOADING */
-.trad-loader{text-align:center;padding:20px;color:var(--grigio);font-size:13px;display:none;}
-.trad-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--sabbia);border-top-color:var(--oro);border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle;}
-
 /* RTL per arabo */
 body.rtl{direction:rtl;}
 body.rtl .prodotto{flex-direction:row-reverse;}
@@ -246,10 +242,6 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
 </div>
 <div class="filtri-attivi" id="filtri-attivi" style="display:none"></div>
 
-<div class="trad-loader" id="trad-loader">
-  <span class="trad-spinner"></span><span id="trad-loader-txt">Traduzione in corso…</span>
-</div>
-
 <main class="main" id="main">
   <div class="stato"><div class="spinner"></div>Caricamento menù…</div>
 </main>
@@ -292,7 +284,6 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
 <script>
 const SUPABASE_URL  = 'https://cmqaujrjrhmwxfkgvrgp.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtcWF1anJqcmhtd3hma2d2cmdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2MDYwNjIsImV4cCI6MjA5NzE4MjA2Mn0.JEO-R-_7B5h7FiwWOc1jRZkMwpwSk3BkYuBeq1HbsKs';
-const CLAUDE_API    = 'https://api.anthropic.com/v1/messages';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 // ── ORARI APERTURA per giorno (0=Dom,1=Lun,...,6=Sab) ──
@@ -517,7 +508,7 @@ async function caricaMenu(){
     inizializzaFiltriUI();
 
     if (lingua !== 'it') {
-      await traduciMenu(prods, cats);
+      traduciMenu(prods, cats);
     }
 
     aggiorna();
@@ -531,92 +522,556 @@ async function caricaMenu(){
   }
 }
 
-// ── TRADUZIONE VIA CLAUDE API ──
-async function traduciMenu(prods, cats) {
-  if (traduzioneCache[lingua]) return;
+// ── DIZIONARIO TRADUZIONI HARD-CODED ──
+// Nomi prodotti, descrizioni e categorie tradotti in 6 lingue.
+// Chiave = testo italiano, valore = traduzione.
+const TRADUZIONI = {
+en: {
+  // CATEGORIE
+  'Bevande':'Drinks','Birre':'Beers','Crea la tua piadina':'Build Your Piadina',
+  'Hamburger della casa':'House Burgers','Kebab':'Kebab','Mignon':'Mignon Bites',
+  'Panini':'Sandwiches','Panini alla piastra':'Grilled Sandwiches','Panini speciali':'Special Sandwiches',
+  'Pasta':'Pasta','Piadina e sandwich':'Piadina & Sandwiches','Sfizioserie':'Snacks & Fritters',
+  // NOMI PRODOTTI
+  'Acqua frizzante 50 cl':'Sparkling Water 50 cl','Acqua naturale 1.5 Lt':'Still Water 1.5 Lt',
+  'Acqua naturale 50 cl':'Still Water 50 cl','Ali di pollo e paprika':'Chicken Wings with Paprika',
+  'Anelletti al forno':'Baked Anelletti Pasta','Anelli di cipolla':'Onion Rings',
+  'Arancine Mignon Carne':'Meat Arancini (Mini)','Arancine mignon burro':'Butter Arancini (Mini)',
+  'BBQ Burger':'BBQ Burger','Bacon':'Bacon','Bacon Burger':'Bacon Burger',
+  'Becks 33 cl':'Becks 33 cl','Becks 66 cl':'Becks 66 cl',
+  'Birbe di pollo':'Chicken Bites','Burger':'Burger','Ca Meusa - Con Milza':'Ca Meusa – Spleen Sandwich',
+  'Calamari fritti':'Fried Calamari','Caprese':'Caprese','Carne di maiale':'Roasted Pork',
+  'Carne di vitello':'Roasted Veal','Cartoccio':'Cartoccio (Ham & Mozzarella)',
+  'Cazzilli - Crocche':'Cazzilli – Potato Croquettes','Ceres':'Ceres',
+  'Cheese Burger':'Cheese Burger','Chinotto Lattina 330 ml':'Chinotto Can 330 ml',
+  'Classic Burger':'Classic Burger','Coca-Cola Lattina 330 ml':'Coca-Cola Can 330 ml',
+  'Coca-Cola Zero Lattina 330 ml':'Coca-Cola Zero Can 330 ml','Cocktail':'Cocktail',
+  'Cotoletta di Carne':'Meat Cutlet','Cotoletta di pollo':'Chicken Cutlet',
+  'Crea la tua piadina':'Build Your Piadina','Crocche singole crude':'Raw Croquettes (single)',
+  'Crocche singole fritte':'Fried Croquettes (single)',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'Crostini with Ham, Mozzarella & Béchamel',
+  'Diavola':'Diavola','Esagerato':'The Exaggerated','Fanta Lattina 330 ml':'Fanta Can 330 ml',
+  'Fratelli Caruso':'Fratelli Caruso','Gazzosa':'Lemonade Soda','Heineken 33cl':'Heineken 33 cl',
+  'Heineken 66 cl':'Heineken 66 cl','Insalata di mare':'Seafood Salad','Insalata mista':'Mixed Salad',
+  'Lasagne al forno':'Baked Lasagne','Melanzane Arrostite':'Grilled Aubergine',
+  'Melanzane Fritte':'Fried Aubergine','Melanzane alla Parmigiana':'Aubergine Parmigiana',
+  'Melanzane arrostite panate':'Breaded Grilled Aubergine','Melanzane fritte panate':'Breaded Fried Aubergine',
+  'Melted Burger':'Melted Burger','Milza e polmone di vitello':'Veal Spleen & Lung',
+  'Moretti 33 cl':'Moretti 33 cl','Moretti 66 cl':'Moretti 66 cl',
+  'Mozzarelline Fritte':'Fried Mozzarella Bites','Onion Burger':'Onion Burger',
+  'Panelle':'Panelle (Chickpea Fritters)','Panelle singole crude':'Raw Panelle (single)',
+  'Panelle singole fritte':'Fried Panelle (single)','Panineria Mignon':'Mignon Sandwiches',
+  'Panineria Mignon con Milza':'Mignon Sandwiches with Spleen','Panineria Mignon di Pesce':'Mignon Fish Sandwiches',
+  'Panino Giovanni Caruso':'Giovanni Caruso Sandwich','Panino Kebab':'Kebab Sandwich',
+  'Panino zio Toto':'Uncle Totò Sandwich','Patatine Fritte':'French Fries',
+  'Peroni Nastro Azzurro 33 cl':'Peroni Nastro Azzurro 33 cl','Peroni Nastro Azzurro 66 cl':'Peroni Nastro Azzurro 66 cl',
+  'Piadina Kebab':'Kebab Piadina','Piadina cotoletta di Pollo':'Chicken Cutlet Piadina',
+  'Porchetta':'Porchetta','Rosticceria Mignon':'Mignon Pastry Bites','Salciccia':'Sausage',
+  'Salmone':'Smoked Salmon','Sandwich Cotto':'Ham Sandwich','Sandwich Tonno':'Tuna Sandwich',
+  'Schiacciata cotto':'Ham Schiacciata','Schiacciata tonno':'Tuna Schiacciata',
+  'Spiedini con Carne':'Meat Skewers','Sprite Lattina 330 ml':'Sprite Can 330 ml',
+  'Spuma':'Spuma Soda','Tennents':'Tennent\'s','The al Limone Lattina 330 ml':'Lemon Iced Tea Can 330 ml',
+  'The alla Pesca Lattina 330 ml':'Peach Iced Tea Can 330 ml','Tonno':'Tuna',
+  'Topolino':'Topolino (Ham, Mozzarella & Wurstel)','Topolino sbagliato':'Wrong Topolino',
+  'Vaschetta Calamari Fritti 200gr':'Fried Calamari Tray 200g','Vaschetta Insalata di mare 200gr':'Seafood Salad Tray 200g',
+  'Vaschetta patatine grande':'Large Fries Tray','Vaschetta patatine media':'Medium Fries Tray',
+  'Vaschetta patatine piccola':'Small Fries Tray','Wurstel':'Wurstel',
+  // DESCRIZIONI
+  '33 cl':'33 cl','66 cl':'66 cl','Anelletti al forno':'Baked anelletti pasta',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'Bacon, spicy salami, emmental, mushrooms, tabasco.',
+  'Bacon, salame piccante, emmental.':'Bacon, spicy salami, emmental.',
+  'Birra premium lager italiana 5.0% vol.':'Italian premium lager 5.0% vol.',
+  'Calamari fritti':'Fried calamari',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'Calamari, mussels, octopus, crab meat, pickles.',
+  'Carne di maiale arrostita.':'Roasted pork.',
+  'Carne di vitello arrostita.':'Roasted veal.',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'Veal, cooked ham, mozzarella, mushrooms, radicchio.',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'Kebab meat, lettuce, radicchio, onion, tomato, yogurt sauce, spicy sauce.',
+  'Crocchette di patate.':'Potato croquettes.',
+  'Farina di ceci.':'Chickpea flour.',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'Shrimp, lettuce, radicchio, pink sauce.',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'Hamburger, bacon, sweet & sour onion, emmental, lettuce, tomato, BBQ sauce.',
+  'Hamburger, cipolla agrodolce.':'Hamburger, sweet & sour onion.',
+  'Hamburger, emmental, lattuga, pomodoro.':'Hamburger, emmental, lettuce, tomato.',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'Hamburger, cheese fondue, crispy bacon & onion, lettuce, tomato.',
+  'Hamburger, lattuga, bacon.':'Hamburger, lettuce, bacon.',
+  'Hamburger, lattuga, pomodoro.':'Hamburger, lettuce, tomato.',
+  'Hamburger, porchetta, mozzarella, patatine.':'Hamburger, porchetta, mozzarella, fries.',
+  'Hamburger.':'Hamburger.',
+  'Lasagne al forno':'Baked lasagne',
+  'Melanzane arrostite e panate.':'Breaded grilled aubergine.',
+  'Melanzane arrostite.':'Grilled aubergine.',
+  'Melanzane fritte e panate.':'Breaded fried aubergine.',
+  'Melanzane fritte.':'Fried aubergine.',
+  'Melanzane, pomodoro, grana.':'Aubergine, tomato, grana cheese.',
+  'Moretti 33 cl':'Moretti 33 cl',
+  'Partannina':'Partannina',
+  'Patatine fritte.':'French fries.',
+  'Pollo impanato e fritto.':'Breaded and fried chicken.',
+  'Pollo impanato fritto, lattuga.':'Breaded fried chicken, lettuce.',
+  'Polmone e milza di vitello.':'Veal lung and spleen.',
+  'Pomodoro e mozzarella.':'Tomato and mozzarella.',
+  'Porchetta di nostra produzione.':'House-made porchetta.',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'Cooked ham, mozzarella, sliced tomato.',
+  'Prosciutto cotto, mozzarella, wurstel.':'Cooked ham, mozzarella, wurstel.',
+  'Prosciutto cotto, mozzarella.':'Cooked ham, mozzarella.',
+  'Salmone affumicato + insalata a scelta':'Smoked salmon + salad of your choice',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'Sausage, porchetta, sweet & sour onion, tabasco.',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'Sausage, spicy salami, emmental, fried aubergine.',
+  'Salsiccia.':'Sausage.',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'Choose your ingredients, price varies by additions. (ask staff)',
+  'Scegli la tua insalata preferita':'Choose your favourite salad',
+  'Tonno':'Tuna',
+  'Tonno, pomodoro a fette.':'Tuna, sliced tomato.',
+  'Wurstel.':'Wurstel.',
+  '€ 10,00 al Kg':'€ 10.00 / kg','€ 15,00 al Kg':'€ 15.00 / kg',
+  '€ 25,00 al Kg':'€ 25.00 / kg','€ 8,00 al Kg':'€ 8.00 / kg',
+},
+fr: {
+  'Bevande':'Boissons','Birre':'Bières','Crea la tua piadina':'Créez votre Piadina',
+  'Hamburger della casa':'Burgers Maison','Kebab':'Kebab','Mignon':'Bouchées Mignon',
+  'Panini':'Sandwichs','Panini alla piastra':'Sandwichs Grillés','Panini speciali':'Sandwichs Spéciaux',
+  'Pasta':'Pâtes','Piadina e sandwich':'Piadina & Sandwichs','Sfizioserie':'Friture & Snacks',
+  'Acqua frizzante 50 cl':'Eau Gazeuse 50 cl','Acqua naturale 1.5 Lt':'Eau Plate 1.5 Lt',
+  'Acqua naturale 50 cl':'Eau Plate 50 cl','Ali di pollo e paprika':'Ailes de Poulet Paprika',
+  'Anelletti al forno':'Anelletti au Four','Anelli di cipolla':'Rondelles d\'Oignon',
+  'Arancine Mignon Carne':'Arancini Viande (Mini)','Arancine mignon burro':'Arancini Beurre (Mini)',
+  'Birbe di pollo':'Bouchées de Poulet','Burger':'Burger','Ca Meusa - Con Milza':'Ca Meusa – Sandwich à la Rate',
+  'Calamari fritti':'Calamars Frits','Caprese':'Caprese','Carne di maiale':'Porc Rôti',
+  'Carne di vitello':'Veau Rôti','Cartoccio':'Cartoccio (Jambon & Mozzarella)',
+  'Cazzilli - Crocche':'Cazzilli – Croquettes de Pommes de Terre',
+  'Cheese Burger':'Cheese Burger','Classic Burger':'Classic Burger',
+  'Cocktail':'Cocktail de Crevettes','Cotoletta di Carne':'Escalope de Viande',
+  'Cotoletta di pollo':'Escalope de Poulet','Crea la tua piadina':'Créez votre Piadina',
+  'Crocche singole crude':'Croquettes Crues (unité)','Crocche singole fritte':'Croquettes Frites (unité)',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'Crostini Jambon, Mozzarella & Béchamel',
+  'Diavola':'Diavola','Esagerato':'L\'Exagéré','Fratelli Caruso':'Fratelli Caruso',
+  'Gazzosa':'Limonade','Insalata di mare':'Salade de Mer','Insalata mista':'Salade Mixte',
+  'Lasagne al forno':'Lasagnes au Four','Melanzane Arrostite':'Aubergines Grillées',
+  'Melanzane Fritte':'Aubergines Frites','Melanzane alla Parmigiana':'Aubergines à la Parmigiana',
+  'Melanzane arrostite panate':'Aubergines Grillées Panées','Melanzane fritte panate':'Aubergines Frites Panées',
+  'Melted Burger':'Melted Burger','Milza e polmone di vitello':'Rate et Poumon de Veau',
+  'Mozzarelline Fritte':'Bouchées de Mozzarella Frites','Onion Burger':'Onion Burger',
+  'Panelle':'Panelle (Beignets de Pois Chiches)','Panelle singole crude':'Panelle Crues (unité)',
+  'Panelle singole fritte':'Panelle Frites (unité)','Panineria Mignon':'Mini Sandwichs',
+  'Panineria Mignon con Milza':'Mini Sandwichs à la Rate','Panineria Mignon di Pesce':'Mini Sandwichs au Poisson',
+  'Panino Giovanni Caruso':'Sandwich Giovanni Caruso','Panino Kebab':'Sandwich Kebab',
+  'Panino zio Toto':'Sandwich Oncle Totò','Patatine Fritte':'Frites',
+  'Piadina Kebab':'Piadina Kebab','Piadina cotoletta di Pollo':'Piadina Escalope de Poulet',
+  'Porchetta':'Porchetta','Rosticceria Mignon':'Rosticceria Mignon','Salciccia':'Saucisse',
+  'Salmone':'Saumon Fumé','Sandwich Cotto':'Sandwich Jambon','Sandwich Tonno':'Sandwich Thon',
+  'Schiacciata cotto':'Schiacciata Jambon','Schiacciata tonno':'Schiacciata Thon',
+  'Spiedini con Carne':'Brochettes de Viande','Spuma':'Spuma','Tennents':'Tennent\'s',
+  'Tonno':'Thon','Topolino':'Topolino (Jambon, Mozzarella & Wurstel)',
+  'Topolino sbagliato':'Topolino Revisité',
+  'Vaschetta Calamari Fritti 200gr':'Barquette Calamars Frits 200g',
+  'Vaschetta Insalata di mare 200gr':'Barquette Salade de Mer 200g',
+  'Vaschetta patatine grande':'Grande Barquette de Frites',
+  'Vaschetta patatine media':'Barquette de Frites Moyenne',
+  'Vaschetta patatine piccola':'Petite Barquette de Frites','Wurstel':'Wurstel',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'Calamars, moules, poulpe, crabe, cornichons.',
+  'Carne di maiale arrostita.':'Porc rôti.','Carne di vitello arrostita.':'Veau rôti.',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'Veau, jambon cuit, mozzarella, champignons, radicchio.',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'Viande kebab, laitue, radicchio, oignon, tomate, sauce yaourt, sauce piquante.',
+  'Crocchette di patate.':'Croquettes de pommes de terre.',
+  'Farina di ceci.':'Farine de pois chiches.',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'Crevettes, laitue, radicchio, sauce rose.',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'Hamburger, bacon, oignon aigre-doux, emmental, laitue, tomate, sauce BBQ.',
+  'Hamburger, cipolla agrodolce.':'Hamburger, oignon aigre-doux.',
+  'Hamburger, emmental, lattuga, pomodoro.':'Hamburger, emmental, laitue, tomate.',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'Hamburger, fondue de fromages, bacon & oignon croustillants, laitue, tomate.',
+  'Hamburger, lattuga, bacon.':'Hamburger, laitue, bacon.',
+  'Hamburger, lattuga, pomodoro.':'Hamburger, laitue, tomate.',
+  'Hamburger, porchetta, mozzarella, patatine.':'Hamburger, porchetta, mozzarella, frites.',
+  'Hamburger.':'Hamburger.',
+  'Melanzane arrostite e panate.':'Aubergines grillées panées.',
+  'Melanzane arrostite.':'Aubergines grillées.',
+  'Melanzane fritte e panate.':'Aubergines frites panées.',
+  'Melanzane fritte.':'Aubergines frites.',
+  'Melanzane, pomodoro, grana.':'Aubergine, tomate, grana.',
+  'Patatine fritte.':'Frites.',
+  'Pollo impanato e fritto.':'Poulet pané et frit.',
+  'Pollo impanato fritto, lattuga.':'Poulet pané frit, laitue.',
+  'Polmone e milza di vitello.':'Poumon et rate de veau.',
+  'Pomodoro e mozzarella.':'Tomate et mozzarella.',
+  'Porchetta di nostra produzione.':'Porchetta maison.',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'Jambon cuit, mozzarella, tomate en tranches.',
+  'Prosciutto cotto, mozzarella, wurstel.':'Jambon cuit, mozzarella, wurstel.',
+  'Prosciutto cotto, mozzarella.':'Jambon cuit, mozzarella.',
+  'Salmone affumicato + insalata a scelta':'Saumon fumé + salade au choix',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'Saucisse, porchetta, oignon aigre-doux, tabasco.',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'Saucisse, salami piquant, emmental, aubergine frite.',
+  'Salsiccia.':'Saucisse.',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'Choisissez vos ingrédients, le prix varie selon les ajouts. (demandez au personnel)',
+  'Scegli la tua insalata preferita':'Choisissez votre salade préférée',
+  'Tonno, pomodoro a fette.':'Thon, tomate en tranches.',
+  'Wurstel.':'Wurstel.',
+  '€ 10,00 al Kg':'€ 10,00 / kg','€ 15,00 al Kg':'€ 15,00 / kg',
+  '€ 25,00 al Kg':'€ 25,00 / kg','€ 8,00 al Kg':'€ 8,00 / kg',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'Bacon, salami piquant, emmental, champignons, tabasco.',
+  'Bacon, salame piccante, emmental.':'Bacon, salami piquant, emmental.',
+},
+de: {
+  'Bevande':'Getränke','Birre':'Biere','Crea la tua piadina':'Eigene Piadina',
+  'Hamburger della casa':'Hausgemachte Burger','Kebab':'Kebab','Mignon':'Mignon-Häppchen',
+  'Panini':'Sandwiches','Panini alla piastra':'Gegrillte Sandwiches','Panini speciali':'Spezial-Sandwiches',
+  'Pasta':'Pasta','Piadina e sandwich':'Piadina & Sandwiches','Sfizioserie':'Snacks & Frittiertes',
+  'Acqua frizzante 50 cl':'Mineralwasser 50 cl','Acqua naturale 1.5 Lt':'Stilles Wasser 1,5 Lt',
+  'Acqua naturale 50 cl':'Stilles Wasser 50 cl','Ali di pollo e paprika':'Hühnerflügel mit Paprika',
+  'Anelletti al forno':'Gebackene Anelletti-Nudeln','Anelli di cipolla':'Zwiebelringe',
+  'Arancine Mignon Carne':'Fleisch-Arancini (Mini)','Arancine mignon burro':'Butter-Arancini (Mini)',
+  'Birbe di pollo':'Knusprige Hühnchenstücke','Burger':'Burger',
+  'Ca Meusa - Con Milza':'Ca Meusa – Milzsandwich','Calamari fritti':'Gebratene Calamari',
+  'Caprese':'Caprese','Carne di maiale':'Gebratenes Schweinefleisch',
+  'Carne di vitello':'Gebratenes Kalbfleisch','Cartoccio':'Cartoccio (Schinken & Mozzarella)',
+  'Cazzilli - Crocche':'Cazzilli – Kartoffelkroketten',
+  'Cheese Burger':'Cheese Burger','Classic Burger':'Classic Burger',
+  'Cocktail':'Cocktail mit Garnelen','Cotoletta di Carne':'Fleischkotelett',
+  'Cotoletta di pollo':'Hühnerschnitzel','Crea la tua piadina':'Eigene Piadina zusammenstellen',
+  'Crocche singole crude':'Rohe Kroketten (einzeln)','Crocche singole fritte':'Gebratene Kroketten (einzeln)',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'Crostini mit Schinken, Mozzarella & Béchamel',
+  'Diavola':'Diavola','Esagerato':'Der Übertriebene','Fratelli Caruso':'Fratelli Caruso',
+  'Gazzosa':'Limonade','Insalata di mare':'Meeresfrüchtesalat','Insalata mista':'Gemischter Salat',
+  'Lasagne al forno':'Gebackene Lasagne','Melanzane Arrostite':'Gegrillte Auberginen',
+  'Melanzane Fritte':'Gebratene Auberginen','Melanzane alla Parmigiana':'Auberginen Parmigiana',
+  'Melanzane arrostite panate':'Panierte gegrillte Auberginen','Melanzane fritte panate':'Panierte gebratene Auberginen',
+  'Melted Burger':'Melted Burger','Milza e polmone di vitello':'Kalbsmilz und -lunge',
+  'Mozzarelline Fritte':'Gebratene Mozzarella-Happen','Onion Burger':'Onion Burger',
+  'Panelle':'Panelle (Kichererbsenfladen)','Panelle singole crude':'Rohe Panelle (einzeln)',
+  'Panelle singole fritte':'Gebratene Panelle (einzeln)','Panineria Mignon':'Mini-Sandwiches',
+  'Panineria Mignon con Milza':'Mini-Sandwiches mit Milz','Panineria Mignon di Pesce':'Mini-Fischsandwiches',
+  'Panino Giovanni Caruso':'Giovanni-Caruso-Sandwich','Panino Kebab':'Kebab-Sandwich',
+  'Panino zio Toto':'Onkel-Totò-Sandwich','Patatine Fritte':'Pommes Frites',
+  'Piadina Kebab':'Kebab-Piadina','Piadina cotoletta di Pollo':'Hühnerschnitzel-Piadina',
+  'Porchetta':'Porchetta','Rosticceria Mignon':'Mignon-Gebäck','Salciccia':'Bratwurst',
+  'Salmone':'Räucherlachs','Sandwich Cotto':'Schinken-Sandwich','Sandwich Tonno':'Thunfisch-Sandwich',
+  'Schiacciata cotto':'Schiacciata mit Schinken','Schiacciata tonno':'Schiacciata mit Thunfisch',
+  'Spiedini con Carne':'Fleischspieße','Spuma':'Spuma Limonade','Tennents':'Tennent\'s',
+  'Tonno':'Thunfisch','Topolino':'Topolino (Schinken, Mozzarella & Wurstel)',
+  'Topolino sbagliato':'Verkehrter Topolino',
+  'Vaschetta Calamari Fritti 200gr':'Gebratene Calamari Schale 200g',
+  'Vaschetta Insalata di mare 200gr':'Meeresfrüchtesalat Schale 200g',
+  'Vaschetta patatine grande':'Große Pommes-Schale',
+  'Vaschetta patatine media':'Mittlere Pommes-Schale',
+  'Vaschetta patatine piccola':'Kleine Pommes-Schale','Wurstel':'Wurstel',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'Calamari, Muscheln, Oktopus, Krebsfleisch, Pickles.',
+  'Carne di maiale arrostita.':'Gebratenes Schweinefleisch.',
+  'Carne di vitello arrostita.':'Gebratenes Kalbfleisch.',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'Kalbfleisch, Kochschinken, Mozzarella, Pilze, Radicchio.',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'Kebab-Fleisch, Salat, Radicchio, Zwiebel, Tomate, Joghurtsauce, scharfe Sauce.',
+  'Crocchette di patate.':'Kartoffelkroketten.',
+  'Farina di ceci.':'Kichererbsenmehl.',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'Garnelen, Salat, Radicchio, Rosa-Sauce.',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'Burger, Bacon, süß-saure Zwiebeln, Emmental, Salat, Tomate, BBQ-Sauce.',
+  'Hamburger, cipolla agrodolce.':'Burger, süß-saure Zwiebeln.',
+  'Hamburger, emmental, lattuga, pomodoro.':'Burger, Emmental, Salat, Tomate.',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'Burger, Käsefondue, knuspriger Bacon & Zwiebeln, Salat, Tomate.',
+  'Hamburger, lattuga, bacon.':'Burger, Salat, Bacon.',
+  'Hamburger, lattuga, pomodoro.':'Burger, Salat, Tomate.',
+  'Hamburger, porchetta, mozzarella, patatine.':'Burger, Porchetta, Mozzarella, Pommes.',
+  'Hamburger.':'Hamburger.',
+  'Melanzane arrostite e panate.':'Panierte gegrillte Auberginen.',
+  'Melanzane arrostite.':'Gegrillte Auberginen.',
+  'Melanzane fritte e panate.':'Panierte gebratene Auberginen.',
+  'Melanzane fritte.':'Gebratene Auberginen.',
+  'Melanzane, pomodoro, grana.':'Auberginen, Tomate, Grana-Käse.',
+  'Patatine fritte.':'Pommes Frites.',
+  'Pollo impanato e fritto.':'Paniertes und gebratenes Hähnchen.',
+  'Pollo impanato fritto, lattuga.':'Paniertes gebratenes Hähnchen, Salat.',
+  'Polmone e milza di vitello.':'Kalbslunge und -milz.',
+  'Pomodoro e mozzarella.':'Tomate und Mozzarella.',
+  'Porchetta di nostra produzione.':'Hausgemachte Porchetta.',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'Kochschinken, Mozzarella, Tomatenscheiben.',
+  'Prosciutto cotto, mozzarella, wurstel.':'Kochschinken, Mozzarella, Wurstel.',
+  'Prosciutto cotto, mozzarella.':'Kochschinken, Mozzarella.',
+  'Salmone affumicato + insalata a scelta':'Räucherlachs + Salat nach Wahl',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'Bratwurst, Porchetta, süß-saure Zwiebeln, Tabasco.',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'Bratwurst, scharfe Salami, Emmental, gebratene Aubergine.',
+  'Salsiccia.':'Bratwurst.',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'Zutaten wählen, Preis je nach Auswahl. (Personal fragen)',
+  'Scegli la tua insalata preferita':'Wähle deinen Lieblingssalat',
+  'Tonno, pomodoro a fette.':'Thunfisch, Tomatenscheiben.',
+  'Wurstel.':'Wurstel.',
+  '€ 10,00 al Kg':'€ 10,00 / kg','€ 15,00 al Kg':'€ 15,00 / kg',
+  '€ 25,00 al Kg':'€ 25,00 / kg','€ 8,00 al Kg':'€ 8,00 / kg',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'Bacon, scharfe Salami, Emmental, Pilze, Tabasco.',
+  'Bacon, salame piccante, emmental.':'Bacon, scharfe Salami, Emmental.',
+},
+es: {
+  'Bevande':'Bebidas','Birre':'Cervezas','Crea la tua piadina':'Crea tu Piadina',
+  'Hamburger della casa':'Hamburguesas de la Casa','Kebab':'Kebab','Mignon':'Bocados Mignon',
+  'Panini':'Sándwiches','Panini alla piastra':'Sándwiches a la Plancha','Panini speciali':'Sándwiches Especiales',
+  'Pasta':'Pasta','Piadina e sandwich':'Piadina y Sándwiches','Sfizioserie':'Fritos & Snacks',
+  'Acqua frizzante 50 cl':'Agua con Gas 50 cl','Acqua naturale 1.5 Lt':'Agua sin Gas 1,5 Lt',
+  'Acqua naturale 50 cl':'Agua sin Gas 50 cl','Ali di pollo e paprika':'Alitas de Pollo con Pimentón',
+  'Anelletti al forno':'Anelletti al Horno','Anelli di cipolla':'Aros de Cebolla',
+  'Arancine Mignon Carne':'Arancini de Carne (Mini)','Arancine mignon burro':'Arancini de Mantequilla (Mini)',
+  'Birbe di pollo':'Bocados de Pollo','Burger':'Hamburguesa',
+  'Ca Meusa - Con Milza':'Ca Meusa – Bocadillo de Bazo','Calamari fritti':'Calamares Fritos',
+  'Caprese':'Caprese','Carne di maiale':'Cerdo Asado','Carne di vitello':'Ternera Asada',
+  'Cartoccio':'Cartoccio (Jamón & Mozzarella)',
+  'Cazzilli - Crocche':'Cazzilli – Croquetas de Patata',
+  'Cheese Burger':'Cheese Burger','Classic Burger':'Classic Burger',
+  'Cocktail':'Cóctel de Gambas','Cotoletta di Carne':'Escalope de Carne',
+  'Cotoletta di pollo':'Escalope de Pollo','Crea la tua piadina':'Crea tu Piadina',
+  'Crocche singole crude':'Croquetas Crudas (unidad)','Crocche singole fritte':'Croquetas Fritas (unidad)',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'Crostini con Jamón, Mozzarella y Bechamel',
+  'Diavola':'Diavola','Esagerato':'El Exagerado','Fratelli Caruso':'Fratelli Caruso',
+  'Gazzosa':'Gaseosa','Insalata di mare':'Ensalada de Mar','Insalata mista':'Ensalada Mixta',
+  'Lasagne al forno':'Lasaña al Horno','Melanzane Arrostite':'Berenjenas a la Plancha',
+  'Melanzane Fritte':'Berenjenas Fritas','Melanzane alla Parmigiana':'Berenjenas a la Parmigiana',
+  'Melanzane arrostite panate':'Berenjenas Rebozadas a la Plancha','Melanzane fritte panate':'Berenjenas Rebozadas Fritas',
+  'Melted Burger':'Melted Burger','Milza e polmone di vitello':'Bazo y Pulmón de Ternera',
+  'Mozzarelline Fritte':'Mozzarella Frita','Onion Burger':'Onion Burger',
+  'Panelle':'Panelle (Tortitas de Garbanzo)','Panelle singole crude':'Panelle Crudas (unidad)',
+  'Panelle singole fritte':'Panelle Fritas (unidad)','Panineria Mignon':'Mini Sándwiches',
+  'Panineria Mignon con Milza':'Mini Sándwiches con Bazo','Panineria Mignon di Pesce':'Mini Sándwiches de Pescado',
+  'Panino Giovanni Caruso':'Sándwich Giovanni Caruso','Panino Kebab':'Sándwich Kebab',
+  'Panino zio Toto':'Sándwich Tío Totò','Patatine Fritte':'Patatas Fritas',
+  'Piadina Kebab':'Piadina Kebab','Piadina cotoletta di Pollo':'Piadina Escalope de Pollo',
+  'Porchetta':'Porchetta','Rosticceria Mignon':'Rosticceria Mignon','Salciccia':'Salchicha',
+  'Salmone':'Salmón Ahumado','Sandwich Cotto':'Sándwich de Jamón','Sandwich Tonno':'Sándwich de Atún',
+  'Schiacciata cotto':'Schiacciata de Jamón','Schiacciata tonno':'Schiacciata de Atún',
+  'Spiedini con Carne':'Pinchos de Carne','Spuma':'Spuma','Tennents':'Tennent\'s',
+  'Tonno':'Atún','Topolino':'Topolino (Jamón, Mozzarella y Wurstel)',
+  'Topolino sbagliato':'Topolino Equivocado',
+  'Vaschetta Calamari Fritti 200gr':'Bandeja Calamares Fritos 200g',
+  'Vaschetta Insalata di mare 200gr':'Bandeja Ensalada de Mar 200g',
+  'Vaschetta patatine grande':'Bandeja Patatas Fritas Grande',
+  'Vaschetta patatine media':'Bandeja Patatas Fritas Mediana',
+  'Vaschetta patatine piccola':'Bandeja Patatas Fritas Pequeña','Wurstel':'Salchicha Wurstel',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'Calamares, mejillones, pulpo, cangrejo, pepinillos.',
+  'Carne di maiale arrostita.':'Cerdo asado.',
+  'Carne di vitello arrostita.':'Ternera asada.',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'Ternera, jamón cocido, mozzarella, champiñones, radicchio.',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'Carne kebab, lechuga, radicchio, cebolla, tomate, salsa de yogur, salsa picante.',
+  'Crocchette di patate.':'Croquetas de patata.',
+  'Farina di ceci.':'Harina de garbanzo.',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'Gambas, lechuga, radicchio, salsa rosa.',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'Hamburguesa, bacon, cebolla agridulce, emmental, lechuga, tomate, salsa BBQ.',
+  'Hamburger, cipolla agrodolce.':'Hamburguesa, cebolla agridulce.',
+  'Hamburger, emmental, lattuga, pomodoro.':'Hamburguesa, emmental, lechuga, tomate.',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'Hamburguesa, fondue de quesos, bacon y cebolla crujientes, lechuga, tomate.',
+  'Hamburger, lattuga, bacon.':'Hamburguesa, lechuga, bacon.',
+  'Hamburger, lattuga, pomodoro.':'Hamburguesa, lechuga, tomate.',
+  'Hamburger, porchetta, mozzarella, patatine.':'Hamburguesa, porchetta, mozzarella, patatas.',
+  'Hamburger.':'Hamburguesa.',
+  'Melanzane arrostite e panate.':'Berenjenas rebozadas a la plancha.',
+  'Melanzane arrostite.':'Berenjenas a la plancha.',
+  'Melanzane fritte e panate.':'Berenjenas rebozadas fritas.',
+  'Melanzane fritte.':'Berenjenas fritas.',
+  'Melanzane, pomodoro, grana.':'Berenjena, tomate, grana.',
+  'Patatine fritte.':'Patatas fritas.',
+  'Pollo impanato e fritto.':'Pollo empanado y frito.',
+  'Pollo impanato fritto, lattuga.':'Pollo empanado frito, lechuga.',
+  'Polmone e milza di vitello.':'Pulmón y bazo de ternera.',
+  'Pomodoro e mozzarella.':'Tomate y mozzarella.',
+  'Porchetta di nostra produzione.':'Porchetta de elaboración propia.',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'Jamón cocido, mozzarella, tomate en rodajas.',
+  'Prosciutto cotto, mozzarella, wurstel.':'Jamón cocido, mozzarella, wurstel.',
+  'Prosciutto cotto, mozzarella.':'Jamón cocido, mozzarella.',
+  'Salmone affumicato + insalata a scelta':'Salmón ahumado + ensalada a elegir',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'Salchicha, porchetta, cebolla agridulce, tabasco.',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'Salchicha, salami picante, emmental, berenjena frita.',
+  'Salsiccia.':'Salchicha.',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'Elige los ingredientes, el precio varía según las adiciones. (pregunta al personal)',
+  'Scegli la tua insalata preferita':'Elige tu ensalada favorita',
+  'Tonno, pomodoro a fette.':'Atún, tomate en rodajas.',
+  'Wurstel.':'Wurstel.',
+  '€ 10,00 al Kg':'€ 10,00 / kg','€ 15,00 al Kg':'€ 15,00 / kg',
+  '€ 25,00 al Kg':'€ 25,00 / kg','€ 8,00 al Kg':'€ 8,00 / kg',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'Bacon, salami picante, emmental, champiñones, tabasco.',
+  'Bacon, salame piccante, emmental.':'Bacon, salami picante, emmental.',
+},
+ar: {
+  'Bevande':'المشروبات','Birre':'البيرة','Crea la tua piadina':'اصنع البياديناك',
+  'Hamburger della casa':'برجر البيت','Kebab':'كباب','Mignon':'مقبّلات مينيون',
+  'Panini':'سندويشات','Panini alla piastra':'سندويشات مشوية','Panini speciali':'سندويشات خاصة',
+  'Pasta':'باستا','Piadina e sandwich':'بيادينا وسندويشات','Sfizioserie':'مقليات وسناكس',
+  'Acqua frizzante 50 cl':'مياه غازية 50 سل','Acqua naturale 1.5 Lt':'مياه طبيعية 1.5 لتر',
+  'Acqua naturale 50 cl':'مياه طبيعية 50 سل','Ali di pollo e paprika':'أجنحة دجاج بالبابريكا',
+  'Anelletti al forno':'أنيلّيتي بالفرن','Anelli di cipolla':'حلقات البصل',
+  'Arancine Mignon Carne':'أرانشيني لحم (ميني)','Arancine mignon burro':'أرانشيني زبدة (ميني)',
+  'Birbe di pollo':'قطع دجاج مقرمشة','Burger':'برجر',
+  'Ca Meusa - Con Milza':'كا مِيوزا – سندويش الطحال','Calamari fritti':'حبار مقلي',
+  'Caprese':'كابريزي','Carne di maiale':'لحم خنزير مشوي','Carne di vitello':'لحم عجل مشوي',
+  'Cartoccio':'كارتوتشو (لحم بارد وموتزاريلا)',
+  'Cazzilli - Crocche':'كروكيت البطاطس','Cheese Burger':'تشيز برجر','Classic Burger':'كلاسيك برجر',
+  'Cocktail':'كوكتيل روبيان','Cotoletta di Carne':'شنيتزل لحم','Cotoletta di pollo':'شنيتزل دجاج',
+  'Crea la tua piadina':'اصنع بياديناك','Crocche singole crude':'كروكيت نيء (قطعة)',
+  'Crocche singole fritte':'كروكيت مقلي (قطعة)',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'كروستيني بالبرشوتو والموتزاريلا والبيشاميل',
+  'Diavola':'ديافولا','Esagerato':'المبالغ فيه','Fratelli Caruso':'فراتيلّي كاروزو',
+  'Gazzosa':'ليمونادا غازية','Insalata di mare':'سلطة البحر','Insalata mista':'سلطة مشكّلة',
+  'Lasagne al forno':'لازانيا بالفرن','Melanzane Arrostite':'باذنجان مشوي',
+  'Melanzane Fritte':'باذنجان مقلي','Melanzane alla Parmigiana':'باذنجان بارميجيانا',
+  'Melanzane arrostite panate':'باذنجان مشوي مغطّى بالبقسماط','Melanzane fritte panate':'باذنجان مقلي مغطّى بالبقسماط',
+  'Melted Burger':'ملتد برجر','Milza e polmone di vitello':'طحال ورئة عجل',
+  'Mozzarelline Fritte':'كرات موتزاريلا مقلية','Onion Burger':'أونيون برجر',
+  'Panelle':'بانيلّي (عجة الحمص)','Panelle singole crude':'بانيلّي نيء (قطعة)',
+  'Panelle singole fritte':'بانيلّي مقلي (قطعة)','Panineria Mignon':'سندويشات ميني',
+  'Panineria Mignon con Milza':'سندويشات ميني بالطحال','Panineria Mignon di Pesce':'سندويشات ميني بالسمك',
+  'Panino Giovanni Caruso':'سندويش جيوفاني كاروزو','Panino Kebab':'سندويش كباب',
+  'Panino zio Toto':'سندويش العمّ توتو','Patatine Fritte':'بطاطا مقلية',
+  'Piadina Kebab':'بيادينا كباب','Piadina cotoletta di Pollo':'بيادينا شنيتزل دجاج',
+  'Porchetta':'بوركيتا','Rosticceria Mignon':'معجنات ميني','Salciccia':'سجق إيطالي',
+  'Salmone':'سلمون مدخّن','Sandwich Cotto':'سندويش لحم بارد','Sandwich Tonno':'سندويش تونة',
+  'Schiacciata cotto':'شياتشاتا بالبرشوتو','Schiacciata tonno':'شياتشاتا بالتونة',
+  'Spiedini con Carne':'أسياخ لحم','Spuma':'مشروب غازي سبوما','Tennents':'تينينتس',
+  'Tonno':'تونة','Topolino':'توبوليني (لحم بارد، موتزاريلا، ووستل)',
+  'Topolino sbagliato':'توبوليني المقلوب',
+  'Vaschetta Calamari Fritti 200gr':'طبق حبار مقلي 200 غ',
+  'Vaschetta Insalata di mare 200gr':'طبق سلطة بحر 200 غ',
+  'Vaschetta patatine grande':'طبق بطاطا كبير','Vaschetta patatine media':'طبق بطاطا وسط',
+  'Vaschetta patatine piccola':'طبق بطاطا صغير','Wurstel':'ووستل',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'حبار، بلح البحر، أخطبوط، سرطان بحر، مخللات.',
+  'Carne di maiale arrostita.':'لحم خنزير مشوي.','Carne di vitello arrostita.':'لحم عجل مشوي.',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'لحم عجل، برشوتو، موتزاريلا، فطر، راديكيو.',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'لحم كباب، خس، راديكيو، بصل، طماطم، صلصة زبادي، صلصة حارة.',
+  'Crocchette di patate.':'كروكيت بطاطس.','Farina di ceci.':'دقيق الحمص.',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'روبيان، خس، راديكيو، صلصة وردية.',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'برجر، لحم مقدد، بصل حلو حامض، إمنتال، خس، طماطم، صلصة BBQ.',
+  'Hamburger, cipolla agrodolce.':'برجر، بصل حلو حامض.',
+  'Hamburger, emmental, lattuga, pomodoro.':'برجر، إمنتال، خس، طماطم.',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'برجر، فوندو جبن، لحم مقدد وبصل مقرمش، خس، طماطم.',
+  'Hamburger, lattuga, bacon.':'برجر، خس، لحم مقدد.',
+  'Hamburger, lattuga, pomodoro.':'برجر، خس، طماطم.',
+  'Hamburger, porchetta, mozzarella, patatine.':'برجر، بوركيتا، موتزاريلا، بطاطا.',
+  'Hamburger.':'برجر.',
+  'Melanzane arrostite e panate.':'باذنجان مشوي مغطى بالبقسماط.',
+  'Melanzane arrostite.':'باذنجان مشوي.',
+  'Melanzane fritte e panate.':'باذنجان مقلي مغطى بالبقسماط.',
+  'Melanzane fritte.':'باذنجان مقلي.',
+  'Melanzane, pomodoro, grana.':'باذنجان، طماطم، جبن غرانا.',
+  'Patatine fritte.':'بطاطا مقلية.',
+  'Pollo impanato e fritto.':'دجاج مغطى بالبقسماط ومقلي.',
+  'Pollo impanato fritto, lattuga.':'دجاج مغطى بالبقسماط مقلي، خس.',
+  'Polmone e milza di vitello.':'رئة وطحال عجل.',
+  'Pomodoro e mozzarella.':'طماطم وموتزاريلا.',
+  'Porchetta di nostra produzione.':'بوركيتا من إنتاجنا.',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'برشوتو، موتزاريلا، شرائح طماطم.',
+  'Prosciutto cotto, mozzarella, wurstel.':'برشوتو، موتزاريلا، ووستل.',
+  'Prosciutto cotto, mozzarella.':'برشوتو، موتزاريلا.',
+  'Salmone affumicato + insalata a scelta':'سلمون مدخّن + سلطة حسب الاختيار',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'سجق، بوركيتا، بصل حلو حامض، تاباسكو.',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'سجق، سلامي حار، إمنتال، باذنجان مقلي.',
+  'Salsiccia.':'سجق.',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'اختر المكونات، السعر يتغيّر حسب الإضافات. (اسأل الموظفين)',
+  'Scegli la tua insalata preferita':'اختر سلطتك المفضلة',
+  'Tonno, pomodoro a fette.':'تونة، شرائح طماطم.',
+  'Wurstel.':'ووستل.',
+  '€ 10,00 al Kg':'€ 10.00 / كغ','€ 15,00 al Kg':'€ 15.00 / كغ',
+  '€ 25,00 al Kg':'€ 25.00 / كغ','€ 8,00 al Kg':'€ 8.00 / كغ',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'لحم مقدد، سلامي حار، إمنتال، فطر، تاباسكو.',
+  'Bacon, salame piccante, emmental.':'لحم مقدد، سلامي حار، إمنتال.',
+},
+zh: {
+  'Bevande':'饮料','Birre':'啤酒','Crea la tua piadina':'定制你的皮亚迪纳',
+  'Hamburger della casa':'招牌汉堡','Kebab':'烤肉串','Mignon':'迷你小食',
+  'Panini':'三明治','Panini alla piastra':'铁板三明治','Panini speciali':'特色三明治',
+  'Pasta':'意面','Piadina e sandwich':'皮亚迪纳与三明治','Sfizioserie':'炸物与小吃',
+  'Acqua frizzante 50 cl':'气泡水 50cl','Acqua naturale 1.5 Lt':'矿泉水 1.5升',
+  'Acqua naturale 50 cl':'矿泉水 50cl','Ali di pollo e paprika':'辣椒粉鸡翅',
+  'Anelletti al forno':'烤安内利蒂意面','Anelli di cipolla':'洋葱圈',
+  'Arancine Mignon Carne':'迷你肉馅饭团','Arancine mignon burro':'迷你黄油饭团',
+  'Birbe di pollo':'脆皮鸡肉块','Burger':'汉堡',
+  'Ca Meusa - Con Milza':'传统脾脏三明治','Calamari fritti':'炸鱿鱼',
+  'Caprese':'卡布里沙拉','Carne di maiale':'烤猪肉','Carne di vitello':'烤小牛肉',
+  'Cartoccio':'卡托乔（火腿与马苏里拉）',
+  'Cazzilli - Crocche':'土豆可乐饼','Cheese Burger':'芝士汉堡','Classic Burger':'经典汉堡',
+  'Cocktail':'虾鸡尾酒沙拉','Cotoletta di Carne':'肉排','Cotoletta di pollo':'鸡排',
+  'Crea la tua piadina':'定制皮亚迪纳','Crocche singole crude':'生可乐饼（单个）',
+  'Crocche singole fritte':'炸可乐饼（单个）',
+  'Crostini con Prosciutto, mozzarella e Besciamella':'火腿马苏里拉白酱脆面包片',
+  'Diavola':'魔鬼辣味三明治','Esagerato':'夸张版汉堡','Fratelli Caruso':'Fratelli Caruso',
+  'Gazzosa':'柠檬汽水','Insalata di mare':'海鲜沙拉','Insalata mista':'什锦沙拉',
+  'Lasagne al forno':'烤千层面','Melanzane Arrostite':'烤茄子',
+  'Melanzane Fritte':'炸茄子','Melanzane alla Parmigiana':'帕尔玛干酪茄子',
+  'Melanzane arrostite panate':'裹粉烤茄子','Melanzane fritte panate':'裹粉炸茄子',
+  'Melted Burger':'融化芝士汉堡','Milza e polmone di vitello':'小牛脾脏与肺',
+  'Mozzarelline Fritte':'炸迷你马苏里拉','Onion Burger':'洋葱汉堡',
+  'Panelle':'鹰嘴豆煎饼','Panelle singole crude':'生鹰嘴豆饼（单个）',
+  'Panelle singole fritte':'炸鹰嘴豆饼（单个）','Panineria Mignon':'迷你三明治',
+  'Panineria Mignon con Milza':'迷你脾脏三明治','Panineria Mignon di Pesce':'迷你鱼肉三明治',
+  'Panino Giovanni Caruso':'Giovanni Caruso三明治','Panino Kebab':'烤肉三明治',
+  'Panino zio Toto':'叔叔Totò三明治','Patatine Fritte':'薯条',
+  'Piadina Kebab':'烤肉皮亚迪纳','Piadina cotoletta di Pollo':'鸡排皮亚迪纳',
+  'Porchetta':'意式烤猪肉','Rosticceria Mignon':'迷你烤物','Salciccia':'意式香肠',
+  'Salmone':'烟熏三文鱼','Sandwich Cotto':'火腿三明治','Sandwich Tonno':'金枪鱼三明治',
+  'Schiacciata cotto':'火腿夏嘉塔','Schiacciata tonno':'金枪鱼夏嘉塔',
+  'Spiedini con Carne':'肉串','Spuma':'苏打汽水','Tennents':'Tennent\'s',
+  'Tonno':'金枪鱼','Topolino':'托波利诺（火腿、马苏里拉、香肠）',
+  'Topolino sbagliato':'颠倒托波利诺',
+  'Vaschetta Calamari Fritti 200gr':'炸鱿鱼盒 200g',
+  'Vaschetta Insalata di mare 200gr':'海鲜沙拉盒 200g',
+  'Vaschetta patatine grande':'大份薯条盒','Vaschetta patatine media':'中份薯条盒',
+  'Vaschetta patatine piccola':'小份薯条盒','Wurstel':'维也纳香肠',
+  'Calamari, cozze, polpo, polpa di granchio, sottaceti.':'鱿鱼、贻贝、章鱼、蟹肉、酸黄瓜。',
+  'Carne di maiale arrostita.':'烤猪肉。','Carne di vitello arrostita.':'烤小牛肉。',
+  'Carne di vitello, prosciutto cotto, mozzarella, funghi, radicchio.':'小牛肉、火腿、马苏里拉、蘑菇、菊苣。',
+  'Carne kebab, lattuga, radicchio, cipolla, pomodoro, salsa yogurt, salsa piccante.':'烤肉、生菜、菊苣、洋葱、番茄、酸奶酱、辣酱。',
+  'Crocchette di patate.':'土豆可乐饼。','Farina di ceci.':'鹰嘴豆粉。',
+  'Gamberetti, lattuga, radicchio, salsa rosa.':'虾、生菜、菊苣、玫瑰酱。',
+  'Hamburger, bacon, cipolla agrodolce, emmental, lattuga, pomodoro, salsa BBQ.':'汉堡肉、培根、糖醋洋葱、埃曼塔尔奶酪、生菜、番茄、BBQ酱。',
+  'Hamburger, cipolla agrodolce.':'汉堡肉、糖醋洋葱。',
+  'Hamburger, emmental, lattuga, pomodoro.':'汉堡肉、埃曼塔尔奶酪、生菜、番茄。',
+  'Hamburger, fonduta di formaggi, bacon e cipolla croccanti, lattuga, pomodoro.':'汉堡肉、奶酪火锅、脆培根和洋葱、生菜、番茄。',
+  'Hamburger, lattuga, bacon.':'汉堡肉、生菜、培根。',
+  'Hamburger, lattuga, pomodoro.':'汉堡肉、生菜、番茄。',
+  'Hamburger, porchetta, mozzarella, patatine.':'汉堡肉、烤猪肉、马苏里拉、薯条。',
+  'Hamburger.':'汉堡肉。',
+  'Melanzane arrostite e panate.':'裹粉烤茄子。',
+  'Melanzane arrostite.':'烤茄子。',
+  'Melanzane fritte e panate.':'裹粉炸茄子。',
+  'Melanzane fritte.':'炸茄子。',
+  'Melanzane, pomodoro, grana.':'茄子、番茄、格拉纳奶酪。',
+  'Patatine fritte.':'薯条。',
+  'Pollo impanato e fritto.':'裹粉炸鸡。',
+  'Pollo impanato fritto, lattuga.':'裹粉炸鸡、生菜。',
+  'Polmone e milza di vitello.':'小牛肺和脾。',
+  'Pomodoro e mozzarella.':'番茄与马苏里拉。',
+  'Porchetta di nostra produzione.':'自制烤猪肉。',
+  'Prosciutto cotto, mozzarella, pomodoro a fette.':'火腿、马苏里拉、番茄片。',
+  'Prosciutto cotto, mozzarella, wurstel.':'火腿、马苏里拉、维也纳香肠。',
+  'Prosciutto cotto, mozzarella.':'火腿、马苏里拉。',
+  'Salmone affumicato + insalata a scelta':'烟熏三文鱼 + 自选沙拉',
+  'Salsiccia, porchetta, cipolla agrodolce, tabasco.':'香肠、烤猪肉、糖醋洋葱、塔巴斯科辣酱。',
+  'Salsiccia, salame piccante, emmental, melanzana fritta.':'香肠、辣萨拉米、埃曼塔尔奶酪、炸茄子。',
+  'Salsiccia.':'香肠。',
+  'Scegli gli ingredienti, il prezzo cambia in base alle aggiunzioni scelte. (chiedi al personale)':'选择配料，价格因添加内容而变化。（请询问工作人员）',
+  'Scegli la tua insalata preferita':'选择你喜欢的沙拉',
+  'Tonno, pomodoro a fette.':'金枪鱼、番茄片。',
+  'Wurstel.':'维也纳香肠。',
+  '€ 10,00 al Kg':'€ 10.00 / 千克','€ 15,00 al Kg':'€ 15.00 / 千克',
+  '€ 25,00 al Kg':'€ 25.00 / 千克','€ 8,00 al Kg':'€ 8.00 / 千克',
+  'Bacon, salame piccante, emmental, funghi, tabasco.':'培根、辣萨拉米、埃曼塔尔奶酪、蘑菇、塔巴斯科。',
+  'Bacon, salame piccante, emmental.':'培根、辣萨拉米、埃曼塔尔奶酪。',
+}
+};
 
+// ── TRADUZIONE: carica dizionario e applica ──
+function traduciMenu(prods, cats) {
+  if (lingua === 'it') return;
+  const dizionario = TRADUZIONI[lingua];
+  if (!dizionario) return;
+  // Salva in cache per la funzione t()
+  traduzioneCache[lingua] = dizionario;
+  // Aggiorna badge labels nella lingua corrente
   const s = UI_STRINGS[lingua];
-  document.getElementById('trad-loader').style.display = 'block';
-  document.getElementById('trad-loader-txt').textContent = s.traduzione;
-
-  const lingueNomi = { en:'English', fr:'French', de:'German', es:'Spanish', ar:'Arabic', zh:'Chinese' };
-  const nomeLingua = lingueNomi[lingua] || lingua;
-  const SYSTEM = `You are a professional menu translator for an Italian street food restaurant in Palermo (Sicily). Translate the given JSON object values to ${nomeLingua}. Keep proper nouns (brand names like "Fratelli Caruso", "Giovanni Caruso", "Zio Totò"), internationally known ingredient names (mozzarella, arancina, etc.) and measurement units as-is. Return ONLY a valid JSON object with the same keys and translated values. No preamble, no markdown, no explanation.`;
-
-  // Costruiamo il dizionario completo da tradurre
-  const tuttiTesti = {};
-  prods.forEach(p => {
-    tuttiTesti[`n_${p.id}`] = p.nome;
-    if (p.descrizione) tuttiTesti[`d_${p.id}`] = p.descrizione;
-  });
-  cats.forEach(c => { tuttiTesti[`c_${c.id}`] = c.nome; });
-
-  // Dividiamo in batch da 25 chiavi per evitare overflow token
-  const BATCH = 25;
-  const chiavi = Object.keys(tuttiTesti);
-  const batches = [];
-  for (let i = 0; i < chiavi.length; i += BATCH) {
-    const slice = chiavi.slice(i, i + BATCH);
-    const obj = {};
-    slice.forEach(k => { obj[k] = tuttiTesti[k]; });
-    batches.push(obj);
-  }
-
-  const tradottoTotale = {};
-  try {
-    for (const batch of batches) {
-      const resp = await fetch(CLAUDE_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
-          system: SYSTEM,
-          messages: [{ role: 'user', content: JSON.stringify(batch) }]
-        })
-      });
-      const data = await resp.json();
-      if (!data.content) { console.warn('Batch fallito:', data); continue; }
-      const raw = data.content.map(i => i.text || '').join('');
-      const clean = raw.replace(/```json|```/g, '').trim();
-      try {
-        const parziale = JSON.parse(clean);
-        Object.assign(tradottoTotale, parziale);
-      } catch(parseErr) {
-        console.warn('Parse JSON fallito per batch:', parseErr, raw.slice(0,200));
-      }
-    }
-
-    // Costruiamo la cache testo→testo per la funzione t()
-    const cache = {};
-    prods.forEach(p => {
-      if (tradottoTotale[`n_${p.id}`]) cache[p.nome] = tradottoTotale[`n_${p.id}`];
-      if (p.descrizione && tradottoTotale[`d_${p.id}`]) cache[p.descrizione] = tradottoTotale[`d_${p.id}`];
-    });
-    cats.forEach(c => {
-      if (tradottoTotale[`c_${c.id}`]) cache[c.nome] = tradottoTotale[`c_${c.id}`];
-    });
-    traduzioneCache[lingua] = { ...tradottoTotale, ...cache };
-
-    // Badge labels tradotti
+  if (s) {
     BADGES_DEF['senza-glutine'].label = s.badgeLabels['senza-glutine'];
     BADGES_DEF['best-seller'].label   = s.badgeLabels['best-seller'];
     BADGES_DEF['novita'].label        = s.badgeLabels['novita'];
     BADGES_DEF['consigliato'].label   = s.badgeLabels['consigliato'];
     BADGES_DEF['piccante'].label      = s.badgeLabels['piccante'];
     BADGES_DEF['vegano'].label        = s.badgeLabels['vegano'];
-
-  } catch(e) {
-    console.warn('Traduzione fallita:', e);
   }
-  document.getElementById('trad-loader').style.display = 'none';
 }
 
 function t(testo) {
   if (lingua === 'it' || !testo) return testo;
   const cache = traduzioneCache[lingua];
   if (!cache) return testo;
-  // prova con chiave diretta (nome), poi con chiave n_id (fallback)
   return cache[testo] || testo;
 }
 
