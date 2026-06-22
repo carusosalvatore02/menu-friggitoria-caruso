@@ -1374,10 +1374,9 @@ function apriMignon(id){
 
   // Selettore ordine per i prodotti Mignon
   detOrdineProdId = id;
-  detOrdineGrammiSel = {label:'½ kg', g:500, prezzo: p.prezzo};
-  const prezzoMig = p.prezzo;
+  detOrdineSelVal = {label:'½ kg', qty_o_g:500, prezzo: +p.prezzo};
   document.getElementById('mignon-ordine-wrap').style.display = 'block';
-  document.getElementById('mignon-ordine-prezzo').textContent = `€ ${Number(prezzoMig).toFixed(2)}`;
+  document.getElementById('mignon-ordine-prezzo').textContent = `€ ${Number(p.prezzo).toFixed(2)}`;
 
   document.getElementById('btn-chiudi-mignon').textContent = s.chiudi;
   document.getElementById('mignon-overlay').classList.add('show');
@@ -1391,25 +1390,21 @@ function chiudiMignon(e){
 }
 
 // ── CALCOLATRICE ORDINE ──
-// Categorie che supportano l'ordine
-const CAT_SFIZIOSERIE = 'Sfizioserie';
-const CAT_MIGNON = ['Mignon']; // nome categoria nel DB
 
-// Grammature per sfizioserie (label, grammi, moltiplicatore del prezzo/kg)
+// IDs prodotti sfizioserie a PESO (€/kg — grammature 100g/200g/500g/1kg)
+const IDS_A_PESO = new Set([56, 57, 58, 62]); // Ali di pollo, Birbe, Anelli cipolla, Mozzarelline
+
+// Grammature sfizioserie a peso
 const GRAMMI_SFIZ = [
   {label:'100g', g:100, mult:0.1},
   {label:'200g', g:200, mult:0.2},
   {label:'500g', g:500, mult:0.5},
-  {label:'1 kg', g:1000, mult:1.0},
-];
-// Per mignon: sempre mezzo kg
-const GRAMMI_MIGNON = [
-  {label:'½ kg', g:500, mult:1.0},
+  {label:'1 kg',  g:1000, mult:1.0},
 ];
 
-let ordine = []; // [{id, nome, grammi, label, prezzoUnitario, totale, catNome}]
-let detOrdineGrammiSel = null; // grammatura selezionata nel dettaglio corrente
-let detOrdineProdId = null;    // prodotto corrente nel dettaglio
+let ordine = [];
+let detOrdineProdId = null;
+let detOrdineSelVal = null; // {label, qty_o_g, prezzo}
 
 function getCatNome(prodId) {
   for (const g of datiMenu) {
@@ -1418,79 +1413,88 @@ function getCatNome(prodId) {
   return '';
 }
 
-function isCategoriaMignon(prodId) {
-  const cn = getCatNome(prodId);
+function getTipoOrdine(prodId) {
   const p = prodottiAll[prodId];
-  return cn === 'Mignon' || (p && MIGNON_NOMI.includes(p.nome));
-}
-
-function isCategoriaSfizioserie(prodId) {
-  return getCatNome(prodId) === 'Sfizioserie';
+  if (!p) return null;
+  if (MIGNON_NOMI.includes(p.nome)) return 'mignon';   // ½ kg fisso
+  if (IDS_A_PESO.has(prodId))       return 'peso';     // grammature
+  return 'qty';                                          // tutti gli altri: quantità
 }
 
 function mostraSezioneOrdineDettaglio(prodId) {
   const p = prodottiAll[prodId];
-  if (!p) { document.getElementById('det-ordine-wrap').style.display = 'none'; return; }
-  const isMig  = isCategoriaMignon(prodId);
-  const isSfiz = isCategoriaSfizioserie(prodId);
-  if (!isMig && !isSfiz) { document.getElementById('det-ordine-wrap').style.display = 'none'; return; }
+  const wrap = document.getElementById('det-ordine-wrap');
+  if (!p) { wrap.style.display = 'none'; return; }
 
-  const grammi = isMig ? GRAMMI_MIGNON : GRAMMI_SFIZ;
-  detOrdineGrammiSel = grammi[isMig ? 0 : 1]; // default 200g sfiz, ½kg mignon
   detOrdineProdId = prodId;
+  const tipo = getTipoOrdine(prodId);
+  const grid = document.getElementById('det-grammi-grid');
 
-  document.getElementById('det-grammi-grid').className = 'det-grammi-grid' + (isMig ? ' mignon-grid' : '');
-  document.getElementById('det-grammi-grid').innerHTML = grammi.map((g, i) => {
-    const prezzo = isMig ? +p.prezzo : +(p.prezzo * g.mult).toFixed(2);
-    const isSel = (i === (isMig ? 0 : 1));
-    if (isSel) detOrdineGrammiSel = {label: g.label, g: g.g, prezzo};
-    return `<button class="grammo-btn${isSel ? ' sel' : ''}"
-      onclick="selGrammo(this,'${g.label}',${g.g},${prezzo})"
-      data-g="${g.g}">
-      ${g.label}<small>€ ${prezzo.toFixed(2)}</small>
-    </button>`;
-  }).join('');
-  document.getElementById('det-ordine-wrap').style.display = 'block';
+  if (tipo === 'mignon') {
+    // ½ kg fisso — non serve griglia, solo bottone
+    detOrdineSelVal = {label:'½ kg', qty_o_g: 500, prezzo: +p.prezzo};
+    grid.className = 'det-grammi-grid mignon-grid';
+    grid.innerHTML = `<button class="grammo-btn sel" style="grid-column:1/-1" onclick="">½ kg<small>€ ${(+p.prezzo).toFixed(2)}</small></button>`;
+    document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi ½ kg';
+
+  } else if (tipo === 'peso') {
+    // Grammature 100g/200g/500g/1kg
+    detOrdineSelVal = {label:'200g', qty_o_g:200, prezzo: +(+p.prezzo * 0.2).toFixed(2)};
+    grid.className = 'det-grammi-grid';
+    grid.innerHTML = GRAMMI_SFIZ.map((g, i) => {
+      const pr = +(+p.prezzo * g.mult).toFixed(2);
+      const sel = i === 1; // default 200g
+      if (sel) detOrdineSelVal = {label: g.label, qty_o_g: g.g, prezzo: pr};
+      return `<button class="grammo-btn${sel?' sel':''}" onclick="selOrdineVal(this,'${g.label}',${g.g},${pr})" data-v="${g.g}">${g.label}<small>€ ${pr.toFixed(2)}</small></button>`;
+    }).join('');
+    document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi all\'ordine';
+
+  } else {
+    // Quantità (tutti gli altri prodotti)
+    detOrdineSelVal = {label:'× 1', qty_o_g:1, prezzo: +p.prezzo};
+    grid.className = 'det-grammi-grid';
+    const qtyOpts = [1,2,3,4,5,6];
+    grid.innerHTML = qtyOpts.map((q, i) => {
+      const pr = +(+p.prezzo * q).toFixed(2);
+      const sel = i === 0;
+      if (sel) detOrdineSelVal = {label:`× ${q}`, qty_o_g:q, prezzo: pr};
+      return `<button class="grammo-btn${sel?' sel':''}" onclick="selOrdineVal(this,'× ${q}',${q},${pr})" data-v="${q}">× ${q}<small>€ ${pr.toFixed(2)}</small></button>`;
+    }).join('');
+    document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi all\'ordine';
+  }
+
+  wrap.style.display = 'block';
 }
 
-function selGrammo(btn, label, g, prezzo) {
-  document.querySelectorAll('.grammo-btn').forEach(b => b.classList.remove('sel'));
+function selOrdineVal(btn, label, val, prezzo) {
+  btn.closest('.det-grammi-grid').querySelectorAll('.grammo-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
-  detOrdineGrammiSel = {label, g, prezzo};
+  detOrdineSelVal = {label, qty_o_g: val, prezzo};
 }
 
 function aggiungiAlOrdine() {
-  if (!detOrdineProdId || !detOrdineGrammiSel) return;
+  if (!detOrdineProdId || !detOrdineSelVal) return;
   const p = prodottiAll[detOrdineProdId];
-  const {label, g, prezzo} = detOrdineGrammiSel;
-
-  // Cerca se esiste già la stessa voce
-  const key = `${detOrdineProdId}_${g}`;
+  const {label, qty_o_g, prezzo} = detOrdineSelVal;
+  const key = `${detOrdineProdId}_${qty_o_g}`;
   const esistente = ordine.find(o => o.key === key);
   if (esistente) {
-    esistente.qty = (esistente.qty || 1) + 1;
+    esistente.qty++;
     esistente.totale = +(esistente.prezzo * esistente.qty).toFixed(2);
   } else {
-    ordine.push({
-      key, id: detOrdineProdId, nome: t(p.nome),
-      label, grammi: g, prezzo, totale: prezzo, qty: 1,
-      catNome: getCatNome(detOrdineProdId)
-    });
+    ordine.push({key, id: detOrdineProdId, nome: t(p.nome), label, prezzo, totale: prezzo, qty: 1, catNome: getCatNome(detOrdineProdId)});
   }
   aggiornaFAB();
-  // Feedback visivo
   const btn = document.getElementById('btn-aggiungi-ordine');
   const orig = btn.textContent;
   btn.textContent = '✓ Aggiunto!';
-  btn.style.background = '#2d6a4f';
-  btn.style.color = 'white';
+  btn.style.background = '#2d6a4f'; btn.style.color = 'white';
   setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
 }
 
 function aggiornaFAB() {
-  const n = ordine.reduce((s, o) => s + (o.qty || 1), 0);
-  const fab = document.getElementById('ordine-fab');
-  fab.classList.toggle('ha-prodotti', n > 0);
+  const n = ordine.reduce((s, o) => s + o.qty, 0);
+  document.getElementById('ordine-fab').classList.toggle('ha-prodotti', n > 0);
   document.getElementById('ordine-fab-badge').textContent = n;
 }
 
@@ -1510,12 +1514,12 @@ function rimuoviDaOrdine(key) {
   ordine = ordine.filter(o => o.key !== key);
   aggiornaFAB();
   renderOrdine();
-  if (ordine.length === 0) chiudiOrdine({target: document.getElementById('ordine-overlay')});
+  if (!ordine.length) chiudiOrdine({target: document.getElementById('ordine-overlay')});
 }
 
 function svuotaOrdine() {
   if (!ordine.length) return;
-  if (!confirm('Svuotare l\'ordine?')) return;
+  if (!confirm('Azzera la spesa calcolata?')) return;
   ordine = [];
   aggiornaFAB();
   chiudiOrdine({target: document.getElementById('ordine-overlay')});
@@ -1524,18 +1528,17 @@ function svuotaOrdine() {
 function renderOrdine() {
   const lista = document.getElementById('ordine-lista');
   if (!ordine.length) {
-    lista.innerHTML = '<div class="ordine-vuoto"><strong>🧮</strong>Nessun prodotto aggiunto.<br><small>Apri un prodotto di Sfizioserie o Mignon<br>e seleziona la quantità per calcolare la spesa.</small></div>';
+    lista.innerHTML = '<div class="ordine-vuoto"><strong>🧮</strong>Nessun prodotto aggiunto.<br><small>Apri un prodotto dal menu e tocca<br>"Aggiungi all\'ordine" per calcolare la spesa.</small></div>';
     document.getElementById('ordine-reset').style.display = 'none';
     return;
   }
   document.getElementById('ordine-reset').style.display = 'block';
   const totale = ordine.reduce((s, o) => s + o.totale, 0);
-
   lista.innerHTML = ordine.map(o => `
     <div class="ordine-riga">
       <div class="ordine-riga-info">
         <div class="ordine-riga-nome">${o.nome}</div>
-        <div class="ordine-riga-det">${o.label}${o.qty > 1 ? ` × ${o.qty}` : ''} · ${o.catNome}</div>
+        <div class="ordine-riga-det">${o.label}${o.qty > 1 ? ` × ${o.qty}` : ''}</div>
       </div>
       <div class="ordine-riga-prezzo">€ ${o.totale.toFixed(2)}</div>
       <button class="ordine-riga-del" onclick="rimuoviDaOrdine('${o.key}')">✕</button>
