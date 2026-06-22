@@ -1371,15 +1371,14 @@ function apriMignon(id){
 
   // Selettore ordine per i prodotti Mignon
   detOrdineProdId = id;
-  const pr_mezzo = +p.prezzo;
-  const pr_uno = +(p.prezzo * 2).toFixed(2);
-  detOrdineSelVal = {label:'½ kg', qty_o_g:500, prezzo: pr_mezzo};
+  const pr = +p.prezzo;
+  detOrdineSelVal = {label:'× 1 (½kg)', qty_o_g:1, prezzo: pr};
   document.getElementById('mignon-ordine-wrap').style.display = 'block';
-  document.getElementById('mignon-ordine-prezzo').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-      <button class="grammo-btn sel" onclick="selOrdineVal(this,'½ kg',500,${pr_mezzo})" data-v="500">½ kg<small>€ ${pr_mezzo.toFixed(2)}</small></button>
-      <button class="grammo-btn" onclick="selOrdineVal(this,'1 kg',1000,${pr_uno})" data-v="1000">1 kg<small>€ ${pr_uno.toFixed(2)}</small></button>
-    </div>`;
+  document.getElementById('mignon-ordine-prezzo').innerHTML =
+    `<div class="det-grammi-grid" style="margin-bottom:10px">${[1,2,3,4,5,6].map((q,i) => {
+      const tot = +(pr * q).toFixed(2);
+      return `<button class="grammo-btn${i===0?' sel':''}" onclick="selOrdineVal(this,'× ${q} (½kg)',${q},${tot})" data-v="${q}">× ${q}<small>€ ${tot.toFixed(2)}</small></button>`;
+    }).join('')}</div>`;
 
   document.getElementById('btn-chiudi-mignon').textContent = s.chiudi;
   document.getElementById('mignon-overlay').classList.add('show');
@@ -1434,15 +1433,20 @@ function mostraSezioneOrdineDettaglio(prodId) {
   const grid = document.getElementById('det-grammi-grid');
 
   if (tipo === 'mignon') {
-    // ½ kg e 1 kg
-    const pr_mezzo = +p.prezzo;
-    const pr_uno = +(p.prezzo * 2).toFixed(2);
-    detOrdineSelVal = {label:'½ kg', qty_o_g: 500, prezzo: pr_mezzo};
-    grid.className = 'det-grammi-grid mignon-grid';
-    grid.innerHTML = [
-      {label:'½ kg', val:500, prezzo:pr_mezzo, sel:true},
-      {label:'1 kg',  val:1000, prezzo:pr_uno,  sel:false},
-    ].map(g => `<button class="grammo-btn${g.sel?' sel':''}" onclick="selOrdineVal(this,'${g.label}',${g.val},${g.prezzo})" data-v="${g.val}">${g.label}<small>€ ${g.prezzo.toFixed(2)}</small></button>`).join('');
+    // Quantità × 1, × 2, × 3 (base = prezzo mezzo kg)
+    const pr = +p.prezzo;
+    detOrdineSelVal = {label:'× 1', qty_o_g:1, prezzo: pr};
+    grid.className = 'det-grammi-grid';
+    [1,2,3,4,5,6].forEach((q, i) => {
+      const tot = +(pr * q).toFixed(2);
+      const sel = i === 0;
+      if (sel) detOrdineSelVal = {label:`× ${q}`, qty_o_g:q, prezzo:tot};
+    });
+    grid.innerHTML = [1,2,3,4,5,6].map((q, i) => {
+      const tot = +(pr * q).toFixed(2);
+      const sel = i === 0;
+      return `<button class="grammo-btn${sel?' sel':''}" onclick="selOrdineVal(this,'× ${q} (½kg)',${q},${tot})" data-v="${q}">× ${q}<small>€ ${tot.toFixed(2)}</small></button>`;
+    }).join('');
     document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi all\'ordine';
 
   } else if (tipo === 'peso') {
@@ -1557,6 +1561,11 @@ function renderOrdine() {
         <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Stima indicativa · il prezzo esatto viene calcolato al banco</div>
       </div>
       <div class="ordine-totale-cifra">€ ${totale.toFixed(2)}</div>
+    </div>
+    <div style="background:#fffdf6;border:1px solid rgba(200,146,42,.2);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:11px;color:var(--grigio);line-height:1.6;">
+      💡 <strong style="color:var(--nero)">Nota:</strong> Il totale è puramente indicativo e calcolato sui prezzi base. 
+      Non include eventuali aggiunzioni, modifiche agli ingredienti o extra richiesti al banco. 
+      Il prezzo definitivo verrà confermato al momento dell'ordine.
     </div>`;
 }
 
