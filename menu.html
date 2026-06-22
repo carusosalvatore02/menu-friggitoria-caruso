@@ -362,6 +362,14 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
       <div class="mignon-prezzo-label" id="mignon-prezzo-label"></div>
     </div>
     <div class="mignon-lista" id="mignon-lista"></div>
+    <div id="mignon-ordine-wrap" class="det-ordine-wrap" style="display:none;margin-top:16px">
+      <div class="det-ordine-title">🧺 Aggiungi all'ordine — ½ kg</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:13px;color:var(--grigio)">Prezzo mezzo kg:</span>
+        <span id="mignon-ordine-prezzo" style="font-family:'Playfair Display',serif;font-size:17px;color:var(--oro);font-weight:700"></span>
+      </div>
+      <button class="btn-aggiungi-ordine" onclick="aggiungiAlOrdine()">Aggiungi ½ kg all'ordine</button>
+    </div>
     <button class="btn-chiudi-det" id="btn-chiudi-mignon" onclick="chiudiMignon()">Chiudi</button>
   </div>
 </div>
@@ -1360,6 +1368,14 @@ function apriMignon(id){
       <div class="mignon-item-nome">${item.nome}</div>
       <div class="mignon-item-desc">${item.desc || ''}</div>
     </div>`).join('');
+
+  // Selettore ordine per i prodotti Mignon
+  detOrdineProdId = id;
+  detOrdineGrammiSel = {label:'½ kg', g:500, prezzo: p.prezzo};
+  const prezzoMig = p.prezzo;
+  document.getElementById('mignon-ordine-wrap').style.display = 'block';
+  document.getElementById('mignon-ordine-prezzo').textContent = `€ ${Number(prezzoMig).toFixed(2)}`;
+
   document.getElementById('btn-chiudi-mignon').textContent = s.chiudi;
   document.getElementById('mignon-overlay').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -1392,14 +1408,6 @@ let ordine = []; // [{id, nome, grammi, label, prezzoUnitario, totale, catNome}]
 let detOrdineGrammiSel = null; // grammatura selezionata nel dettaglio corrente
 let detOrdineProdId = null;    // prodotto corrente nel dettaglio
 
-function isProdottoOrdinabile(p) {
-  // Cerca la categoria del prodotto
-  const cat = Object.values(datiMenu).flatMap(g => g.categoria ? [g] : []).find(g => g.prodotti.some(pp => pp.id === p.id));
-  if (!cat) return false;
-  const nomecat = cat.categoria.nome;
-  return nomecat === CAT_SFIZIOSERIE || CAT_MIGNON.includes(nomecat) || MIGNON_NOMI.includes(p.nome);
-}
-
 function getCatNome(prodId) {
   for (const g of datiMenu) {
     if (g.prodotti.some(p => p.id === prodId)) return g.categoria.nome;
@@ -1409,30 +1417,32 @@ function getCatNome(prodId) {
 
 function isCategoriaMignon(prodId) {
   const cn = getCatNome(prodId);
-  return CAT_MIGNON.includes(cn) || MIGNON_NOMI.includes((prodottiAll[prodId]||{}).nome);
+  const p = prodottiAll[prodId];
+  return cn === 'Mignon' || (p && MIGNON_NOMI.includes(p.nome));
+}
+
+function isCategoriaSfizioserie(prodId) {
+  return getCatNome(prodId) === 'Sfizioserie';
 }
 
 function mostraSezioneOrdineDettaglio(prodId) {
   const p = prodottiAll[prodId];
-  if (!p) return;
-  const isMig = isCategoriaMignon(prodId);
-  const catNome = getCatNome(prodId);
-  const isSfiz = catNome === CAT_SFIZIOSERIE;
+  if (!p) { document.getElementById('det-ordine-wrap').style.display = 'none'; return; }
+  const isMig  = isCategoriaMignon(prodId);
+  const isSfiz = isCategoriaSfizioserie(prodId);
   if (!isMig && !isSfiz) { document.getElementById('det-ordine-wrap').style.display = 'none'; return; }
 
   const grammi = isMig ? GRAMMI_MIGNON : GRAMMI_SFIZ;
-  detOrdineGrammiSel = grammi[isMig ? 0 : 1]; // default 200g per sfiz, ½kg per mignon
+  detOrdineGrammiSel = grammi[isMig ? 0 : 1]; // default 200g sfiz, ½kg mignon
   detOrdineProdId = prodId;
 
   document.getElementById('det-grammi-grid').className = 'det-grammi-grid' + (isMig ? ' mignon-grid' : '');
-  document.getElementById('det-grammi-grid').innerHTML = grammi.map(g => {
-    // calcola prezzo per questa grammatura
-    const prezzoKg = p.prezzo; // il prezzo nel DB è al kg o mezzo kg?
-    // Per sfizioserie il prezzo nel DB è al kg (€/kg)
-    // Per mignon il prezzo nel DB è già il prezzo del mezzo kg
-    const prezzo = isMig ? p.prezzo : +(prezzoKg * g.mult).toFixed(2);
-    return `<button class="grammo-btn${g === detOrdineGrammiSel ? ' sel' : ''}"
-      onclick="selGrammo(this,'${g.label}',${g.g},${prezzo},${isMig})"
+  document.getElementById('det-grammi-grid').innerHTML = grammi.map((g, i) => {
+    const prezzo = isMig ? +p.prezzo : +(p.prezzo * g.mult).toFixed(2);
+    const isSel = (i === (isMig ? 0 : 1));
+    if (isSel) detOrdineGrammiSel = {label: g.label, g: g.g, prezzo};
+    return `<button class="grammo-btn${isSel ? ' sel' : ''}"
+      onclick="selGrammo(this,'${g.label}',${g.g},${prezzo})"
       data-g="${g.g}">
       ${g.label}<small>€ ${prezzo.toFixed(2)}</small>
     </button>`;
@@ -1440,7 +1450,7 @@ function mostraSezioneOrdineDettaglio(prodId) {
   document.getElementById('det-ordine-wrap').style.display = 'block';
 }
 
-function selGrammo(btn, label, g, prezzo, isMig) {
+function selGrammo(btn, label, g, prezzo) {
   document.querySelectorAll('.grammo-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
   detOrdineGrammiSel = {label, g, prezzo};
