@@ -153,6 +153,20 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 @keyframes spin{to{transform:rotate(360deg)}}
 .pop-vuoto{text-align:center;padding:40px 20px;color:var(--grigio);}
 .pop-vuoto strong{display:block;font-size:28px;margin-bottom:8px;}
+
+/* ── MIGNON EDITOR ── */
+.mignon-editor{display:none;margin-top:4px;}
+.mignon-editor.visible{display:block;}
+.mignon-row{display:flex;gap:8px;align-items:flex-start;background:var(--bianco);border:1.5px solid #e8dfd0;border-radius:10px;padding:10px 10px 10px 12px;margin-bottom:8px;}
+.mignon-row-inputs{flex:1;display:flex;flex-direction:column;gap:6px;}
+.mignon-row input{width:100%;padding:8px 10px;border:1.5px solid #d4c9bb;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;background:var(--carta);outline:none;}
+.mignon-row input:focus{border-color:var(--oro);}
+.mignon-row input::placeholder{color:#bbb;}
+.mignon-del-btn{width:30px;height:30px;flex-shrink:0;background:none;border:1.5px solid #e8dfd0;border-radius:8px;cursor:pointer;font-size:14px;color:var(--rosso);display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.mignon-del-btn:hover{background:#fef0ef;border-color:var(--rosso);}
+.mignon-add-btn{width:100%;padding:10px;background:none;border:1.5px dashed var(--oro);border-radius:10px;color:var(--oro);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;}
+.mignon-add-btn:hover{background:rgba(200,146,42,.06);}
+.mignon-nota{font-size:11px;color:var(--grigio);margin-top:6px;font-style:italic;}
 </style>
 </head>
 <body>
@@ -253,7 +267,14 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
     </div>
     <div class="campo">
       <label>Abbinamenti consigliati</label>
-      <textarea id="prod-abbinamenti" placeholder="Es. Ottimo con una birra artigianale o una Spuma ghiacciata. Prova anche le panelle come antipasto…" style="min-height:80px"></textarea>
+      <textarea id="prod-abbinamenti" placeholder="Es. Ottimo con una birra artigianale o una Spuma ghiacciata…" style="min-height:80px"></textarea>
+    </div>
+    <!-- SEZIONE MIGNON (visibile solo per i 3 prodotti mignon) -->
+    <div id="mignon-editor-wrap" class="sezione-titolo-modale" style="display:none">🧺 Tipologie disponibili</div>
+    <div class="mignon-editor" id="mignon-editor">
+      <div id="mignon-rows"></div>
+      <button class="mignon-add-btn" onclick="aggiungiRigaMignon()">+ Aggiungi tipologia</button>
+      <div class="mignon-nota">Le tipologie vengono mostrate ai clienti quando aprono questo prodotto nel menu.</div>
     </div>
     <div class="campo" style="display:flex;align-items:center;gap:10px;margin-top:4px;">
       <label style="margin:0">Disponibile</label>
@@ -512,7 +533,31 @@ async function caricaFoto(){
   return pub.publicUrl;
 }
 
-// ── MODALE PRODOTTO ──
+// ── NOMI MIGNON ──
+const MIGNON_NOMI_ADMIN = ['Panineria Mignon','Rosticceria Mignon','Panineria Mignon di Pesce'];
+
+// ── MIGNON EDITOR ──
+function aggiungiRigaMignon(nome='', desc=''){
+  const cont = document.getElementById('mignon-rows');
+  const idx = cont.children.length;
+  const div = document.createElement('div');
+  div.className = 'mignon-row';
+  div.innerHTML = `
+    <div class="mignon-row-inputs">
+      <input type="text" placeholder="Nome tipologia (es. Capriccioso)" value="${nome.replace(/"/g,'&quot;')}" data-mignon="nome">
+      <input type="text" placeholder="Ingredienti (es. Insalate di verdure, maionese)" value="${desc.replace(/"/g,'&quot;')}" data-mignon="desc">
+    </div>
+    <button class="mignon-del-btn" onclick="this.closest('.mignon-row').remove()" title="Elimina">✕</button>`;
+  cont.appendChild(div);
+}
+
+function getMignonTipologie(){
+  return [...document.querySelectorAll('#mignon-rows .mignon-row')].map(row => ({
+    nome: row.querySelector('[data-mignon="nome"]').value.trim(),
+    desc: row.querySelector('[data-mignon="desc"]').value.trim(),
+  })).filter(r => r.nome);
+}
+
 function apriModaleProdotto(id){
   editId=id||null;fotoFile=null;
   const p=id?prodotti.find(x=>x.id===id):null;
@@ -526,7 +571,6 @@ function apriModaleProdotto(id){
   document.getElementById('prod-ora-fine').value=p?.ora_fine?.slice(0,5)||'';
   document.getElementById('prod-foto-url').value=p?.foto_url||'';
   document.getElementById('prod-ingredienti').value=p?.ingredienti||'';
-  document.getElementById('prod-abbinamenti').value=p?.abbinamenti||'';
   const img=document.getElementById('foto-preview');
   if(p?.foto_url){img.src=p.foto_url;img.style.display='block';document.getElementById('foto-testo').textContent='Foto attuale';}
   else{img.style.display='none';document.getElementById('foto-testo').innerHTML='📷 <strong>Tocca per scegliere una foto</strong><br><span style="font-size:11px">JPG, PNG, WEBP · max 5MB</span>';}
@@ -537,6 +581,24 @@ function apriModaleProdotto(id){
   prefBtn.classList.toggle('on',isPref);prefRow.classList.toggle('attivo',isPref);
   document.getElementById('prod-disp').classList.toggle('on',p?.disponibile!==false);
   document.getElementById('btn-elimina-prod').style.display=p?'block':'none';
+
+  // Mignon: mostra editor tipologie, nascondi abbinamenti
+  const isMig = p && MIGNON_NOMI_ADMIN.includes(p.nome);
+  document.getElementById('prod-abbinamenti').value = isMig ? '' : (p?.abbinamenti||'');
+  document.getElementById('prod-abbinamenti').closest('.campo').style.display = isMig ? 'none' : '';
+  document.getElementById('mignon-editor-wrap').style.display = isMig ? '' : 'none';
+  document.getElementById('mignon-editor').classList.toggle('visible', isMig);
+  document.getElementById('mignon-rows').innerHTML = '';
+  if(isMig){
+    let tipologie = [];
+    if(p.abbinamenti){ try{ const parsed=JSON.parse(p.abbinamenti); if(Array.isArray(parsed)) tipologie=parsed; }catch(e){} }
+    if(!tipologie.length){
+      const DEF={'Panineria Mignon':[{nome:'Capriccioso',desc:'Insalate di verdure, maionese'},{nome:'Tedesco',desc:'Patate, wurstel, prezzemolo, maionese'},{nome:'Campagnola',desc:'Patate, wurstel, prezzemolo, tonno, salsa rosa'},{nome:'Primavera',desc:'Lattuga, tonno, pomodoro, maionese'},{nome:'Pomodoro e mozzarella',desc:''},{nome:'Salame dolce e mozzarella',desc:''},{nome:'Tonno e lattuga',desc:'Tonno e lattuga'},{nome:'Parmigiana',desc:'Melanzana fritta, salsa di pomodoro e grana'},{nome:'Panelle',desc:'Farina di ceci, acqua, sale'},{nome:'Crocchè',desc:'Patate, prezzemolo, sale'},{nome:'Hamburger',desc:'Hamburger, pomodoro, salsa'},{nome:'Cartoccio',desc:'Prosciutto cotto arrostito, mozzarella, salsa'},{nome:'Wurstel',desc:'Wurstel, salsa'}],'Rosticceria Mignon':[{nome:'Calzone al forno',desc:'Prosciutto cotto, mozzarella'},{nome:'Calzone fritto',desc:'Prosciutto cotto, mozzarella'},{nome:'Pizzetta',desc:''},{nome:'Sfincionello',desc:''},{nome:'Rollò con Wurstel',desc:''},{nome:'Ravazzata con ragù di carne',desc:''},{nome:'Barchetta con Salame piccante e mozzarella',desc:''}],'Panineria Mignon di Pesce':[{nome:'Salmone',desc:'Salmone e lattuga'},{nome:'Cocktail di Gamberi',desc:'Gamberetti, salsa rosa, lattuga, radicchio'},{nome:'Insalata di mare',desc:'Polpo, calamari, cozze, polpa di granchio, insalatina'}]};
+      tipologie = DEF[p.nome] || [];
+    }
+    tipologie.forEach(t => aggiungiRigaMignon(t.nome, t.desc));
+  }
+
   document.getElementById('modal-prodotto').classList.add('show');
 }
 function modificaProdotto(id){apriModaleProdotto(id);}
@@ -547,7 +609,15 @@ async function salvaProdotto(){
   if(!nome||isNaN(prezzo)){toast('Inserisci nome e prezzo','err');return;}
   let fotoUrl=document.getElementById('prod-foto-url').value.trim()||null;
   if(fotoFile){const url=await caricaFoto();if(url)fotoUrl=url;}
-  const dati={categoria_id:parseInt(document.getElementById('prod-cat').value),nome,descrizione:document.getElementById('prod-desc').value.trim(),prezzo,prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,badges:getBadgesSelezionati(),is_preferito:document.getElementById('prod-preferito').classList.contains('on'),ora_inizio:document.getElementById('prod-ora-inizio').value||null,ora_fine:document.getElementById('prod-ora-fine').value||null,foto_url:fotoUrl,disponibile:document.getElementById('prod-disp').classList.contains('on'),allergeni:getAllergeniSelezionati(),ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,abbinamenti:document.getElementById('prod-abbinamenti').value.trim()||null};
+  const isMig = MIGNON_NOMI_ADMIN.includes(nome);
+  let abbinamenti = null;
+  if(isMig){
+    const tipologie = getMignonTipologie();
+    abbinamenti = tipologie.length ? JSON.stringify(tipologie) : null;
+  } else {
+    abbinamenti = document.getElementById('prod-abbinamenti').value.trim()||null;
+  }
+  const dati={categoria_id:parseInt(document.getElementById('prod-cat').value),nome,descrizione:document.getElementById('prod-desc').value.trim(),prezzo,prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,badges:getBadgesSelezionati(),is_preferito:document.getElementById('prod-preferito').classList.contains('on'),ora_inizio:document.getElementById('prod-ora-inizio').value||null,ora_fine:document.getElementById('prod-ora-fine').value||null,foto_url:fotoUrl,disponibile:document.getElementById('prod-disp').classList.contains('on'),allergeni:getAllergeniSelezionati(),ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,abbinamenti};
   if(editId){await sb.from('prodotti').update(dati).eq('id',editId);toast('Prodotto aggiornato ✓','ok');}
   else{dati.ordine=prodotti.filter(p=>p.categoria_id===dati.categoria_id).length+1;await sb.from('prodotti').insert(dati);toast('Prodotto aggiunto ✓','ok');}
   chiudiModale('modal-prodotto');await carica();

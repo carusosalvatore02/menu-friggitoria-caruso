@@ -169,6 +169,22 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .det-abbinamenti-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
 .btn-chiudi-det{width:100%;padding:13px;background:var(--nero);color:var(--carta);border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:20px;}
 
+/* ── PANNELLO MIGNON ── */
+.mignon-overlay{display:none;position:fixed;inset:0;background:rgba(17,16,8,.6);z-index:100;align-items:flex-end;justify-content:center;}
+.mignon-overlay.show{display:flex;}
+.mignon-box{background:var(--carta);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;max-height:86vh;overflow-y:auto;box-shadow:0 -4px 40px rgba(0,0,0,.25);animation:slideUp .25s ease;}
+.mignon-handle{width:40px;height:4px;background:#d4c9bb;border-radius:2px;margin:0 auto 16px;}
+.mignon-header{margin-bottom:18px;}
+.mignon-titolo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--nero);margin-bottom:4px;}
+.mignon-prezzo-label{font-size:12px;color:var(--grigio);font-weight:500;}
+.mignon-prezzo-label strong{color:var(--oro);font-size:14px;}
+.mignon-lista{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.mignon-item{background:var(--bianco);border:1.5px solid #e8dfd0;border-radius:12px;padding:12px 14px;}
+.mignon-item-nome{font-size:14px;font-weight:600;color:var(--nero);margin-bottom:3px;}
+.mignon-item-desc{font-size:12px;color:var(--grigio);line-height:1.5;}
+.mignon-item-desc:empty{display:none;}
+.mignon-sezione-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grigio);padding:4px 0 6px;margin-top:4px;}
+
 /* RTL per arabo */
 body.rtl{direction:rtl;}
 body.rtl .prodotto{flex-direction:row-reverse;}
@@ -276,6 +292,19 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
       <div class="nota-allergeni" id="det-nota-allergeni">⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.</div>
     </div>
     <button class="btn-chiudi-det" id="btn-chiudi-det" onclick="chiudiDettaglio()">Chiudi</button>
+  </div>
+</div>
+
+<!-- PANNELLO MIGNON -->
+<div class="mignon-overlay" id="mignon-overlay" onclick="chiudiMignon(event)">
+  <div class="mignon-box">
+    <div class="mignon-handle"></div>
+    <div class="mignon-header">
+      <div class="mignon-titolo" id="mignon-titolo"></div>
+      <div class="mignon-prezzo-label" id="mignon-prezzo-label"></div>
+    </div>
+    <div class="mignon-lista" id="mignon-lista"></div>
+    <button class="btn-chiudi-det" id="btn-chiudi-mignon" onclick="chiudiMignon()">Chiudi</button>
   </div>
 </div>
 
@@ -1213,6 +1242,77 @@ function osservaSezioni(){
   document.querySelectorAll('.sezione').forEach(s=>obs.observe(s));
 }
 
+// ── NOMI PRODOTTI MIGNON (rilevamento) ──
+const MIGNON_NOMI = ['Panineria Mignon','Rosticceria Mignon','Panineria Mignon di Pesce'];
+function isMignon(p){ return MIGNON_NOMI.some(n => p.nome && p.nome.toLowerCase().includes(n.toLowerCase().replace('panineria mignon di pesce','pesce').replace('panineria mignon','panineria').replace('rosticceria mignon','rosticceria')) || p.nome === n); }
+function isMignonProdotto(p){ return MIGNON_NOMI.includes(p.nome); }
+
+// ── DATI TIPOLOGIE MIGNON (da abbinamenti JSON, con fallback hard-coded) ──
+const MIGNON_DEFAULT = {
+  'Panineria Mignon': [
+    {nome:'Capriccioso', desc:'Insalate di verdure, maionese'},
+    {nome:'Tedesco', desc:'Patate, wurstel, prezzemolo, maionese'},
+    {nome:'Campagnola', desc:'Patate, wurstel, prezzemolo, tonno, salsa rosa'},
+    {nome:'Primavera', desc:'Lattuga, tonno, pomodoro, maionese'},
+    {nome:'Pomodoro e mozzarella', desc:''},
+    {nome:'Salame dolce e mozzarella', desc:''},
+    {nome:'Tonno e lattuga', desc:'Tonno e lattuga'},
+    {nome:'Parmigiana', desc:'Melanzana fritta, salsa di pomodoro e grana'},
+    {nome:'Panelle', desc:'Farina di ceci, acqua, sale'},
+    {nome:'Crocchè', desc:'Patate, prezzemolo, sale'},
+    {nome:'Hamburger', desc:'Hamburger, pomodoro, salsa'},
+    {nome:'Cartoccio', desc:'Prosciutto cotto arrostito, mozzarella, salsa'},
+    {nome:'Wurstel', desc:'Wurstel, salsa'},
+  ],
+  'Rosticceria Mignon': [
+    {nome:'Calzone al forno', desc:'Prosciutto cotto, mozzarella'},
+    {nome:'Calzone fritto', desc:'Prosciutto cotto, mozzarella'},
+    {nome:'Pizzetta', desc:''},
+    {nome:'Sfincionello', desc:''},
+    {nome:'Rollò con Wurstel', desc:''},
+    {nome:'Ravazzata con ragù di carne', desc:''},
+    {nome:'Barchetta con Salame piccante e mozzarella', desc:''},
+  ],
+  'Panineria Mignon di Pesce': [
+    {nome:'Salmone', desc:'Salmone e lattuga'},
+    {nome:'Cocktail di Gamberi', desc:'Gamberetti, salsa rosa, lattuga, radicchio'},
+    {nome:'Insalata di mare', desc:'Polpo, calamari, cozze, polpa di granchio, insalatina'},
+  ],
+};
+
+const MIGNON_PREZZI = {
+  'Panineria Mignon':         '€ 8,00 / kg  ·  mezzo kg € 4,00',
+  'Rosticceria Mignon':       '€ 8,00 / kg  ·  mezzo kg € 4,00',
+  'Panineria Mignon di Pesce':'€ 15,00 / kg  ·  mezzo kg € 7,50',
+};
+
+function apriMignon(id){
+  const p = prodottiAll[id]; if(!p) return;
+  registraTap(id, 'dettaglio');
+  const s = UI_STRINGS[lingua] || UI_STRINGS['it'];
+  // Leggi tipologie: prima da abbinamenti (JSON), poi da default
+  let tipologie = MIGNON_DEFAULT[p.nome] || [];
+  if(p.abbinamenti){
+    try { const parsed = JSON.parse(p.abbinamenti); if(Array.isArray(parsed)) tipologie = parsed; } catch(e){}
+  }
+  document.getElementById('mignon-titolo').textContent = t(p.nome);
+  document.getElementById('mignon-prezzo-label').innerHTML = `<strong>${MIGNON_PREZZI[p.nome] || ''}</strong>`;
+  document.getElementById('mignon-lista').innerHTML = tipologie.map(item => `
+    <div class="mignon-item">
+      <div class="mignon-item-nome">${item.nome}</div>
+      <div class="mignon-item-desc">${item.desc || ''}</div>
+    </div>`).join('');
+  document.getElementById('btn-chiudi-mignon').textContent = s.chiudi;
+  document.getElementById('mignon-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function chiudiMignon(e){
+  if(e && e.target !== document.getElementById('mignon-overlay') && !e.target.classList.contains('btn-chiudi-det')) return;
+  document.getElementById('mignon-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
 // ── CONTATORE TAP ──
 async function registraTap(prodottoId, tipo) {
   try {
@@ -1222,7 +1322,9 @@ async function registraTap(prodottoId, tipo) {
 
 async function tapLista(id) {
   await registraTap(id, 'lista');
-  apriDettaglio(id);
+  const p = prodottiAll[id];
+  if(p && MIGNON_NOMI.includes(p.nome)) apriMignon(id);
+  else apriDettaglio(id);
 }
 
 // ── PANNELLO DETTAGLIO ──
