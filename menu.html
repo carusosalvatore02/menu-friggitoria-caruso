@@ -366,12 +366,9 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
     </div>
     <div class="mignon-lista" id="mignon-lista"></div>
     <div id="mignon-ordine-wrap" class="det-ordine-wrap" style="display:none;margin-top:16px">
-      <div class="det-ordine-title">🧺 Aggiungi all'ordine — ½ kg</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <span style="font-size:13px;color:var(--grigio)">Prezzo mezzo kg:</span>
-        <span id="mignon-ordine-prezzo" style="font-family:'Playfair Display',serif;font-size:17px;color:var(--oro);font-weight:700"></span>
-      </div>
-      <button class="btn-aggiungi-ordine" onclick="aggiungiAlOrdine()">Aggiungi ½ kg all'ordine</button>
+      <div class="det-ordine-title">🧮 Aggiungi all'ordine</div>
+      <div id="mignon-ordine-prezzo"></div>
+      <button class="btn-aggiungi-ordine" onclick="aggiungiAlOrdine()">Aggiungi all'ordine</button>
     </div>
     <button class="btn-chiudi-det" id="btn-chiudi-mignon" onclick="chiudiMignon()">Chiudi</button>
   </div>
@@ -1374,9 +1371,15 @@ function apriMignon(id){
 
   // Selettore ordine per i prodotti Mignon
   detOrdineProdId = id;
-  detOrdineSelVal = {label:'½ kg', qty_o_g:500, prezzo: +p.prezzo};
+  const pr_mezzo = +p.prezzo;
+  const pr_uno = +(p.prezzo * 2).toFixed(2);
+  detOrdineSelVal = {label:'½ kg', qty_o_g:500, prezzo: pr_mezzo};
   document.getElementById('mignon-ordine-wrap').style.display = 'block';
-  document.getElementById('mignon-ordine-prezzo').textContent = `€ ${Number(p.prezzo).toFixed(2)}`;
+  document.getElementById('mignon-ordine-prezzo').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+      <button class="grammo-btn sel" onclick="selOrdineVal(this,'½ kg',500,${pr_mezzo})" data-v="500">½ kg<small>€ ${pr_mezzo.toFixed(2)}</small></button>
+      <button class="grammo-btn" onclick="selOrdineVal(this,'1 kg',1000,${pr_uno})" data-v="1000">1 kg<small>€ ${pr_uno.toFixed(2)}</small></button>
+    </div>`;
 
   document.getElementById('btn-chiudi-mignon').textContent = s.chiudi;
   document.getElementById('mignon-overlay').classList.add('show');
@@ -1431,11 +1434,16 @@ function mostraSezioneOrdineDettaglio(prodId) {
   const grid = document.getElementById('det-grammi-grid');
 
   if (tipo === 'mignon') {
-    // ½ kg fisso — non serve griglia, solo bottone
-    detOrdineSelVal = {label:'½ kg', qty_o_g: 500, prezzo: +p.prezzo};
+    // ½ kg e 1 kg
+    const pr_mezzo = +p.prezzo;
+    const pr_uno = +(p.prezzo * 2).toFixed(2);
+    detOrdineSelVal = {label:'½ kg', qty_o_g: 500, prezzo: pr_mezzo};
     grid.className = 'det-grammi-grid mignon-grid';
-    grid.innerHTML = `<button class="grammo-btn sel" style="grid-column:1/-1" onclick="">½ kg<small>€ ${(+p.prezzo).toFixed(2)}</small></button>`;
-    document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi ½ kg';
+    grid.innerHTML = [
+      {label:'½ kg', val:500, prezzo:pr_mezzo, sel:true},
+      {label:'1 kg',  val:1000, prezzo:pr_uno,  sel:false},
+    ].map(g => `<button class="grammo-btn${g.sel?' sel':''}" onclick="selOrdineVal(this,'${g.label}',${g.val},${g.prezzo})" data-v="${g.val}">${g.label}<small>€ ${g.prezzo.toFixed(2)}</small></button>`).join('');
+    document.getElementById('btn-aggiungi-ordine').textContent = 'Aggiungi all\'ordine';
 
   } else if (tipo === 'peso') {
     // Grammature 100g/200g/500g/1kg
