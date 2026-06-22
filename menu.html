@@ -186,9 +186,12 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .mignon-sezione-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grigio);padding:4px 0 6px;margin-top:4px;}
 
 /* ── CALCOLATRICE ORDINE ── */
-.ordine-fab{position:fixed;bottom:24px;right:20px;z-index:90;background:var(--oro);color:var(--nero);border:none;border-radius:50px;padding:13px 18px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(200,146,42,.45);display:none;align-items:center;gap:8px;transition:transform .15s;}
+.ordine-fab{position:fixed;bottom:24px;right:20px;z-index:90;background:var(--nero);color:var(--carta);border:1.5px solid rgba(200,146,42,.4);border-radius:50px;padding:12px 18px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:8px;transition:all .2s;}
+.ordine-fab:hover{background:var(--oro);color:var(--nero);border-color:var(--oro);}
 .ordine-fab:active{transform:scale(.95);}
-.ordine-fab-badge{background:var(--nero);color:var(--carta);border-radius:10px;font-size:11px;font-weight:700;padding:1px 7px;min-width:20px;text-align:center;}
+.ordine-fab.ha-prodotti{background:var(--oro);color:var(--nero);border-color:var(--oro);box-shadow:0 4px 20px rgba(200,146,42,.45);}
+.ordine-fab-badge{background:var(--nero);color:var(--carta);border-radius:10px;font-size:11px;font-weight:700;padding:1px 7px;min-width:20px;text-align:center;display:none;}
+.ordine-fab.ha-prodotti .ordine-fab-badge{display:inline;}
 .ordine-overlay{display:none;position:fixed;inset:0;background:rgba(17,16,8,.6);z-index:110;align-items:flex-end;justify-content:center;}
 .ordine-overlay.show{display:flex;}
 .ordine-box{background:var(--carta);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;box-shadow:0 -4px 40px rgba(0,0,0,.3);animation:slideUp .25s ease;}
@@ -338,7 +341,7 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
 
 <!-- FAB ORDINE -->
 <button class="ordine-fab" id="ordine-fab" onclick="apriOrdine()">
-  🧺 <span id="ordine-fab-txt">Il tuo ordine</span>
+  🧮 Calcola la tua spesa
   <span class="ordine-fab-badge" id="ordine-fab-badge">0</span>
 </button>
 
@@ -346,9 +349,9 @@ body.rtl .hero-lang-btn{left:14px;right:auto;}
 <div class="ordine-overlay" id="ordine-overlay" onclick="chiudiOrdine(event)">
   <div class="ordine-box">
     <div class="ordine-handle"></div>
-    <div class="ordine-titolo">🧺 Il tuo ordine</div>
+    <div class="ordine-titolo">🧮 Calcola la tua spesa</div>
     <div id="ordine-lista"></div>
-    <button class="ordine-reset" id="ordine-reset" onclick="svuotaOrdine()">🗑 Svuota ordine</button>
+    <button class="ordine-reset" id="ordine-reset" onclick="svuotaOrdine()">🗑 Azzera</button>
     <button class="btn-chiudi-det" onclick="chiudiOrdine()" style="margin-top:8px">Chiudi</button>
   </div>
 </div>
@@ -1487,7 +1490,7 @@ function aggiungiAlOrdine() {
 function aggiornaFAB() {
   const n = ordine.reduce((s, o) => s + (o.qty || 1), 0);
   const fab = document.getElementById('ordine-fab');
-  fab.style.display = n > 0 ? 'flex' : 'none';
+  fab.classList.toggle('ha-prodotti', n > 0);
   document.getElementById('ordine-fab-badge').textContent = n;
 }
 
@@ -1521,7 +1524,7 @@ function svuotaOrdine() {
 function renderOrdine() {
   const lista = document.getElementById('ordine-lista');
   if (!ordine.length) {
-    lista.innerHTML = '<div class="ordine-vuoto"><strong>🧺</strong>Nessun prodotto aggiunto.<br><small>Apri un prodotto e seleziona la quantità.</small></div>';
+    lista.innerHTML = '<div class="ordine-vuoto"><strong>🧮</strong>Nessun prodotto aggiunto.<br><small>Apri un prodotto di Sfizioserie o Mignon<br>e seleziona la quantità per calcolare la spesa.</small></div>';
     document.getElementById('ordine-reset').style.display = 'none';
     return;
   }
@@ -1540,7 +1543,7 @@ function renderOrdine() {
     `<div class="ordine-totale">
       <div>
         <div class="ordine-totale-label">TOTALE STIMATO</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Prezzi indicativi · conferma al banco</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Stima indicativa · il prezzo esatto viene calcolato al banco</div>
       </div>
       <div class="ordine-totale-cifra">€ ${totale.toFixed(2)}</div>
     </div>`;
