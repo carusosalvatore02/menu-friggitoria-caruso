@@ -55,7 +55,7 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .nav-btn{padding:12px 16px;background:none;border:none;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.06em;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
 .nav-btn:hover{color:var(--oro-v);}
 .nav-btn.attivo{color:var(--oro);border-bottom-color:var(--oro);}
-.nav-btn.novita{color:#58c4dc;}
+.nav-btn.preferiti{color:var(--oro-v);}
 
 /* BARRA RICERCA */
 .barra-ricerca{padding:14px 16px 10px;background:var(--carta);border-bottom:1px solid rgba(0,0,0,.06);}
@@ -87,17 +87,17 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 /* CONTENUTO */
 .main{max-width:680px;margin:0 auto;padding:0 0 60px;}
 
-/* SEZIONE NOVITÀ */
-.sezione-novita{background:#071626;border-bottom:2px solid rgba(88,196,220,.25);}
-.sezione-novita .sezione-header{position:relative;top:0;background:transparent;}
-.sezione-novita .sezione-header h2{color:#58c4dc;}
-.sezione-novita .prodotto{border-bottom-color:rgba(255,255,255,.07);}
-.sezione-novita .prodotto-nome{color:var(--bianco);}
-.sezione-novita .prodotto-desc{color:rgba(255,255,255,.45);}
-.sezione-novita .prodotto-prezzo{color:#58c4dc;}
-.sezione-novita .prodotto-prezzo-barrato{color:rgba(255,255,255,.3);}
-.sezione-novita .prodotto-foto-placeholder{background:rgba(255,255,255,.07);}
-.sezione-novita .all-sigla-pill{background:#001525;border-color:#003355;color:#58c4dc;}
+/* SEZIONE PREFERITI */
+.sezione-preferiti{background:var(--nero);border-bottom:2px solid rgba(200,146,42,.3);}
+.sezione-preferiti .sezione-header{position:relative;top:0;background:transparent;}
+.sezione-preferiti .sezione-header h2{color:var(--oro-v);}
+.sezione-preferiti .prodotto{border-bottom-color:rgba(255,255,255,.07);}
+.sezione-preferiti .prodotto-nome{color:var(--bianco);}
+.sezione-preferiti .prodotto-desc{color:rgba(255,255,255,.45);}
+.sezione-preferiti .prodotto-prezzo{color:var(--oro);}
+.sezione-preferiti .prodotto-prezzo-barrato{color:rgba(255,255,255,.3);}
+.sezione-preferiti .prodotto-foto-placeholder{background:rgba(255,255,255,.07);}
+.sezione-preferiti .all-sigla-pill{background:#2a1500;border-color:#5a2d00;color:#e8a050;}
 
 /* SEZIONE NORMALE */
 .sezione{padding:0 0 8px;}
@@ -420,7 +420,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'Prova a modificare la ricerca o i filtri.',
     ingredienti: 'Ingredienti', abbinamenti: 'Abbinamenti consigliati', allergeni: 'Allergeni',
     notaAllergeni: '⚠ Possibile contaminazione crociata. In caso di allergie gravi informare sempre il personale.',
-    chiudi: 'Chiudi', preferiti: '🆕 Novità', traduzione: 'Traduzione in corso…',
+    chiudi: 'Chiudi', preferiti: '⭐ I Nostri Preferiti', traduzione: 'Traduzione in corso…',
     bannerChiuso: '🔴 Oggi siamo chiusi', noAllergene: 'No ', bannerAperto: '🟢 Oggi siamo aperti fino alle',
     fuoriMenu: '⚠️ Momentaneamente non disponibili:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'Senza Glutine','best-seller':'Best Seller','novita':'Novità','consigliato':'Consigliato','piccante':'Piccante','vegano':'Vegano' }
@@ -433,7 +433,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'Try changing the search or filters.',
     ingredienti: 'Ingredients', abbinamenti: 'Recommended pairings', allergeni: 'Allergens',
     notaAllergeni: '⚠ Possible cross-contamination. For severe allergies always inform staff.',
-    chiudi: 'Close', preferiti: '🆕 New', traduzione: 'Translating…',
+    chiudi: 'Close', preferiti: '⭐ Our Favourites', traduzione: 'Translating…',
     bannerChiuso: '🔴 We are closed today', noAllergene: 'No ', bannerAperto: '🟢 Open today until',
     fuoriMenu: '⚠️ Temporarily unavailable:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'Gluten Free','best-seller':'Best Seller','novita':'New','consigliato':'Recommended','piccante':'Spicy','vegano':'Vegan' }
@@ -446,7 +446,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'Essayez de modifier la recherche ou les filtres.',
     ingredienti: 'Ingrédients', abbinamenti: 'Accords recommandés', allergeni: 'Allergènes',
     notaAllergeni: '⚠ Contamination croisée possible. En cas d\'allergie grave, informez toujours le personnel.',
-    chiudi: 'Fermer', preferiti: '🆕 Nouveautés', traduzione: 'Traduction en cours…',
+    chiudi: 'Fermer', preferiti: '⭐ Nos Favoris', traduzione: 'Traduction en cours…',
     bannerChiuso: '🔴 Fermé aujourd\'hui', noAllergene: 'Sans ', bannerAperto: '🟢 Ouvert aujourd\'hui jusqu\'à',
     fuoriMenu: '⚠️ Temporairement indisponibles:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'Sans Gluten','best-seller':'Best Seller','novita':'Nouveau','consigliato':'Conseillé','piccante':'Épicé','vegano':'Végane' }
@@ -459,7 +459,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'Versuche die Suche oder Filter zu ändern.',
     ingredienti: 'Zutaten', abbinamenti: 'Empfohlene Kombinationen', allergeni: 'Allergene',
     notaAllergeni: '⚠ Mögliche Kreuzkontamination. Bei schweren Allergien immer das Personal informieren.',
-    chiudi: 'Schließen', preferiti: '🆕 Neuheiten', traduzione: 'Übersetzung läuft…',
+    chiudi: 'Schließen', preferiti: '⭐ Unsere Favoriten', traduzione: 'Übersetzung läuft…',
     bannerChiuso: '🔴 Heute geschlossen', noAllergene: 'Ohne ', bannerAperto: '🟢 Heute geöffnet bis',
     fuoriMenu: '⚠️ Vorübergehend nicht verfügbar:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'Glutenfrei','best-seller':'Bestseller','novita':'Neu','consigliato':'Empfohlen','piccante':'Scharf','vegano':'Vegan' }
@@ -472,7 +472,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'Intenta cambiar la búsqueda o los filtros.',
     ingredienti: 'Ingredientes', abbinamenti: 'Maridajes recomendados', allergeni: 'Alérgenos',
     notaAllergeni: '⚠ Posible contaminación cruzada. En caso de alergias graves, informar siempre al personal.',
-    chiudi: 'Cerrar', preferiti: '🆕 Novedades', traduzione: 'Traduciendo…',
+    chiudi: 'Cerrar', preferiti: '⭐ Nuestros Favoritos', traduzione: 'Traduciendo…',
     bannerChiuso: '🔴 Hoy estamos cerrados', noAllergene: 'Sin ', bannerAperto: '🟢 Hoy abiertos hasta las',
     fuoriMenu: '⚠️ Temporalmente no disponibles:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'Sin Gluten','best-seller':'Más Vendido','novita':'Novedad','consigliato':'Recomendado','piccante':'Picante','vegano':'Vegano' }
@@ -485,7 +485,7 @@ const UI_STRINGS = {
     noRisultatiSub: 'حاول تغيير البحث أو المرشحات.',
     ingredienti: 'المكوّنات', abbinamenti: 'مقترحات التقديم', allergeni: 'مسببات الحساسية',
     notaAllergeni: '⚠ احتمال تلوث متبادل. في حالة الحساسية الشديدة أبلغ الموظفين دائماً.',
-    chiudi: 'إغلاق', preferiti: '🆕 الجديد', traduzione: 'جارٍ الترجمة…',
+    chiudi: 'إغلاق', preferiti: '⭐ مفضلاتنا', traduzione: 'جارٍ الترجمة…',
     bannerChiuso: '🔴 مغلق اليوم', noAllergene: 'بدون ', bannerAperto: '🟢 مفتوح اليوم حتى',
     fuoriMenu: '⚠️ غير متوفر مؤقتاً:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'خالٍ من الغلوتين','best-seller':'الأكثر مبيعاً','novita':'جديد','consigliato':'موصى به','piccante':'حار','vegano':'نباتي' }
@@ -498,7 +498,7 @@ const UI_STRINGS = {
     noRisultatiSub: '请尝试更改搜索或筛选条件。',
     ingredienti: '成分', abbinamenti: '推荐搭配', allergeni: '过敏原',
     notaAllergeni: '⚠ 可能存在交叉污染。严重过敏请务必告知工作人员。',
-    chiudi: '关闭', preferiti: '🆕 新品', traduzione: '翻译中…',
+    chiudi: '关闭', preferiti: '⭐ 我们的推荐', traduzione: '翻译中…',
     bannerChiuso: '🔴 今日休息', noAllergene: '无 ', bannerAperto: '🟢 今日营业至',
     fuoriMenu: '⚠️ 暂时缺货:', langNotice: '🗣️ English spoken here — ask for Salvatore or Giovanni',
     badgeLabels: { 'senza-glutine':'无麸质','best-seller':'热销','novita':'新品','consigliato':'推荐','piccante':'辣','vegano':'素食' }
@@ -1219,7 +1219,7 @@ function prodottoPassaFiltri(p){
 // ── AGGIORNA ──
 function aggiorna(){
   aggiornaCSSFiltri();
-  const preferiti=Object.values(prodottiAll).filter(p=>p.badges&&p.badges.includes('novita') && orarioVisibile(p.ora_inizio,p.ora_fine) && p.disponibile!==false && prodottoPassaFiltri(p));
+  const preferiti=Object.values(prodottiAll).filter(p=>p.is_preferito && orarioVisibile(p.ora_inizio,p.ora_fine) && p.disponibile!==false && prodottoPassaFiltri(p));
   const gruppi=datiMenu.map(g=>({categoria:g.categoria,prodotti:g.prodotti.filter(p=>prodottoPassaFiltri(p))})).filter(g=>g.prodotti.length>0);
   renderNav(preferiti.length>0,gruppi);
   renderMain(preferiti,gruppi);
@@ -1230,7 +1230,7 @@ function renderNav(haPreferiti,gruppi){
   const s=UI_STRINGS[lingua]||UI_STRINGS['it'];
   const inner=document.getElementById('nav-inner');
   let html='';
-  if(haPreferiti) html+=`<button class="nav-btn novita attivo" id="nav-novita" onclick="scorriA('sec-novita')">${s.preferiti}</button>`;
+  if(haPreferiti) html+=`<button class="nav-btn preferiti attivo" id="nav-preferiti" onclick="scorriA('sec-preferiti')">${s.preferiti}</button>`;
   html+=gruppi.map(g=>`<button class="nav-btn" onclick="scorriA('cat-${g.categoria.id}')" id="nav-${g.categoria.id}">${g.categoria.emoji} ${t(g.categoria.nome)}</button>`).join('');
   inner.innerHTML=html;
 }
@@ -1267,9 +1267,9 @@ function renderMain(preferiti,gruppi){
   const main=document.getElementById('main');
   let html='';
   if(preferiti.length>0){
-    html+=`<section class="sezione sezione-novita" id="sec-novita">
-      <div class="sezione-header"><span class="sezione-emoji">🆕</span><h2>${s.preferiti.replace('🆕 ','')}</h2><div class="sezione-divider"></div></div>
-      <div class="prodotti-lista">${preferiti.map(p=>prodottoHTML(p,'🆕')).join('')}</div>
+    html+=`<section class="sezione sezione-preferiti" id="sec-preferiti">
+      <div class="sezione-header"><span class="sezione-emoji">⭐</span><h2>${s.preferiti.replace('⭐ ','')}</h2><div class="sezione-divider"></div></div>
+      <div class="prodotti-lista">${preferiti.map(p=>prodottoHTML(p,'⭐')).join('')}</div>
     </section>`;
   }
   if(!gruppi.length&&!preferiti.length){
@@ -1298,7 +1298,7 @@ function osservaSezioni(){
     entries.forEach(e=>{
       if(e.isIntersecting){
         const raw=e.target.id;
-        const id=raw.replace('cat-','').replace('sec-novita','novita');
+        const id=raw.replace('cat-','').replace('sec-preferiti','preferiti');
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('attivo'));
         const btn=document.getElementById('nav-'+id)||document.querySelector(`[onclick*="${raw}"]`);
         if(btn){btn.classList.add('attivo');btn.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});}
@@ -1309,13 +1309,28 @@ function osservaSezioni(){
 }
 
 // ── NOMI PRODOTTI MIGNON (rilevamento) ──
-const MIGNON_NOMI = ['Panineria Mignon','Rosticceria Mignon','Panineria Mignon di Pesce'];
+const MIGNON_NOMI = ['Panineria Mignon','Panineria Mignon Classic','Rosticceria Mignon','Panineria Mignon di Pesce'];
 function isMignon(p){ return MIGNON_NOMI.some(n => p.nome && p.nome.toLowerCase().includes(n.toLowerCase().replace('panineria mignon di pesce','pesce').replace('panineria mignon','panineria').replace('rosticceria mignon','rosticceria')) || p.nome === n); }
 function isMignonProdotto(p){ return MIGNON_NOMI.includes(p.nome); }
 
 // ── DATI TIPOLOGIE MIGNON (da abbinamenti JSON, con fallback hard-coded) ──
 const MIGNON_DEFAULT = {
   'Panineria Mignon': [
+    {nome:'Capriccioso', desc:'Insalate di verdure, maionese'},
+    {nome:'Tedesco', desc:'Patate, wurstel, prezzemolo, maionese'},
+    {nome:'Campagnola', desc:'Patate, wurstel, prezzemolo, tonno, salsa rosa'},
+    {nome:'Primavera', desc:'Lattuga, tonno, pomodoro, maionese'},
+    {nome:'Pomodoro e mozzarella', desc:''},
+    {nome:'Salame dolce e mozzarella', desc:''},
+    {nome:'Tonno e lattuga', desc:'Tonno e lattuga'},
+    {nome:'Parmigiana', desc:'Melanzana fritta, salsa di pomodoro e grana'},
+    {nome:'Panelle', desc:'Farina di ceci, acqua, sale'},
+    {nome:'Crocchè', desc:'Patate, prezzemolo, sale'},
+    {nome:'Hamburger', desc:'Hamburger, pomodoro, salsa'},
+    {nome:'Cartoccio', desc:'Prosciutto cotto arrostito, mozzarella, salsa'},
+    {nome:'Wurstel', desc:'Wurstel, salsa'},
+  ],
+  'Panineria Mignon Classic': [
     {nome:'Capriccioso', desc:'Insalate di verdure, maionese'},
     {nome:'Tedesco', desc:'Patate, wurstel, prezzemolo, maionese'},
     {nome:'Campagnola', desc:'Patate, wurstel, prezzemolo, tonno, salsa rosa'},
@@ -1348,6 +1363,7 @@ const MIGNON_DEFAULT = {
 
 const MIGNON_PREZZI = {
   'Panineria Mignon':         '€ 8,00 / kg  ·  mezzo kg € 4,00',
+  'Panineria Mignon Classic':  '€ 8,00 / kg  ·  mezzo kg € 4,00',
   'Rosticceria Mignon':       '€ 8,00 / kg  ·  mezzo kg € 4,00',
   'Panineria Mignon di Pesce':'€ 15,00 / kg  ·  mezzo kg € 7,50',
 };
