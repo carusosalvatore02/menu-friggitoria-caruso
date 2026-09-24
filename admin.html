@@ -36,7 +36,7 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
 .drag-item:hover{border-color:var(--oro);}
 .drag-item.dragging{opacity:.4;box-shadow:0 4px 20px rgba(0,0,0,.15);}
 .drag-item.drag-over{border-color:var(--oro);box-shadow:0 0 0 3px rgba(200,146,42,.2);}
-.drag-item.preferito{border-color:rgba(200,146,42,.5);background:linear-gradient(135deg,#fffdf6,#fff);}
+.drag-item.novita{border-color:rgba(88,196,220,.5);background:linear-gradient(135deg,#f0fafd,#fff);}
 .drag-handle{color:#c5bdb4;cursor:grab;font-size:18px;flex-shrink:0;padding:4px;touch-action:none;user-select:none;}
 .drag-handle:active{cursor:grabbing;}
 .prod-foto{width:52px;height:52px;border-radius:8px;flex-shrink:0;background:var(--sabbia);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;}
@@ -234,11 +234,11 @@ body{font-family:'Inter',sans-serif;background:var(--carta);color:var(--nero);mi
     </div>
     <div class="sezione-titolo-modale">🏷️ Badge</div>
     <div class="badges-grid" id="badges-checkboxes"></div>
-    <div class="sezione-titolo-modale">⭐ Sezione Preferiti</div>
+    <div class="sezione-titolo-modale">🆕 Sezione Novità</div>
     <div class="preferito-row" id="preferito-row" onclick="togglePreferito()">
       <div>
-        <div class="preferito-label">⭐ Prodotto preferito</div>
-        <div class="preferito-sub">Appare nella sezione "I Nostri Preferiti" in cima al menù</div>
+        <div class="preferito-label">🆕 Prodotto in Novità</div>
+        <div class="preferito-sub">Appare nella sezione "Novità" in cima al menù (aggiunge badge 🆕)</div>
       </div>
       <button class="toggle-disp" id="prod-preferito" onclick="event.stopPropagation();togglePreferito()"></button>
     </div>
@@ -378,8 +378,18 @@ function toggleBadgeCheck(k,el){const chk=document.getElementById('bchk-'+k);chk
 function getBadgesSelezionati(){return BADGES_DEF.filter(b=>document.getElementById('bchk-'+b.k)?.checked).map(b=>b.k);}
 function setBadgesCheckbox(arr){BADGES_DEF.forEach(b=>{const chk=document.getElementById('bchk-'+b.k);const lbl=document.getElementById('badgechk-'+b.k);if(chk&&lbl){chk.checked=arr&&arr.includes(b.k);lbl.classList.toggle('sel',chk.checked);}});}
 
-// ── PREFERITO ──
-function togglePreferito(){const btn=document.getElementById('prod-preferito');const row=document.getElementById('preferito-row');btn.classList.toggle('on');row.classList.toggle('attivo',btn.classList.contains('on'));}
+// ── NOVITÀ TOGGLE ──
+function togglePreferito(){
+  const btn=document.getElementById('prod-preferito');
+  const row=document.getElementById('preferito-row');
+  btn.classList.toggle('on');
+  const isOn=btn.classList.contains('on');
+  row.classList.toggle('attivo',isOn);
+  // Sincronizza con checkbox badge novita
+  const chk=document.getElementById('bchk-novita');
+  const lbl=document.getElementById('badgechk-novita');
+  if(chk&&lbl){chk.checked=isOn;lbl.classList.toggle('sel',isOn);}
+}
 
 // ── CARICAMENTO ──
 async function carica(){
@@ -425,8 +435,9 @@ function itemHTML(p,c){
   const prezzoBarrato=p.prezzo_barrato?`<span class="prod-prezzo-barrato">€${Number(p.prezzo_barrato).toFixed(2)}</span>`:'';
   const allerTag=p.allergeni&&p.allergeni.length?`<span class="allergeni-tag">⚠ ${p.allergeni.join(', ')}</span>`:'';
   const badgePills=(p.badges||[]).map(k=>{const b=BADGES_DEF.find(x=>x.k===k);return b?`<span class="badge-pill ${b.cls}">${b.icon}</span>`:''}).join('');
-  const prefTag=p.is_preferito?'<span style="font-size:12px">⭐</span>':'';
-  return `<li class="drag-item ${p.is_preferito?'preferito':''}" id="prod-${p.id}" data-id="${p.id}" draggable="true">
+  const isNovita=(p.badges||[]).includes('novita');
+  const prefTag=isNovita?'<span style="font-size:12px">🆕</span>':'';
+  return `<li class="drag-item ${isNovita?'novita':''}" id="prod-${p.id}" data-id="${p.id}" draggable="true">
     <span class="drag-handle" title="Trascina per riordinare">⠿</span>
     <div class="prod-foto">${fotoSrc}</div>
     <div class="prod-info">
@@ -577,7 +588,7 @@ function apriModaleProdotto(id){
   setBadgesCheckbox(p?.badges||[]);setAllergeniCheckbox(p?.allergeni||[]);
   const prefBtn=document.getElementById('prod-preferito');
   const prefRow=document.getElementById('preferito-row');
-  const isPref=p?.is_preferito||false;
+  const isPref=(p?.badges||[]).includes('novita');
   prefBtn.classList.toggle('on',isPref);prefRow.classList.toggle('attivo',isPref);
   document.getElementById('prod-disp').classList.toggle('on',p?.disponibile!==false);
   document.getElementById('btn-elimina-prod').style.display=p?'block':'none';
@@ -617,7 +628,7 @@ async function salvaProdotto(){
   } else {
     abbinamenti = document.getElementById('prod-abbinamenti').value.trim()||null;
   }
-  const dati={categoria_id:parseInt(document.getElementById('prod-cat').value),nome,descrizione:document.getElementById('prod-desc').value.trim(),prezzo,prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,badges:getBadgesSelezionati(),is_preferito:document.getElementById('prod-preferito').classList.contains('on'),ora_inizio:document.getElementById('prod-ora-inizio').value||null,ora_fine:document.getElementById('prod-ora-fine').value||null,foto_url:fotoUrl,disponibile:document.getElementById('prod-disp').classList.contains('on'),allergeni:getAllergeniSelezionati(),ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,abbinamenti};
+  const dati={categoria_id:parseInt(document.getElementById('prod-cat').value),nome,descrizione:document.getElementById('prod-desc').value.trim(),prezzo,prezzo_barrato:parseFloat(document.getElementById('prod-prezzo-barrato').value)||null,badges:getBadgesSelezionati(),ora_inizio:document.getElementById('prod-ora-inizio').value||null,ora_fine:document.getElementById('prod-ora-fine').value||null,foto_url:fotoUrl,disponibile:document.getElementById('prod-disp').classList.contains('on'),allergeni:getAllergeniSelezionati(),ingredienti:document.getElementById('prod-ingredienti').value.trim()||null,abbinamenti};
   if(editId){await sb.from('prodotti').update(dati).eq('id',editId);toast('Prodotto aggiornato ✓','ok');}
   else{dati.ordine=prodotti.filter(p=>p.categoria_id===dati.categoria_id).length+1;await sb.from('prodotti').insert(dati);toast('Prodotto aggiunto ✓','ok');}
   chiudiModale('modal-prodotto');await carica();
